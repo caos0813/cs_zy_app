@@ -1,6 +1,7 @@
 import Login from './pages/login'
 import { createStackNavigator } from 'react-navigation'
-import { dark04, gray } from './common/vars'
+import { PixelRatio } from 'react-native'
+import colors from './common/colors'
 export default createStackNavigator({
   Login: {
     screen: Login,
@@ -14,13 +15,13 @@ export default createStackNavigator({
     headerTitleStyle: {
       fontSize: 18,
       fontWeight: 'normal',
-      color: dark04
+      color: colors.$dark04
     }
   },
   headerLayoutPreset: 'center',
   cardStyle: {
     height: 50,
-    borderBottomColor: gray,
-    borderBottomWidth: 1
+    borderBottomColor: colors.$gray,
+    borderBottomWidth: 1 / PixelRatio.get()
   }
 })
