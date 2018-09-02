@@ -1,7 +1,17 @@
 import React, { Component } from 'react'
 import { View, TextInput, Button } from 'react-native-ui-lib'
 export default class Login extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      progress: 0
+    }
+  }
+
   render () {
+    setTimeout(() => {
+      this.setState({ progress: this.state.progress + (0.4 * Math.random()) })
+    }, 1000)
     const { navigate } = this.props.navigation
     return (
       <View flex paddingH-10 paddingT-20>

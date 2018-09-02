@@ -42,6 +42,6 @@ export default createStackNavigator({
   headerLayoutPreset: 'center',
   cardStyle: {
     backgroundColor: light
-  }
-  //  initialRouteName: 'Home',
+  },
+  initialRouteName: 'Browser'
 })

@@ -8,3 +8,4 @@ for (let i = 1; i <= 100; i++) {
   textSize[`text-${i}`] = { fontSize: i }
 }
 Typography.loadTypographies(textSize)
+export { colors }

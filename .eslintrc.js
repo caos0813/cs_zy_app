@@ -6,5 +6,8 @@ module.exports = {
         "react/prop-types": 0,
         "no-useless-constructor":0,
         "generator-star-spacing": 0
+    },
+    "globals":{
+        "alert":true
     }
 }
