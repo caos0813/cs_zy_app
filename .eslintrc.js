@@ -3,6 +3,8 @@ module.exports = {
     "parser": "babel-eslint",
     "rules": {
         "arrow-parens": 0,
+        "react/prop-types": 0,
+        "no-useless-constructor":0,
         "generator-star-spacing": 0
     }
 }
