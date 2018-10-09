@@ -21,7 +21,7 @@ export default createStackNavigator({
   Browser: {
     screen: Browser,
     navigationOptions: () => ({
-      title: '忘记密码'
+      title: 'webview'
     })
   }
 },
