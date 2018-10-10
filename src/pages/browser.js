@@ -1,12 +1,50 @@
 import React, { Component } from 'react'
-import { WebView, StyleSheet } from 'react-native'
-import { View, LoaderScreen } from 'react-native-ui-lib'
+import { WebView, StyleSheet, Clipboard } from 'react-native'
+import { View, LoaderScreen, Button } from 'react-native-ui-lib'
 import { colors } from './../theme'
+import Picker from 'react-native-picker'
+let data = []
+for (var i = 0; i < 100; i++) {
+  data.push(i)
+}
+
+Picker.init({
+  pickerData: data,
+  selectedValue: [59],
+  onPickerConfirm: data => {
+    console.log(data)
+  },
+  onPickerCancel: data => {
+    console.log(data)
+  },
+  onPickerSelect: data => {
+    console.log(data)
+  }
+})
 export default class Browser extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      content: 'Content will appear here',
       loading: false
+    }
+  }
+  onMessage = (e) => {
+    Picker.show()
+  }
+  sendMessage = () => {
+    this.refs.webview.postMessage({
+      type: 1,
+      text: '这是app发送到html的消息'
+    })
+  }
+  _setClipboardContent = async () => {
+    Clipboard.setString('Hello World')
+    try {
+      const content = await Clipboard.getString()
+      this.setState({ content })
+    } catch (e) {
+      this.setState({ content: e.message })
     }
   }
   onLoadEnd = () => {
@@ -36,10 +74,10 @@ export default class Browser extends Component {
             // backgroundColor={Colors.rgba(Colors.dark80, 0.85)}
             {...animationConfig}
           />}
-
-        <WebView style={styles.flex_1}
-          source={{ uri: 'http://hotipay.luhesj.com/www/#/forget' }}
-          onLoadEnd={this.onLoadEnd} onNavigationStateChange={this.onNavigationStateChange}
+        <Button text-20 light bg-positive label={this.state.content} br20 onPress={this.sendMessage} />
+        <WebView ref={'webview'} style={styles.flex_1} onMessage={(e) => {
+          this.onMessage(e)
+        }} source={{ uri: 'http://172.20.10.4:8100/#/login' }} onLoadEnd={this.onLoadEnd} onNavigationStateChange={this.onNavigationStateChange}
         />
       </View>
     )
