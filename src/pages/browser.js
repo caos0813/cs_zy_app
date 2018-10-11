@@ -77,7 +77,7 @@ export default class Browser extends Component {
         <Button text-20 light bg-positive label={this.state.content} br20 onPress={this.sendMessage} />
         <WebView ref={'webview'} style={styles.flex_1} onMessage={(e) => {
           this.onMessage(e)
-        }} source={{ uri: 'http://172.20.10.4:8100/#/login' }} onLoadEnd={this.onLoadEnd} onNavigationStateChange={this.onNavigationStateChange}
+        }} source={require('../www/index.html')} onLoadEnd={this.onLoadEnd} onNavigationStateChange={this.onNavigationStateChange}
         />
       </View>
     )

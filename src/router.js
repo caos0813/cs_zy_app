@@ -43,5 +43,5 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Login'
+  initialRouteName: 'Home'
 })
