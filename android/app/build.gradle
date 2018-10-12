@@ -77,6 +77,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -93,6 +94,7 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -102,7 +104,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -131,8 +133,20 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            buildConfigField "String", "CODEPUSH_KEY", '"6MspA6500RgXSFJ-vmQ9Hs0mUht16c2286f0-5ac2-4dcf-b111-16564f0de8dd"'
             /* 打包新增 */
             signingConfig signingConfigs.release
+        }  
+        releaseStaging {
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            buildConfigField "String", "CODEPUSH_KEY", '"_HT_UmOwymR1XdfRiwa9xksSBi296c2286f0-5ac2-4dcf-b111-16564f0de8dd"'
+            /* 打包新增 */
+            signingConfig signingConfigs.release
+            matchingFallbacks = ['release', 'debug']
+        }
+        debug{
+            buildConfigField "String", "CODEPUSH_KEY", '"_HT_UmOwymR1XdfRiwa9xksSBi296c2286f0-5ac2-4dcf-b111-16564f0de8dd"'
         }
     }
     // applicationVariants are e.g. debug, release
@@ -151,6 +165,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-code-push')
     compile project(':react-native-splash-screen')
     compile project(':react-native-picker')
     compile project(':react-native-camera')

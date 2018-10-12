@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import SplashScreen from 'react-native-splash-screen'
+import codePush from 'react-native-code-push'
 
 export default class Home extends Component {
   constructor (props) {
@@ -14,6 +15,7 @@ export default class Home extends Component {
     }
   }
   componentDidMount () {
+    this.update()
     setTimeout(() => {
       SplashScreen.hide()
     }, 1000)
@@ -23,6 +25,18 @@ export default class Home extends Component {
       camera: true
     })
   }
+  update = () => {
+    codePush.sync({
+      updateDialog: {
+        appendReleaseDescription: true,
+        descriptionPrefix: '检查到更新',
+        title: '更新',
+        mandatoryUpdateMessage: '',
+        mandatoryContinueButtonLabel: '确定'
+      },
+      mandatoryInstallMode: codePush.InstallMode.IMMEDIATE
+    })
+  }
   render () {
     const { navigate } = this.props.navigation
     return (
@@ -30,7 +44,7 @@ export default class Home extends Component {
         <TextInput text-15 placeholder='请输入手机号' dark10 keyboardType='phone-pad' />
         <TextInput text-15 placeholder='请输入密码' secureTextEntry dark10 />
         <View marginT-20 >
-          <Button text-14 light bg-positive label='登录' onPress={() => {
+          <Button text-14 light bg-positive label='登录一下' onPress={() => {
             navigate('Login')
           }} br20 />
         </View>
