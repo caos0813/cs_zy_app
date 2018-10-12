@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Button, TextInput } from 'react-native-ui-lib'
+import { Progress } from '../components'
 import {
   StyleSheet
 } from 'react-native'
@@ -11,13 +12,15 @@ export default class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      camera: false
+      camera: false,
+      progress: 0
     }
   }
   componentDidMount () {
     this.update()
     setTimeout(() => {
       SplashScreen.hide()
+      this.setState({ progress: this.state.progress + (0.4 * Math.random()) })
     }, 1000)
   }
   setShow = () => {
@@ -41,6 +44,12 @@ export default class Home extends Component {
     const { navigate } = this.props.navigation
     return (
       <View flex paddingH-10 paddingT-20>
+        <Progress
+          fillStyle={{}}
+          backgroundStyle={{ backgroundColor: '#cccccc', borderRadius: 2 }}
+          style={{ marginTop: 10, width: 300 }}
+          progress={this.state.progress}
+        />
         <TextInput text-15 placeholder='请输入手机号' dark10 keyboardType='phone-pad' />
         <TextInput text-15 placeholder='请输入密码' secureTextEntry dark10 />
         <View marginT-20 >
