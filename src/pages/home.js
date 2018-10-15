@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Button, TextInput } from 'react-native-ui-lib'
 import { Progress } from '../components'
-import { width, getLayoutInfo } from '../utils'
+import { width, getLayoutInfo, toast } from '../utils'
 import {
   StyleSheet,
   SafeAreaView
@@ -55,6 +55,7 @@ export default class Home extends Component {
           <TextInput text-15 placeholder='请输入密码' secureTextEntry dark10 />
           <View marginT-20 >
             <Button text-14 light bg-positive label='登录一下' onPress={() => {
+              toast('显示了没')
               this.refs.progress.start()
             }} br20 />
           </View>
