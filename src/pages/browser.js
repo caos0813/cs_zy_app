@@ -74,10 +74,9 @@ export default class Browser extends Component {
             // backgroundColor={Colors.rgba(Colors.dark80, 0.85)}
             {...animationConfig}
           />}
-        <Button text-20 light bg-positive label={this.state.content} br20 onPress={this.sendMessage} />
         <WebView ref={'webview'} style={styles.flex_1} onMessage={(e) => {
           this.onMessage(e)
-        }} source={{ uri: 'file:///android_asset/www/index.html' }} onLoadEnd={this.onLoadEnd} onNavigationStateChange={this.onNavigationStateChange}
+        }} source={{ uri: 'http://ustbhuangyi.com/music/#/recommend' }} onLoadEnd={this.onLoadEnd} onNavigationStateChange={this.onNavigationStateChange}
         />
       </View>
     )

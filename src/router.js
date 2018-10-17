@@ -4,7 +4,7 @@ import { dark04, gray, light } from './theme/colors'
 import Login from './pages/login'
 import Home from './pages/home'
 import Browser from './pages/browser'
-console.log(dark04)
+import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 export default createStackNavigator({
   Login: {
     screen: Login,
@@ -21,7 +21,7 @@ export default createStackNavigator({
   Browser: {
     screen: Browser,
     navigationOptions: () => ({
-      title: 'webview'
+      title: '测试1'
     })
   }
 },
@@ -43,5 +43,8 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Home'
+  initialRouteName: 'Home',
+  transitionConfig: () => ({
+    screenInterpolator: StackViewStyleInterpolator.forHorizontal
+  })
 })
