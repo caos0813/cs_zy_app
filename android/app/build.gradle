@@ -100,7 +100,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.demoapp"
+        applicationId "com.zhiyazhiyuan.zyzy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

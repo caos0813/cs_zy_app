@@ -1,4 +1,4 @@
 <resources>
     <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey"></string>
-    <string name="app_name">demoapp</string>
+    <string name="app_name">知涯志愿</string>
 </resources>

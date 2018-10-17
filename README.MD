@@ -8,11 +8,11 @@
  ```
  ### 测试环境发布热更新
 ```
-code-push release-react demoapp android  --t 1.0.0 --dev false --d Staging --des "试一下更新" --m true
+code-push release-react zyzy-android android  --t 1.0.0 --dev false --d Staging --des "试一下更新" --m true
 ```
  ### 查看热更新
  ```
- code-push deployment ls demoapp
+ code-push deployment ls  zyzy-android
  ```
  ### 测试环境打包
   ```

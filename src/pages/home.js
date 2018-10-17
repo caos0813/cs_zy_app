@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { View, Button, TextInput } from 'react-native-ui-lib'
+import { View, Button, Text, TextInput } from 'react-native-ui-lib'
 import { Progress } from '../components'
-import { width, getLayoutInfo, toast } from '../utils'
+import { width, toast } from '../utils'
 import {
   StyleSheet,
   SafeAreaView
 } from 'react-native'
-import { RNCamera } from 'react-native-camera'
+// import { RNCamera } from 'react-native-camera'
 import SplashScreen from 'react-native-splash-screen'
 import codePush from 'react-native-code-push'
 
@@ -51,28 +51,30 @@ export default class Home extends Component {
           style={{ width: width }}
         />
         <View flex paddingH-10 paddingT-10>
-          <TextInput text-15 placeholder='请输入手机号' dark10 keyboardType='phone-pad' />
+          <View >
+            <Text>
+              演示首页，测试打开原生界面跟url的体验差别
+            </Text>
+          </View>
+          <Button text-14 light label='原生界面' marginT-10 onPress={() => navigate('Login')} />
+          <Button text-14 light label='打开url' marginT-10 onPress={() => navigate('Browser')} />
+          {/* <TextInput text-15 placeholder='请输入手机号' dark10 keyboardType='phone-pad' />
           <TextInput text-15 placeholder='请输入密码' secureTextEntry dark10 />
           <View marginT-20 >
             <Button text-14 light bg-positive label='登录一下' onPress={() => {
               toast('显示了没')
-              this.refs.progress.start()
             }} br20 />
           </View>
           <View right>
-            <Button link text-14 positive label='忘记密码?' marginT-10 onPress={() => {
-              this.setState({
-                camera: true
-              })
-            }} />
-          </View>
-          {this.state.camera && <RNCamera
+            <Button link text-14 positive label='忘记密码?' marginT-10 />
+          </View> */}
+          {/* {this.state.camera && <RNCamera
             ref={'camera'}
             style={styles.preview}
             type={RNCamera.Constants.Type.back}
             permissionDialogTitle={'Permission to use camera'}
             permissionDialogMessage={'We need your permission to use your camera phone'}
-          />}
+          />} */}
         </View>
       </SafeAreaView>
     )
