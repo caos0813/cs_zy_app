@@ -19,10 +19,7 @@ export default createStackNavigator({
     })
   },
   Browser: {
-    screen: Browser,
-    navigationOptions: () => ({
-      title: '测试1'
-    })
+    screen: Browser
   }
 },
 {

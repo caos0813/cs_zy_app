@@ -133,7 +133,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "CODEPUSH_KEY", '"6MspA6500RgXSFJ-vmQ9Hs0mUht16c2286f0-5ac2-4dcf-b111-16564f0de8dd"'
+            buildConfigField "String", "CODEPUSH_KEY", '"C1juEuKRXD7g2QVYMvKZ08EL78XC6c2286f0-5ac2-4dcf-b111-16564f0de8dd"'
             /* 打包新增 */
             signingConfig signingConfigs.release
         }  
