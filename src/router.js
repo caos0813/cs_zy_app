@@ -19,10 +19,7 @@ export default createStackNavigator({
     })
   },
   Browser: {
-    screen: Browser,
-    navigationOptions: () => ({
-      title: '测试1'
-    })
+    screen: Browser
   }
 },
 {
@@ -43,7 +40,11 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Home',
+  initialRouteName: 'Browser',
+  initialRouteParams: {
+    type: 1,
+    title: '无切换动画'
+  },
   transitionConfig: () => ({
     screenInterpolator: StackViewStyleInterpolator.forHorizontal
   })

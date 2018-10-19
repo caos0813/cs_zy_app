@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Button, Text, TextInput } from 'react-native-ui-lib'
-import { Progress } from '../components'
-import { width, toast } from '../utils'
+import { View, Button, Text } from 'react-native-ui-lib'
+// import * as WeChat from 'react-native-wechat'
+import JPushModule from 'jpush-react-native'
 import {
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
+  Platform
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import SplashScreen from 'react-native-splash-screen'
@@ -17,13 +18,12 @@ export default class Home extends Component {
       camera: false
     }
   }
-  componentDidMount () {
+  async componentDidMount () {
     this.update()
-    this.refs.progress.start()
     setTimeout(() => {
       SplashScreen.hide()
-      this.refs.progress.end()
     }, 2000)
+    JPushModule.initPush()
   }
   setShow = () => {
     this.setState({
@@ -46,18 +46,21 @@ export default class Home extends Component {
     const { navigate } = this.props.navigation
     return (
       <SafeAreaView style={styles.flex}>
-        <Progress
-          ref='progress'
-          style={{ width: width }}
-        />
         <View flex paddingH-10 paddingT-10>
           <View >
             <Text>
               演示首页，测试打开原生界面跟url的体验差别
             </Text>
           </View>
-          <Button text-14 light label='原生界面' marginT-10 onPress={() => navigate('Login')} />
-          <Button text-14 light label='打开url' marginT-10 onPress={() => navigate('Browser')} />
+          <Button text-14 light label='原生界面切换' marginT-10 onPress={() => navigate('Login')} />
+          <Button text-14 light label='无切换动画' marginT-10 onPress={() => navigate('Browser', {
+            type: 1,
+            title: '无切换动画'
+          })} />
+          <Button text-14 light label='css3切换动画' marginT-10 onPress={() => navigate('Browser', {
+            type: 2,
+            title: 'css3切换动画'
+          })} />
           {/* <TextInput text-15 placeholder='请输入手机号' dark10 keyboardType='phone-pad' />
           <TextInput text-15 placeholder='请输入密码' secureTextEntry dark10 />
           <View marginT-20 >
