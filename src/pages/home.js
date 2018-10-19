@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { View, Button, Text } from 'react-native-ui-lib'
+// import * as WeChat from 'react-native-wechat'
+import JPushModule from 'jpush-react-native'
 import {
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
+  Platform
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import SplashScreen from 'react-native-splash-screen'
@@ -15,11 +18,12 @@ export default class Home extends Component {
       camera: false
     }
   }
-  componentDidMount () {
+  async componentDidMount () {
     this.update()
     setTimeout(() => {
       SplashScreen.hide()
     }, 2000)
+    JPushModule.initPush()
   }
   setShow = () => {
     this.setState({

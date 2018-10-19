@@ -5,6 +5,8 @@ import { colors } from './../theme'
 import { Progress } from '../components'
 import Picker from 'react-native-picker'
 import { width } from '../utils'
+import SplashScreen from 'react-native-splash-screen'
+
 let data = []
 for (var i = 0; i < 100; i++) {
   data.push(i)
@@ -73,9 +75,13 @@ export default class Browser extends Component {
     }, 800)
   }
   componentDidMount () {
+    SplashScreen.hide()
     this.props.navigation.setParams({// 给导航中增加监听事件
       goBack: this.goBack
     })
+  }
+  postMessage=() => {
+    this.refs.webview.postMessage('发送一个消息')
   }
   render () {
     const { getParam } = this.props.navigation
@@ -95,9 +101,10 @@ export default class Browser extends Component {
           overlay
           {...animationConfig}
         />}
+        <Button label='postMessage' onPress={this.postMessage} />
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.1.25:8080' }}
+          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.1.41:8080' }}
           onLoad={this.onLoad}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}

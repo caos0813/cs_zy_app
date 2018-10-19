@@ -18,6 +18,8 @@ code-push release-react zyzy-android android  --t 1.1.0 --dev false --d Staging 
   ```
  gradlew assembleReleaseStaging
  ```
+ ### 安装
+  react-native run-android --variant=releaseStaging
  ## 正式环境
  
 ### 正式环境打包
