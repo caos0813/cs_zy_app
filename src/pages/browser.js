@@ -4,6 +4,7 @@ import { View, LoaderScreen, Button } from 'react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress } from '../components'
 import { width } from '../utils'
+import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
 
 export default class Browser extends Component {
@@ -80,7 +81,7 @@ export default class Browser extends Component {
     if (data) {
       switch (data.type) {
         case 'picker':
-          /* Picker.init({
+          Picker.init({
             ...data.data,
             pickerConfirmBtnText: '确定',
             pickerCancelBtnText: '取消',
@@ -113,7 +114,7 @@ export default class Browser extends Component {
               }))
             }
           })
-          Picker.show() */
+          Picker.show()
           break
       }
     }
@@ -140,7 +141,7 @@ export default class Browser extends Component {
 
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.0.2:8080/#/index' }}
+          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.1.41:8080/#/index' }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}

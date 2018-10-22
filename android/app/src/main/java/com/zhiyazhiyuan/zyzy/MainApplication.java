@@ -3,6 +3,7 @@ package com.zhiyazhiyuan.zyzy;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.beefe.picker.PickerViewPackage;
 import com.theweflex.react.WeChatPackage;
 import com.microsoft.codepush.react.CodePush;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
@@ -41,6 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerViewPackage(),
             new WeChatPackage(),
             new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
             new SplashScreenReactPackage(),

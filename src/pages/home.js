@@ -1,12 +1,15 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { View, Button, Text, Picker } from 'react-native-ui-lib'
+import { View, Button, Text, WheelPicker, WheelPickerItem } from 'react-native-ui-lib'
+import JPushModule from 'jpush-react-native'
 // import * as WeChat from 'react-native-wechat'
+import SplashScreen from 'react-native-splash-screen'
 import {
   StyleSheet,
   SafeAreaView
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
+import codePush from 'react-native-code-push'
 const options = [
   { label: 'JavaScript', value: 'js' },
   { label: 'Java', value: 'java' },
@@ -19,7 +22,7 @@ export default class Home extends Component {
     super(props)
     this.state = {
       camera: false,
-      nativePickerValue: 'js'
+      nativePickerValue: 'java'
     }
   }
   async componentDidMount () {
@@ -50,11 +53,11 @@ export default class Home extends Component {
     const { navigate } = this.props.navigation
     return (
       <SafeAreaView style={styles.flex}>
-        <Picker
+        <WheelPicker
           title='Native Picker'
           placeholder='Pick a Language'
-          value={this.state.nativePickerValue}
-          onChange={nativePickerValue => this.setState({ nativePickerValue })}
+          selectedValue={this.state.nativePickerValue}
+          onValueChange={nativePickerValue => this.setState({ nativePickerValue })}
           // renderNativePicker={(props) => {
           //   return (
           //     <View flex bg-red50>
@@ -62,9 +65,10 @@ export default class Home extends Component {
           //     </View>
           //   );
           // }}
+          useNativePicker
         >
-          {_.map(options, option => <Picker.Item key={option.value} value={option.value} label={option.label} disabled={option.disabled} />)}
-        </Picker>
+          {_.map(options, option => <WheelPickerItem key={option.value} value={option.value} label={option.label} disabled={option.disabled} />)}
+        </WheelPicker>
         <View flex paddingH-10 paddingT-10>
           <View >
             <Text>

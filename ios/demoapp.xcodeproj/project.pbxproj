@@ -56,6 +56,7 @@
 		DECD0B4094CE434D9A4E5F97 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38207B0D265B48AF9781E513 /* CoreGraphics.framework */; };
 		BAC94BB2FE3D44DA94C2D18E /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EBDCD00950E4392938BEE71 /* libRNCamera.a */; };
 		9C5213F2AADF487CB2A89B00 /* libreactnativeuilib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E923C178A5D4F40B08237FC /* libreactnativeuilib.a */; };
+		BBD80AE3846A464E9F42816E /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B20FA1D6B42A425F9DAADB88 /* libRCTBEEPickerManager.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -387,6 +388,8 @@
 		0EBDCD00950E4392938BEE71 /* libRNCamera.a */ = {isa = PBXFileReference; name = "libRNCamera.a"; path = "libRNCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		933678ED19534E59AC8562D9 /* reactnativeuilib.xcodeproj */ = {isa = PBXFileReference; name = "reactnativeuilib.xcodeproj"; path = "../node_modules/react-native-ui-lib/lib/ios/reactnativeuilib.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6E923C178A5D4F40B08237FC /* libreactnativeuilib.a */ = {isa = PBXFileReference; name = "libreactnativeuilib.a"; path = "libreactnativeuilib.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		9CC83243A0AC47068382E9EB /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; name = "RCTBEEPickerManager.xcodeproj"; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B20FA1D6B42A425F9DAADB88 /* libRCTBEEPickerManager.a */ = {isa = PBXFileReference; name = "libRCTBEEPickerManager.a"; path = "libRCTBEEPickerManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,6 +437,7 @@
 				DECD0B4094CE434D9A4E5F97 /* CoreGraphics.framework in Frameworks */,
 				BAC94BB2FE3D44DA94C2D18E /* libRNCamera.a in Frameworks */,
 				9C5213F2AADF487CB2A89B00 /* libreactnativeuilib.a in Frameworks */,
+				BBD80AE3846A464E9F42816E /* libRCTBEEPickerManager.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,6 +642,7 @@
 				A9D9702841744793A81159EE /* RCTJPushModule.xcodeproj */,
 				09C943A1D7654BE3AD77A339 /* RNCamera.xcodeproj */,
 				933678ED19534E59AC8562D9 /* reactnativeuilib.xcodeproj */,
+				9CC83243A0AC47068382E9EB /* RCTBEEPickerManager.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1264,6 +1269,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/demoapp.app/demoapp";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1275,6 +1281,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Debug;
@@ -1295,6 +1302,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/demoapp.app/demoapp";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1306,6 +1314,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Release;
@@ -1335,6 +1344,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Debug;
@@ -1363,6 +1373,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Release;
@@ -1392,6 +1403,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1403,6 +1415,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Debug;
@@ -1432,6 +1445,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1443,6 +1457,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Release;
@@ -1471,6 +1486,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1482,6 +1498,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Debug;
@@ -1510,6 +1527,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1521,6 +1539,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-camera\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-ui-lib\lib\ios\reactnativeuilib/**",
+					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 				);
 			};
 			name = Release;
