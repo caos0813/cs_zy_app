@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.theweflex.react.WeChatPackage;
 import com.microsoft.codepush.react.CodePush;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import com.beefe.picker.PickerViewPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -14,13 +13,17 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import cn.jpush.reactnativejpush.JPushPackage;
 
+import com.wix.reactnativeuilib.highlighterview.HighlighterViewPackage;
+import com.wix.reactnativeuilib.textinput.TextInputDelKeyHandlerPackage;
+import com.wix.reactnativeuilib.wheelpicker.WheelPickerPackage;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
   
-  private boolean SHUTDOWN_TOAST = false;
-  private boolean SHUTDOWN_LOG = false;
+  private boolean SHUTDOWN_TOAST = true;
+  private boolean SHUTDOWN_LOG = true;
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
@@ -41,9 +44,11 @@ public class MainApplication extends Application implements ReactApplication {
             new WeChatPackage(),
             new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
             new SplashScreenReactPackage(),
-            new PickerViewPackage(),
             new RNCameraPackage(),
-            new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
+            new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
+            new TextInputDelKeyHandlerPackage(),
+            new HighlighterViewPackage(),
+            new WheelPickerPackage()
       );
     }
 

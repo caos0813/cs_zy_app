@@ -4,19 +4,7 @@ import {
   Animated,
   Easing
 } from 'react-native'
-
-const styles = StyleSheet.create({
-  range: {
-    backgroundColor: '#3385ff',
-    height: 2,
-    overflow: 'hidden'
-  },
-  wrap: {
-    backgroundColor: '#bbb',
-    height: 2
-  }
-})
-
+import { width, height } from '../utils'
 export default class Progress extends Component {
   constructor (props) {
     super(props)
@@ -25,7 +13,7 @@ export default class Progress extends Component {
       opacity: new Animated.Value(1)
     }
   }
-  start = () => {
+  show = () => {
     this.state.progress.setValue(0)
     this.state.opacity.setValue(1)
     Animated.timing(
@@ -37,7 +25,7 @@ export default class Progress extends Component {
       }
     ).start()
   }
-  end = () => {
+  hide = () => {
     Animated.sequence([
       Animated.timing(
         this.state.progress,
@@ -57,15 +45,20 @@ export default class Progress extends Component {
     ]).start()
   }
   render () {
-    const rangeWidth = this.state.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0 * this.props.width, 1 * this.props.width]
-    })
-
     return (
       <Animated.View style={[styles.wrap, this.props.style, { opacity: this.state.opacity }, { width: this.props.width }]}>
-        <Animated.View style={[styles.range, { width: rangeWidth }]} />
       </Animated.View>
     )
   }
 }
+const styles = StyleSheet.create({
+  wrap: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    height: height,
+    width: width,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 1001
+  }
+})

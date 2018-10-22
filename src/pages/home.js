@@ -1,21 +1,25 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
-import { View, Button, Text } from 'react-native-ui-lib'
+import { View, Button, Text, Picker } from 'react-native-ui-lib'
 // import * as WeChat from 'react-native-wechat'
-import JPushModule from 'jpush-react-native'
 import {
   StyleSheet,
-  SafeAreaView,
-  Platform
+  SafeAreaView
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
-import SplashScreen from 'react-native-splash-screen'
-import codePush from 'react-native-code-push'
-
+const options = [
+  { label: 'JavaScript', value: 'js' },
+  { label: 'Java', value: 'java' },
+  { label: 'Python', value: 'python' },
+  { label: 'C++', value: 'c++' },
+  { label: 'Perl', value: 'perl' }
+]
 export default class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      camera: false
+      camera: false,
+      nativePickerValue: 'js'
     }
   }
   async componentDidMount () {
@@ -46,6 +50,21 @@ export default class Home extends Component {
     const { navigate } = this.props.navigation
     return (
       <SafeAreaView style={styles.flex}>
+        <Picker
+          title='Native Picker'
+          placeholder='Pick a Language'
+          value={this.state.nativePickerValue}
+          onChange={nativePickerValue => this.setState({ nativePickerValue })}
+          // renderNativePicker={(props) => {
+          //   return (
+          //     <View flex bg-red50>
+          //       <Text>CUSTOM NATIVE PICKER</Text>
+          //     </View>
+          //   );
+          // }}
+        >
+          {_.map(options, option => <Picker.Item key={option.value} value={option.value} label={option.label} disabled={option.disabled} />)}
+        </Picker>
         <View flex paddingH-10 paddingT-10>
           <View >
             <Text>

@@ -40,7 +40,7 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Browser',
+  initialRouteName: 'Home',
   initialRouteParams: {
     type: 1,
     title: '无切换动画'

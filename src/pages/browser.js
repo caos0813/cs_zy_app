@@ -3,28 +3,9 @@ import { WebView, StyleSheet } from 'react-native'
 import { View, LoaderScreen, Button } from 'react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress } from '../components'
-import Picker from 'react-native-picker'
 import { width } from '../utils'
 import SplashScreen from 'react-native-splash-screen'
 
-let data = []
-for (var i = 0; i < 100; i++) {
-  data.push(i)
-}
-
-Picker.init({
-  pickerData: data,
-  selectedValue: [59],
-  onPickerConfirm: data => {
-    console.log(data)
-  },
-  onPickerCancel: data => {
-    console.log(data)
-  },
-  onPickerSelect: data => {
-    console.log(data)
-  }
-})
 export default class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -39,7 +20,7 @@ export default class Browser extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      loading: true
+      loading: false
     }
   }
   goBack = (canBack) => {
@@ -56,10 +37,11 @@ export default class Browser extends Component {
       webviewCanBack: canGoBack
     })
   }
-  onLoad = () => {
+  onLoadStart = () => {
     this.refs.progress.start()
   }
   onLoadEnd = () => {
+    this.postMessage()
     this.refs.progress.end()
     setTimeout(() => {
       try {
@@ -80,8 +62,61 @@ export default class Browser extends Component {
       goBack: this.goBack
     })
   }
-  postMessage=() => {
-    this.refs.webview.postMessage('发送一个消息')
+  postMessage = () => {
+    this.refs.webview.postMessage(JSON.stringify({
+      type: 'auth',
+      data: {
+        token: 1212
+      }
+    }))
+  }
+  onMessage = (e) => {
+    let data
+    try {
+      data = JSON.parse(e.nativeEvent.data)
+    } catch (err) {
+
+    }
+    if (data) {
+      switch (data.type) {
+        case 'picker':
+          /* Picker.init({
+            ...data.data,
+            pickerConfirmBtnText: '确定',
+            pickerCancelBtnText: '取消',
+            pickerTitleText: '请选择',
+            onPickerConfirm: data => {
+              this.refs.webview.postMessage(JSON.stringify({
+                type: 'picker',
+                data: {
+                  type: 'confirm',
+                  value: data
+                }
+              }))
+            },
+            onPickerCancel: data => {
+              this.refs.webview.postMessage(JSON.stringify({
+                type: 'picker',
+                data: {
+                  type: 'cancel',
+                  value: data
+                }
+              }))
+            },
+            onPickerSelect: data => {
+              this.refs.webview.postMessage(JSON.stringify({
+                type: 'picker',
+                data: {
+                  type: 'select',
+                  value: data
+                }
+              }))
+            }
+          })
+          Picker.show() */
+          break
+      }
+    }
   }
   render () {
     const { getParam } = this.props.navigation
@@ -102,12 +137,16 @@ export default class Browser extends Component {
           {...animationConfig}
         />}
         <Button label='postMessage' onPress={this.postMessage} />
+
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.1.41:8080' }}
-          onLoad={this.onLoad}
+          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.0.2:8080/#/index' }}
+          onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}
+          onMessage={(e) => {
+            this.onMessage(e)
+          }}
         />
       </View>
     )
