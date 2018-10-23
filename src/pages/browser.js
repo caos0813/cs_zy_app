@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { WebView, StyleSheet } from 'react-native'
 import { View, LoaderScreen, Button } from 'react-native-ui-lib'
 import { colors } from './../theme'
-import { Progress } from '../components'
+import { Progress, Mask } from '../components'
 import { width } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
@@ -21,7 +21,8 @@ export default class Browser extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      loading: false
+      loading: false,
+      maskShow: false
     }
   }
   goBack = (canBack) => {
@@ -81,12 +82,19 @@ export default class Browser extends Component {
     if (data) {
       switch (data.type) {
         case 'picker':
+          console.log(this)
+          this.setState({
+            maskShow: true
+          })
           Picker.init({
             ...data.data,
             pickerConfirmBtnText: '确定',
             pickerCancelBtnText: '取消',
             pickerTitleText: '请选择',
             onPickerConfirm: data => {
+              this.setState({
+                maskShow: false
+              })
               this.refs.webview.postMessage(JSON.stringify({
                 type: 'picker',
                 data: {
@@ -96,6 +104,9 @@ export default class Browser extends Component {
               }))
             },
             onPickerCancel: data => {
+              this.setState({
+                maskShow: false
+              })
               this.refs.webview.postMessage(JSON.stringify({
                 type: 'picker',
                 data: {
@@ -105,6 +116,9 @@ export default class Browser extends Component {
               }))
             },
             onPickerSelect: data => {
+              this.setState({
+                maskShow: false
+              })
               this.refs.webview.postMessage(JSON.stringify({
                 type: 'picker',
                 data: {
@@ -121,7 +135,7 @@ export default class Browser extends Component {
   }
   render () {
     const { getParam } = this.props.navigation
-    const { loading, animationConfig } = this.state
+    const { loading, animationConfig, maskShow } = this.state
     const type = getParam('type')
     return (
       <View flex>
@@ -137,6 +151,7 @@ export default class Browser extends Component {
           overlay
           {...animationConfig}
         />}
+        {maskShow && <Mask />}
         <Button label='postMessage' onPress={this.postMessage} />
 
         <WebView ref='webview'
