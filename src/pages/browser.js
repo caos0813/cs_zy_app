@@ -82,7 +82,6 @@ export default class Browser extends Component {
     if (data) {
       switch (data.type) {
         case 'picker':
-          console.log(this)
           this.setState({
             maskShow: true
           })
@@ -156,7 +155,7 @@ export default class Browser extends Component {
 
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://ustbhuangyi.com/music/#/recommend' : 'http://192.168.1.41:8080/#/index' }}
+          source={{ uri: type === 2 ? 'http://192.168.1.41:8082/#/school-list' : 'http://192.168.1.41:8082/#/index' }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}
