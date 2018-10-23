@@ -80,7 +80,7 @@ export default class Home extends Component {
             type: 1,
             title: '无切换动画'
           })} />
-          <Button text-14 light label='css3切换动画' marginT-10 onPress={() => navigate('Browser', {
+          <Button text-14 light label='css3切换动画' marginT-10 onPress={() => navigate('Test', {
             type: 2,
             title: 'css3切换动画'
           })} />
