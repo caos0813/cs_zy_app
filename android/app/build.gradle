@@ -170,11 +170,12 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-camera')
     compile project(':react-native-picker')
     compile project(':react-native-wechat')
     compile project(':react-native-code-push')
     compile project(':react-native-splash-screen')
-    compile project(':react-native-camera')
+    //  compile project(':react-native-camera')
     compile project(':jpush-react-native')  // 添加 jpush 依赖
     compile project(':jcore-react-native')  // 添加 jcore 依赖
     compile project(':react-native-ui-lib')

@@ -7,7 +7,10 @@ export default function (txt) {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
+      onHidden: function () {
+        resolve(true)
+      }
     })
   })
 }

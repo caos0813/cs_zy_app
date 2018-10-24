@@ -8,6 +8,7 @@ module.exports = {
         "generator-star-spacing": 0
     },
     "globals":{
-        "alert":true
+        "alert":true,
+        "fetch":true
     }
 }

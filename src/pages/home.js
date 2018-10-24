@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { View, Button, Text, WheelPicker, WheelPickerItem } from 'react-native-ui-lib'
+import { View, Button, Text } from 'react-native-ui-lib'
 import JPushModule from 'jpush-react-native'
 // import * as WeChat from 'react-native-wechat'
 import SplashScreen from 'react-native-splash-screen'
@@ -10,13 +10,7 @@ import {
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
-const options = [
-  { label: 'JavaScript', value: 'js' },
-  { label: 'Java', value: 'java' },
-  { label: 'Python', value: 'python' },
-  { label: 'C++', value: 'c++' },
-  { label: 'Perl', value: 'perl' }
-]
+import { storage, dialog } from '../utils'
 export default class Home extends Component {
   constructor (props) {
     super(props)
@@ -26,10 +20,20 @@ export default class Home extends Component {
     }
   }
   async componentDidMount () {
-    this.update()
+    const { navigate } = this.props.navigation
+    storage.load({
+      key: 'userInfo'
+    }).then(data => {
+      alert(data)
+    }).catch(() => {
+      dialog.confirm('您还没有登录，请先登录。').then(res => {
+        navigate('Login')
+      })
+    })
     setTimeout(() => {
       SplashScreen.hide()
     }, 2000)
+    this.update()
     JPushModule.initPush()
   }
   setShow = () => {
@@ -53,22 +57,6 @@ export default class Home extends Component {
     const { navigate } = this.props.navigation
     return (
       <SafeAreaView style={styles.flex}>
-        <WheelPicker
-          title='Native Picker'
-          placeholder='Pick a Language'
-          selectedValue={this.state.nativePickerValue}
-          onValueChange={nativePickerValue => this.setState({ nativePickerValue })}
-          // renderNativePicker={(props) => {
-          //   return (
-          //     <View flex bg-red50>
-          //       <Text>CUSTOM NATIVE PICKER</Text>
-          //     </View>
-          //   );
-          // }}
-          useNativePicker
-        >
-          {_.map(options, option => <WheelPickerItem key={option.value} value={option.value} label={option.label} disabled={option.disabled} />)}
-        </WheelPicker>
         <View flex paddingH-10 paddingT-10>
           <View >
             <Text>

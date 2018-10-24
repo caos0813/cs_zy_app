@@ -66,7 +66,7 @@ export default class Browser extends Component {
   }
   postMessage = () => {
     this.refs.webview.postMessage(JSON.stringify({
-      type: 'auth',
+      type: 'userInfo',
       data: {
         token: 1212
       }
@@ -155,7 +155,7 @@ export default class Browser extends Component {
 
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://192.168.1.41:8082/#/school-list' : 'http://192.168.1.41:8082/#/index' }}
+          source={{ uri: type === 2 ? 'http://192.168.1.41:8080/#/school-list' : 'http://192.168.1.41:8080/#/index' }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}

@@ -1,10 +1,10 @@
 import { createStackNavigator } from 'react-navigation'
 import { PixelRatio } from 'react-native'
-import { dark04, gray, light } from './theme/colors'
-import Login from './pages/login'
-import Home from './pages/home'
-import Browser from './pages/browser'
-import Test from './pages/test'
+import { dark04, gray, light } from '../theme/colors'
+import Login from '../pages/login'
+import Home from '../pages/home'
+import Browser from '../pages/browser'
+import Test from '../pages/test'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 export default createStackNavigator({
   Login: {
