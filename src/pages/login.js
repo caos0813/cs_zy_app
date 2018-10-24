@@ -1,59 +1,29 @@
 import React, { Component } from 'react'
 import { View, Text, Button, TextInput } from 'react-native-ui-lib'
-import { observable, computed, action } from 'mobx'
-import { observer } from 'mobx-react/native'
-import { api, axios, toast, BackPress } from '../utils'
-import { StyleSheet, Animated } from 'react-native'
-import Modal from 'react-native-root-modal'
+import { inject, observer } from 'mobx-react/native'
+import { api, axios, toast } from '../utils'
+import { StyleSheet, Keyboard } from 'react-native'
+import Modal from 'react-native-modalbox'
 let timer
-class Store {
-  @observable phoneNum = ''
-  @observable verificationCode = ''
-  @observable tick = 150
-  @observable modalFlag = false
-  /* 手机错误提示 */
-  @computed get phoneErrorText () {
-    if (!(/^1[34578]\d{9}$/.test(this.phoneNum)) && this.phoneNum) {
-      return '手机号码格式错误'
-    }
-  }
-  /* 是否禁用下一步按钮  */
-  @computed get phoneValid () {
-    if (!(/^1[34578]\d{9}$/.test(this.phoneNum))) {
-      return true
-    } else {
-      return false
-    }
-  }
-  @action.bound
-  setValue (key, val) {
-    this[key] = val
-  }
-  @action.bound
-  countDown () {
-    if (this.tick > 0) {
-      this.tick--
-    }
-  }
-}
-const store = new Store()
+@inject('loginStore', 'userStore')
 @observer class Login extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      scale: new Animated.Value(1)
-    }
-    this.backPress = new BackPress({ backPress: this.onBackPress })
+    console.log(this.props)
+    console.log(this.props)
+    // this.backPress = new BackPress({ backPress: this.onBackPress })
   }
   sendSms = () => {
+    const { phoneNum, setValue, countDown } = this.props.loginStore
+    Keyboard.dismiss()
     this.clearTimer()
-    axios.get(`${api.sendSms}${store.phoneNum}`).then(data => {
+    axios.get(`${api.sendSms}${phoneNum}`).then(data => {
       if (data.code === 'ok') {
         toast('验证码已发送成功！').then(() => {
-          this.showModal()
-          store.setValue('tick', 150)
+          this.refs.modal.open()
+          setValue('tick', 150)
           timer = setInterval(() => {
-            store.countDown()
+            countDown()
           }, 1000)
         })
       } else {
@@ -66,22 +36,8 @@ const store = new Store()
   clearTimer = () => {
     timer && clearInterval(timer)
   }
-  showModal = () => {
-    store.setValue('modalFlag', true)
-    this.state.scale.setValue(0)
-    Animated.spring(this.state.scale, {
-      toValue: 1
-    }).start()
-  }
-  hideModal = () => {
-    Animated.timing(this.state.scale, {
-      toValue: 0
-    }).start(() => {
-      store.setValue('modalFlag', false)
-    })
-  }
   login = () => {
-    const { phoneNum, verificationCode } = store
+    const { phoneNum, verificationCode } = this.props.loginStore
     axios.post(api.webLogin, {
       phoneNum: phoneNum,
       verificationCode: verificationCode
@@ -95,37 +51,14 @@ const store = new Store()
       toast('请检查您的网络')
     })
   }
-  onBackPress = (e) => {
-    if (store.modalFlag) {
-      store.setValue('modalFlag', false)
-      return true
-    } else {
-      // this.props.navigation.goBack()
-      return false
-    }
-  }
-  componentDidMount () {
-    this.backPress.componentDidMount()
-  }
-  componentWillUnmount () {
-    this.clearTimer()
-    this.backPress.componentWillUnmount()
-  }
   render () {
     /* setTimeout(() => {
       this.setState({ progress: this.state.progress + (0.4 * Math.random()) })
     }, 1000) */
-    const { phoneValid, modalFlag, phoneErrorText, setValue, tick, verificationCode } = store
+    const { phoneValid, phoneErrorText, setValue, tick, verificationCode } = this.props.loginStore
     return (
       <View flex paddingH-20 paddingT-20>
-        {modalFlag && <Text>12112</Text>}
-        <Animated.Modal style={[style.modal, {
-          transform: [
-            {
-              scale: this.state.scale
-            }
-          ]
-        }]} visible={modalFlag} >
+        <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
           <View paddingH-20 paddingT-20 >
             <Text text-18 dark>验证码已发送</Text>
             <View row spread centerV paddingV-20>
@@ -135,7 +68,6 @@ const store = new Store()
                 /> : <Button label='重新获取' size='small' text-14 marginT-10 borderRadius={10} onPress={this.sendSms}
                 />
               }
-
             </View>
             <View center>
               <TextInput placeholder='输入验证码' containerStyle={style.codeInputWrap} style={style.codeInput}
@@ -149,7 +81,7 @@ const store = new Store()
               />
             </View>
           </View>
-        </Animated.Modal>
+        </Modal>
         <Text text-18 dark>欢迎使用知涯志愿</Text>
         <View paddingT-20>
           <TextInput text-15 placeholder='请输入手机号' keyboardType='phone-pad' error={phoneErrorText} dark10 onChangeText={val => setValue('phoneNum', val)} />
@@ -158,18 +90,21 @@ const store = new Store()
           <Button text-14 light label='下一步' marginT-10 onPress={this.sendSms} disabled={phoneValid} />
         </View>
 
-      </View>
+      </View >
     )
+  }
+  componentWillUnmount () {
+    this.clearTimer()
   }
 }
 const style = StyleSheet.create({
   modal: {
     top: 0,
-    right: 0,
-    bottom: 0,
     left: 0,
+    width: '100%',
+    height: '100%',
     position: 'absolute',
-    backgroundColor: 'rgba(255, 255, 255, 1)'
+    zIndex: 1001
   },
   codeInputWrap: {
     width: 200

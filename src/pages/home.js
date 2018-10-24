@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { Component } from 'react'
 import { View, Button, Text } from 'react-native-ui-lib'
 import JPushModule from 'jpush-react-native'
@@ -12,7 +11,7 @@ import {
 import codePush from 'react-native-code-push'
 import { storage, dialog } from '../utils'
 export default class Home extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       camera: false,
