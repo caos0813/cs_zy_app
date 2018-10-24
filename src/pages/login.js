@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { View, Text, Button, TextInput } from 'react-native-ui-lib'
 import { observable, computed, action } from 'mobx'
 import { observer } from 'mobx-react/native'
-import { api, axios, toast, platform } from '../utils'
-import { StyleSheet, Animated, BackHandler } from 'react-native'
-import SplashScreen from 'react-native-splash-screen'
+import { api, axios, toast, BackPress } from '../utils'
+import { StyleSheet, Animated } from 'react-native'
 import Modal from 'react-native-root-modal'
 let timer
 class Store {
@@ -17,7 +16,7 @@ class Store {
     if (!(/^1[34578]\d{9}$/.test(this.phoneNum)) && this.phoneNum) {
       return '手机号码格式错误'
     }
-  };
+  }
   /* 是否禁用下一步按钮  */
   @computed get phoneValid () {
     if (!(/^1[34578]\d{9}$/.test(this.phoneNum))) {
@@ -44,6 +43,7 @@ const store = new Store()
     this.state = {
       scale: new Animated.Value(1)
     }
+    this.backPress = new BackPress({ backPress: this.onBackPress })
   }
   sendSms = () => {
     this.clearTimer()
@@ -95,23 +95,21 @@ const store = new Store()
       toast('请检查您的网络')
     })
   }
+  onBackPress = (e) => {
+    if (store.modalFlag) {
+      store.setValue('modalFlag', false)
+      return true
+    } else {
+      // this.props.navigation.goBack()
+      return false
+    }
+  }
   componentDidMount () {
-    SplashScreen.hide()
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      if (store.modalFlag) {
-        store.setValue('modalFlag', false)
-        return true
-      } else {
-        this.props.navigation.goBack()
-        return false
-      }
-    })
+    this.backPress.componentDidMount()
   }
   componentWillUnmount () {
     this.clearTimer()
-    if (platform === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', () => { })
-    }
+    this.backPress.componentWillUnmount()
   }
   render () {
     /* setTimeout(() => {
