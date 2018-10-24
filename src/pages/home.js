@@ -6,11 +6,12 @@ import JPushModule from 'jpush-react-native'
 import SplashScreen from 'react-native-splash-screen'
 import {
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
+  BackHandler
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
-import { storage, dialog } from '../utils'
+import { storage, dialog, toast, platform } from '../utils'
 export default class Home extends Component {
   constructor (props) {
     super(props)
@@ -98,6 +99,16 @@ export default class Home extends Component {
     const options = { quality: 0.5, base64: true }
     const data = await this.refs.camera.takePictureAsync(options)
     alert(data.uri)
+  }
+  componentWillMount () {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true
+    })
+  }
+  componentWillUnmount () {
+    if (platform === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', () => { })
+    }
   }
 }
 

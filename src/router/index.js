@@ -47,7 +47,7 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Login',
+  initialRouteName: 'Home',
   initialRouteParams: {
     type: 1,
     title: '无切换动画'
