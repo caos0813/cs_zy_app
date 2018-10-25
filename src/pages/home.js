@@ -1,18 +1,20 @@
 import React, { Component } from 'react'
 import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from 'react-native-ui-lib'
 import JPushModule from 'jpush-react-native'
+import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import SplashScreen from 'react-native-splash-screen'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import {
   StyleSheet,
   StatusBar,
-  Animated
+  Animated,
+  Easing
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { storage, api, axios, imageResize } from '../utils'
+import { storage, api, axios, imageResize, ratio } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -26,12 +28,12 @@ Assets.loadAssetsGroup('icons', {
   icon04: require('../assets/home/icon04.png'),
   icon05: require('../assets/home/icon05.png')
 })
-class Home extends Component {
+@inject('homeStore')
+@observer class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
       camera: false,
-      barStyle: 'light-content',
       headerAnimate: new Animated.Value(0)
     }
   }
@@ -131,22 +133,32 @@ class Home extends Component {
     })
   }
   onScroll = (e) => {
+    const { setValue } = this.props.homeStore
     const posY = e.nativeEvent.contentOffset.y
-    if (posY <= 110) {
-      this.setState({
-        barStyle: 'light-content'
-      })
+    if (posY > 150) {
+      setValue('barStyle', 'dark-content')
       Animated.timing(
         this.state.headerAnimate,
         {
-          toValue: posY / 100,
-          duration: 100
+          toValue: 1,
+          duration: 400,
+          easing: Easing.linear,
+          useNativeDriver: true
         }
       ).start()
+      setValue('headerOpacity', true)
     } else {
-      this.setState({
-        barStyle: 'dark-content'
-      })
+      Animated.timing(
+        this.state.headerAnimate,
+        {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.linear,
+          useNativeDriver: true
+        }
+      ).start()
+      setValue('headerOpacity', false)
+      setValue('barStyle', 'light-content')
     }
   }
   renderItem = (item, index, separator) => {
@@ -165,20 +177,20 @@ class Home extends Component {
     )
   }
   render () {
-    const range = this.state.headerAnimate.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)']
-    })
+    const { barStyle, headerOpacity } = this.props.homeStore
     return (
       <View flex useSafeArea>
-        <StatusBar translucent backgroundColor='rgba(0,0,0,0)' animated barStyle={this.state.barStyle} />
-        <Animated.View centerV paddingH-15 style={[styles.header, { backgroundColor: range }]} >
-          <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent' />
-          <TouchableOpacity style={[styles.searchInput]} activeOpacity={0.6}>
+        <StatusBar translucent backgroundColor='rgba(0,0,0,0)' animated barStyle={barStyle} />
+        <View centerV paddingH-15 style={[styles.header, headerOpacity && styles.headerBottom]} >
+          <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
+            imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
+          />
+          <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6}>
             <Image assetName='searchIcon' style={styles.searchIcon} />
             <TextInput hideUnderline text-14 dark06 placeholder='清华大学' containerStyle={{ paddingHorizontal: 48, height: 32 }} style={{ paddingTop: 2 }} editable={false} />
           </TouchableOpacity>
-        </Animated.View>
+          <Animated.View style={[styles.headerBg, { opacity: this.state.headerAnimate }]}></Animated.View>
+        </View>
         <UltimateListView keyExtractor={(item, index) => `${index} - ${item}`}
           header={this.renderHeader}
           onFetch={this.onFetch}
@@ -219,16 +231,35 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     zIndex: 2
   },
+  headerBottom: {
+    borderBottomColor: colors.gray,
+    borderBottomWidth: 1 / 2
+  },
+  headerBg: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.light,
+    zIndex: 0
+  },
   avatar: {
     width: 28,
-    height: 28
+    height: 28,
+    zIndex: 1
   },
   searchInput: {
-    height: 30,
+    // height: 30,
     borderRadius: 20,
     backgroundColor: colors.light,
     flex: 1,
-    marginLeft: 16
+    marginLeft: 16,
+    zIndex: 1
+  },
+  searchInputBorder: {
+    borderColor: colors.gray,
+    borderWidth: 1 / 2
   },
   searchIcon: {
     position: 'absolute',

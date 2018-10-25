@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Button, TextInput, Dialog } from 'react-native-ui-lib'
+import { View, Text, Button, TextInput } from 'react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { api, axios, toast } from '../utils'
 import { StyleSheet, Keyboard } from 'react-native'
