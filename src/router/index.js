@@ -22,7 +22,8 @@ export default createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: () => ({
-      title: '首页'
+      title: '首页',
+      header: null
     })
   },
   Browser: {

@@ -21,18 +21,15 @@
     "react-native-code-push": "^5.4.2",
     "react-native-modalbox": "^1.6.0",
     "react-native-picker": "^4.3.7",
-    "react-native-root-toast": "^3.0.1",
     "react-native-splash-screen": "^3.1.1",
     "react-native-storage": "^0.2.3",
     "react-native-swiper": "^1.5.13",
     "react-native-ui-lib": "^3.3.268",
+    "react-native-ultimate-listview": "^3.3.0",
     "react-native-wechat": "^1.9.10",
-    "react-navigation": "^2.12.1",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.1"
+    "react-navigation": "^2.12.1"
   },
   "devDependencies": {
-    "eslint-plugin-react": "^7.11.1",
     "@babel/plugin-proposal-decorators": "^7.1.2",
     "babel-eslint": "^9.0.0",
     "babel-jest": "23.6.0",
@@ -42,6 +39,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-react-native": "^3.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "23.6.0",

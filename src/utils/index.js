@@ -6,7 +6,8 @@ import storage from './storage'
 import api from './api'
 import axios from './axios'
 import BackPress from './backPress'
+import imageResize from './imageResize'
 
 const platform = Platform.OS
 let { width, height } = Dimensions.get('window')
-export { width, height, getLayoutInfo, toast, dialog, storage, platform, api, axios, BackPress }
+export { width, height, getLayoutInfo, toast, dialog, storage, platform, api, axios, BackPress, imageResize }

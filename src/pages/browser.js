@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { WebView, StyleSheet } from 'react-native'
+import { WebView, StyleSheet, StatusBar } from 'react-native'
 import { View, LoaderScreen, Button } from 'react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress, Mask } from '../components'
@@ -10,12 +10,13 @@ import SplashScreen from 'react-native-splash-screen'
 export default class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam('title', 'webview'),
+      header: null
+      /* title: navigation.getParam('title', 'webview'),
       headerLeft: () => {
         return <Button text-14 positive label='返回' size='small' outline onPress={() => {
           navigation.state.params.goBack(navigation.state.params.webviewCanBack)
         }} />
-      }
+      } */
     }
   }
   constructor (props) {
@@ -138,6 +139,8 @@ export default class Browser extends Component {
     const type = getParam('type')
     return (
       <View flex>
+        <StatusBar translucent backgroundColor='rgba(0,0,0,0)' barStyle='light-content' />
+
         <Progress
           ref='progress'
           style={styles.progress}
@@ -155,7 +158,7 @@ export default class Browser extends Component {
 
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://192.168.1.41:8080/#/school-list' : 'http://192.168.1.41:8080/#/index' }}
+          source={{ uri: type === 2 ? 'http://192.168.1.25:8081/#/school-list' : 'http://192.168.1.25:8081/#/index' }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}

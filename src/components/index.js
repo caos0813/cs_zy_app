@@ -1,3 +1,4 @@
 import Progress from './progress'
 import Mask from './mask'
-export { Progress, Mask }
+import ItemHead from './itemHead'
+export { Progress, Mask, ItemHead }
