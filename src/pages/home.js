@@ -14,7 +14,7 @@ import {
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { storage, api, axios, imageResize, ratio, statusBarHeight } from '../utils'
+import { storage, api, axios, imageResize, ratio, statusBarHeight, width } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -109,17 +109,6 @@ Assets.loadAssetsGroup('icons', {
     )
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
-    /* try {
-      let pageLimit = 5
-      let rowData = [1, 2, 3, 4, 5]
-      console.log(rowData)
-      if (page === 3) {
-        rowData = []
-      }
-      startFetch(rowData, pageLimit)
-    } catch (err) {
-      abortFetch()
-    } */
     const pageSize = 5
     axios.get(api.getArticleFile, {
       params: {
@@ -164,7 +153,7 @@ Assets.loadAssetsGroup('icons', {
   renderItem = (item, index, separator) => {
     return (
       <Card style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article?id=${item.id}`, false)}>
-        <Card.Image height={120} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
+        <Card.Image height={110} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
         <Card.Section body >
           <Card.Section >
             <Text text-18 dark>{item.name}</Text>
