@@ -1,3 +1,4 @@
+import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import { PixelRatio } from 'react-native'
 import { dark04, gray, light } from '../theme/colors'
@@ -6,6 +7,10 @@ import Home from '../pages/home'
 import Browser from '../pages/browser'
 import Test from '../pages/test'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
+import { Avatar, Assets } from 'react-native-ui-lib'
+Assets.loadAssetsGroup('icons', {
+  ic_back: require('../assets/icons/ic_back.png')
+})
 export default createStackNavigator({
   Login: {
     screen: Login,
@@ -22,18 +27,23 @@ export default createStackNavigator({
   Home: {
     screen: Home,
     navigationOptions: () => ({
-      title: '首页',
       header: null
     })
   },
   Browser: {
-    screen: Browser
+    screen: Browser,
+    navigationOptions: () => ({
+      header: null
+    })
   }
 },
 {
-  navigationOptions: {
+  navigationOptions: ({ navigation, screenProps }) => ({
+    gesturesEnabled: true,
+    headerLeft: <Avatar imageSource={Assets.icons.ic_back} resizeMode='cover' backgroundColor='transparent' containerStyle={{ marginLeft: 15, width: 24, height: 24 }} imageStyle={{ width: 24, height: 24 }} onPress={() => navigation.goBack()} />,
     headerStyle: {
-      height: 50,
+      height: 44 + screenProps.statusBarHeight,
+      paddingTop: screenProps.statusBarHeight,
       borderBottomColor: gray,
       elevation: 0,
       borderBottomWidth: 1 / PixelRatio.get()
@@ -43,7 +53,7 @@ export default createStackNavigator({
       fontWeight: 'normal',
       color: dark04
     }
-  },
+  }),
   headerLayoutPreset: 'center',
   cardStyle: {
     backgroundColor: light

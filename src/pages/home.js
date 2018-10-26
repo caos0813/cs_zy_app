@@ -14,7 +14,7 @@ import {
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { storage, api, axios, imageResize, ratio } from '../utils'
+import { storage, api, axios, imageResize, ratio, statusBarHeight } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -83,23 +83,23 @@ Assets.loadAssetsGroup('icons', {
           </Swiper>
         </View>
         <View row marginV-10>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, true)}>
             <Image assetName='icon01' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查大学</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`major-index`, true)}>
             <Image assetName='icon02' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查专业</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`profession-list`, true)}>
             <Image assetName='icon03' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查职业</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} >
             <Image assetName='icon04' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>填志愿</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`holland-entry`, true)}>
             <Image assetName='icon05' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>测一测</Text>
           </TouchableOpacity>
@@ -141,7 +141,7 @@ Assets.loadAssetsGroup('icons', {
         this.state.headerAnimate,
         {
           toValue: 1,
-          duration: 400,
+          duration: 200,
           easing: Easing.linear,
           useNativeDriver: true
         }
@@ -152,7 +152,7 @@ Assets.loadAssetsGroup('icons', {
         this.state.headerAnimate,
         {
           toValue: 0,
-          duration: 400,
+          duration: 200,
           easing: Easing.linear,
           useNativeDriver: true
         }
@@ -163,8 +163,8 @@ Assets.loadAssetsGroup('icons', {
   }
   renderItem = (item, index, separator) => {
     return (
-      <Card marginB-10 marginH-15>
-        <Card.Image height={130} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
+      <Card style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article?id=${item.id}`, false)}>
+        <Card.Image height={120} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
         <Card.Section body >
           <Card.Section >
             <Text text-18 dark>{item.name}</Text>
@@ -176,6 +176,12 @@ Assets.loadAssetsGroup('icons', {
       </Card>
     )
   }
+  openUrl = (path, auth) => {
+    const { navigate } = this.props.navigation
+    navigate('Browser', {
+      path: path
+    })
+  }
   render () {
     const { barStyle, headerOpacity } = this.props.homeStore
     return (
@@ -183,11 +189,12 @@ Assets.loadAssetsGroup('icons', {
         <StatusBar translucent backgroundColor='rgba(0,0,0,0)' animated barStyle={barStyle} />
         <View centerV paddingH-15 style={[styles.header, headerOpacity && styles.headerBottom]} >
           <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
+            onPress={() => this.props.navigation.navigate('Login')}
             imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
           />
-          <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6}>
+          <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, false)}>
             <Image assetName='searchIcon' style={styles.searchIcon} />
-            <TextInput hideUnderline text-14 dark06 placeholder='清华大学' containerStyle={{ paddingHorizontal: 48, height: 32 }} style={{ paddingTop: 2 }} editable={false} />
+            <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 32 }} style={{ paddingTop: 2 }} editable={false} />
           </TouchableOpacity>
           <Animated.View style={[styles.headerBg, { opacity: this.state.headerAnimate }]}></Animated.View>
         </View>
@@ -198,6 +205,7 @@ Assets.loadAssetsGroup('icons', {
           refreshable={false}
           allLoadedText='--我是有底线的--'
           onScroll={this.onScroll}
+          showsVerticalScrollIndicator={false}
           paginationFetchingView={() => <LoaderScreen loaderColor={colors.positive} message='正在加载...' />}
         />
       </View>
@@ -226,14 +234,14 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     flexDirection: 'row',
-    paddingTop: 24,
+    paddingTop: statusBarHeight,
     paddingHorizontal: 15,
     paddingBottom: 5,
     zIndex: 2
   },
   headerBottom: {
     borderBottomColor: colors.gray,
-    borderBottomWidth: 1 / 2
+    borderBottomWidth: 1 / ratio
   },
   headerBg: {
     position: 'absolute',
@@ -247,6 +255,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 28,
     height: 28,
+    marginTop: 1,
     zIndex: 1
   },
   searchInput: {
@@ -259,7 +268,7 @@ const styles = StyleSheet.create({
   },
   searchInputBorder: {
     borderColor: colors.gray,
-    borderWidth: 1 / 2
+    borderWidth: 1 / ratio
   },
   searchIcon: {
     position: 'absolute',

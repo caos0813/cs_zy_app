@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { WebView, StyleSheet, StatusBar } from 'react-native'
-import { View, LoaderScreen, Button } from 'react-native-ui-lib'
+import { View, LoaderScreen } from 'react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress, Mask } from '../components'
-import { width } from '../utils'
+import { width, BackPress } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
-
+import config from '../config'
 export default class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -23,22 +23,37 @@ export default class Browser extends Component {
     super(props)
     this.state = {
       loading: false,
-      maskShow: false
+      maskShow: false,
+      canGoBack: false
     }
+    this.backPress = new BackPress({ backPress: this.onBackPress })
   }
-  goBack = (canBack) => {
-    if (canBack) {
+  goBack = () => {
+    if (this.state.canGoBack) {
       this.refs.webview.goBack()
     } else {
       this.props.navigation.goBack()
     }
   }
+  onBackPress =() => {
+    if (this.state.canGoBack) {
+      this.refs.webview.goBack()
+      return true
+    } else {
+      return false
+    }
+  }
   onNavigationStateChange = (e) => {
     const { canGoBack } = e
-    global.webviewCanBack = canGoBack
+    console.log(canGoBack)
+    console.log('onNavigationStateChange')
+    this.setState({
+      canGoBack: canGoBack
+    })
+    /* global.webviewCanBack = canGoBack
     this.props.navigation.setParams({// 给导航中增加监听事件
       webviewCanBack: canGoBack
-    })
+    }) */
   }
   onLoadStart = () => {
     this.refs.progress.start()
@@ -46,6 +61,7 @@ export default class Browser extends Component {
   onLoadEnd = () => {
     this.postMessage()
     this.refs.progress.end()
+    //  this.refs.webview.injectJavaScript(`document.body.style.paddingTop="${statusBarHeight}px"`)
     setTimeout(() => {
       try {
         this.setState({
@@ -58,12 +74,6 @@ export default class Browser extends Component {
 
       }
     }, 800)
-  }
-  componentDidMount () {
-    SplashScreen.hide()
-    this.props.navigation.setParams({// 给导航中增加监听事件
-      goBack: this.goBack
-    })
   }
   postMessage = () => {
     this.refs.webview.postMessage(JSON.stringify({
@@ -130,17 +140,26 @@ export default class Browser extends Component {
           })
           Picker.show()
           break
+        case 'goBack':
+          this.goBack()
+          break
       }
     }
+  }
+  componentDidMount () {
+    this.backPress.componentDidMount()
+    SplashScreen.hide()
+  }
+  componentWillUnmount () {
+    this.backPress.componentWillUnmount()
   }
   render () {
     const { getParam } = this.props.navigation
     const { loading, animationConfig, maskShow } = this.state
-    const type = getParam('type')
+    const path = getParam('path')
     return (
       <View flex>
-        <StatusBar translucent backgroundColor='rgba(0,0,0,0)' barStyle='light-content' />
-
+        <StatusBar translucent={false} barStyle='dark-content' />
         <Progress
           ref='progress'
           style={styles.progress}
@@ -154,11 +173,9 @@ export default class Browser extends Component {
           {...animationConfig}
         />}
         {maskShow && <Mask />}
-        <Button label='postMessage' onPress={this.postMessage} />
-
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: type === 2 ? 'http://192.168.1.25:8081/#/school-list' : 'http://192.168.1.25:8081/#/index' }}
+          source={{ uri: `${config.webUrl}${path}` }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}

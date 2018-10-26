@@ -5,13 +5,13 @@ import Router from './src/router'
 import * as WeChat from 'react-native-wechat'
 /* eslint-disable */
 import theme from './src/theme'
-import {axios} from './src/utils'
+import {statusBarHeight} from './src/utils'
 import store from './src/store'
 class App extends Component {
   render() {
     return (
       <Provider {...store}>
-        <Router />
+        <Router screenProps={{ statusBarHeight: statusBarHeight}} />
       </Provider>
     );
   }
