@@ -43,6 +43,10 @@ let timer
   login = () => {
     const { phoneNum, verificationCode } = this.props.loginStore
     const { goBack } = this.props.navigation
+    if (verificationCode.length !== 6) {
+      Toast('验证码长度不正确')
+      return
+    }
     Keyboard.dismiss()
     axios.post(api.webLogin, {
       phoneNum: phoneNum,
@@ -77,7 +81,7 @@ let timer
       }
     }
 
-    const { phoneValid, phoneErrorText, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
+    const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
     return (
       <View flex paddingH-23 paddingT-20>
         <StatusBar barStyle='dark-content' />
@@ -92,20 +96,34 @@ let timer
                 />
               }
             </View>
-            <View center marginT-14>
+            <View center marginT-20>
+              <View row style={style.codeWrap} >
+                {getCodeArr.map((item, i) => (
+                  <View center style={style.codeCeil} key={i} >
+                    <Text text-36 calm style={style.codeText}>{item.value}</Text>
+                    <View style={[style.codeLine, {
+                      opacity: item.type === 1 ? 0 : 1,
+                      backgroundColor: item.type === 0 ? colors.gray : colors.calm
+                    }]} />
+                  </View>
+                ))}
+
+              </View>
               <TextInput placeholder='输入验证码' containerStyle={style.codeInputWrap} style={style.codeInput}
                 onChangeText={val => setValue('verificationCode', val)}
                 returnKeyType='done'
                 onSubmitEditing={this.login}
+                maxLength={6}
+                keyboardType='phone-pad'
                 //  style={{ backgroundColor: colors.positive }}
-                // hideUnderline
+                hideUnderline
               />
 
               {/* <Button label='点击按钮代表同意《知涯用户协议》' text-10 marginT-20 dark09 link
               /> */}
             </View>
             <View paddingT-100 paddingH-5>
-              <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.sendSms} disabled={verificationCode.length > 0} />
+              <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
               <TouchableOpacity activeOpacity={0.6}>
                 <View padding-10 center>
                   <Text text-12 gray>点击按钮表示同意<Text calm>《知涯用户协议》</Text></Text>
@@ -118,7 +136,18 @@ let timer
         <Text marginT-75 marginH-12 text-16 dark06>请输入您的手机号码</Text>
         <View paddingT-23>
           <BoxShadow setting={shadowOpt}>
-            <TextInput style={{ backgroundColor: colors.light, height: 32, borderRadius: 16, paddingHorizontal: 30, textAlign: 'center', marginBottom: 5 }} hideUnderline text-14 placeholder='请输入手机号' keyboardType='phone-pad' error={phoneErrorText} dark10 onChangeText={val => setValue('phoneNum', val)} returnKeyType='next' onSubmitEditing={this.sendSms} />
+            <TextInput style={{ backgroundColor: colors.light, height: 32, borderRadius: 16, paddingHorizontal: 30, textAlign: 'center', marginBottom: 5 }}
+              text-14
+              placeholder='请输入手机号'
+              keyboardType='phone-pad'
+              error={phoneErrorText}
+              dark10
+              onChangeText={val => setValue('phoneNum', val)}
+              returnKeyType='next'
+              onSubmitEditing={this.sendSms}
+              hideUnderline
+
+            />
           </BoxShadow>
         </View>
         <View paddingT-100 paddingH-5>
@@ -145,10 +174,31 @@ const style = StyleSheet.create({
     zIndex: 1001
   },
   codeInputWrap: {
-    width: 200
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    backgroundColor: '#111',
+    opacity: 0
   },
   codeInput: {
     textAlign: 'center'
+  },
+  codeCeil: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50
+  },
+  codeText: {
+    lineHeight: 36
+  },
+  codeLine: {
+    position: 'absolute',
+    left: 11,
+    top: 17,
+    height: 1,
+    width: 32
   }
 })
 export default Login

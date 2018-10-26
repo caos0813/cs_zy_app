@@ -44,13 +44,13 @@ Assets.loadAssetsGroup('icons', {
   }
   update = () => {
     codePush.sync({
-      updateDialog: {
+      /* updateDialog: {
         appendReleaseDescription: true,
         descriptionPrefix: '检查到更新',
         title: '更新',
         mandatoryUpdateMessage: '',
         mandatoryContinueButtonLabel: '确定'
-      },
+      }, */
       mandatoryInstallMode: codePush.InstallMode.IMMEDIATE
     })
   }
