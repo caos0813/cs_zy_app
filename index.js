@@ -11,7 +11,7 @@ class App extends Component {
   render() {
     return (
       <Provider {...store}>
-        <Router screenProps={{ statusBarHeight: statusBarHeight}} />
+        <Router screenProps={{ statusBarHeight: statusBarHeight}}  />
       </Provider>
     );
   }

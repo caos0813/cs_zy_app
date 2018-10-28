@@ -53,9 +53,8 @@ let timer
       verificationCode: verificationCode
     }).then(data => {
       if (data.token) {
-        Toast('登录成功').then(data => {
-          goBack()
-        })
+        Toast('登录成功')
+        goBack()
       } else {
         Toast(data.msg)
       }

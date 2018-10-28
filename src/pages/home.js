@@ -152,7 +152,7 @@ Assets.loadAssetsGroup('icons', {
   }
   renderItem = (item, index, separator) => {
     return (
-      <Card style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article?id=${item.id}`, false)}>
+      <Card borderRadius={8} style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article?id=${item.id}`, false)}>
         <Card.Image height={110} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
         <Card.Section body >
           <Card.Section >
