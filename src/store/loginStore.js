@@ -1,4 +1,7 @@
-import { observable, computed, action } from 'mobx'
+import { configure, observable, computed, action } from 'mobx'
+configure({
+  enforceActions: 'always'
+})
 class Store {
   @observable phoneNum = ''
   @observable verificationCode = ''

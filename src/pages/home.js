@@ -14,7 +14,7 @@ import {
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { storage, api, axios, imageResize, ratio, statusBarHeight, width } from '../utils'
+import { storage, api, axios, imageResize, ratio, statusBarHeight, OpenUrl } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -28,10 +28,11 @@ Assets.loadAssetsGroup('icons', {
   icon04: require('../assets/home/icon04.png'),
   icon05: require('../assets/home/icon05.png')
 })
-@inject('homeStore')
+@inject('homeStore', 'userStore')
 @observer class Home extends Component {
   constructor (props) {
     super(props)
+    this.OpenUrl = new OpenUrl(props)
     this.state = {
       camera: false,
       headerAnimate: new Animated.Value(0)
@@ -83,15 +84,15 @@ Assets.loadAssetsGroup('icons', {
           </Swiper>
         </View>
         <View row marginV-10>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, true)}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
             <Image assetName='icon01' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查大学</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`major-index`, true)}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`major-index`, {}, true)}>
             <Image assetName='icon02' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查专业</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`profession-list`, true)}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`profession-list`, {}, true)}>
             <Image assetName='icon03' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查职业</Text>
           </TouchableOpacity>
@@ -99,7 +100,7 @@ Assets.loadAssetsGroup('icons', {
             <Image assetName='icon04' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>填志愿</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`holland-entry`, true)}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`holland-entry`, {}, true)}>
             <Image assetName='icon05' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>测一测</Text>
           </TouchableOpacity>
@@ -152,7 +153,7 @@ Assets.loadAssetsGroup('icons', {
   }
   renderItem = (item, index, separator) => {
     return (
-      <Card borderRadius={8} style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article?id=${item.id}`, false)}>
+      <Card borderRadius={8} style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article`, { id: item.id }, false)}>
         <Card.Image height={110} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
         <Card.Section body >
           <Card.Section >
@@ -165,11 +166,8 @@ Assets.loadAssetsGroup('icons', {
       </Card>
     )
   }
-  openUrl = (path, auth) => {
-    const { navigate } = this.props.navigation
-    navigate('Browser', {
-      path: path
-    })
+  openUrl = (path, query, auth) => {
+    this.OpenUrl.openBrowser(path, query, auth)
   }
   render () {
     const { barStyle, headerOpacity } = this.props.homeStore
@@ -181,7 +179,7 @@ Assets.loadAssetsGroup('icons', {
             onPress={() => this.props.navigation.navigate('Login')}
             imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
           />
-          <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, false)}>
+          <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
             <Image assetName='searchIcon' style={styles.searchIcon} />
             <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 32 }} style={{ paddingTop: 2 }} editable={false} />
           </TouchableOpacity>
@@ -201,20 +199,24 @@ Assets.loadAssetsGroup('icons', {
     )
   }
   async componentDidMount () {
+    const { setUserInfo, getUserInfo } = this.props.userStore
     storage.load({
       key: 'userInfo'
     }).then(data => {
-      alert(data)
+      setUserInfo(data)
+      getUserInfo()
     }).catch(() => {
-      /* dialog.confirm('您还没有登录，请先登录。').then(res => {
-        navigate('Login')
-      }) */
+      //  setUserInfo({})
     })
     setTimeout(() => {
       SplashScreen.hide()
     }, 2000)
     this.update()
     JPushModule.initPush()
+    //  getUserInfo()
+  }
+  componentWillUnmount () {
+    console.log('componentWillUnmount')
   }
 }
 

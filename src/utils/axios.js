@@ -5,7 +5,7 @@ axios.defaults.timeout = 5000
 axios.defaults.maxContentLength = 1048576
 axios.defaults.baseURL = config.baseUrl
 axios.defaults.headers['Accept'] = 'application/json'
-axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+// axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 
 /* 添加拦截器 */
 /*
