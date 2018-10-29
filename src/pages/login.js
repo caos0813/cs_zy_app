@@ -43,7 +43,7 @@ clearTimer = () => {
 login = () => {
   const { phoneNum, verificationCode } = this.props.loginStore
   const { getUserInfo, setUserInfo } = this.props.userStore
-  const { goBack } = this.props.navigation
+  const { goBack, replace } = this.props.navigation
   if (verificationCode.length !== 6) {
     Toast('验证码长度不正确')
     return
@@ -68,7 +68,7 @@ login = () => {
         getUserInfo()
         goBack()
       } else {
-
+        replace('Info')
       }
     } else {
       Toast(data.msg)

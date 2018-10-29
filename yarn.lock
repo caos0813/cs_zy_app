@@ -578,6 +578,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@remobile/react-native-toast@^1.0.7":
+  version "1.0.7"
+  resolved "http://registry.npm.taobao.org/@remobile/react-native-toast/download/@remobile/react-native-toast-1.0.7.tgz#b2e3684cdb13e1c9d9b4ed08e667157d4ad0fab2"
+
 abab@^2.0.0:
   version "2.0.0"
   resolved "http://registry.npm.taobao.org/abab/download/abab-2.0.0.tgz#aba0ab4c5eee2d4c79d3487d85450fb2376ebb0f"
@@ -2037,7 +2041,7 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
 
-es6-promise@^4.0.3:
+es6-promise@^4.0.3, es6-promise@^4.2.5:
   version "4.2.5"
   resolved "http://registry.npm.taobao.org/es6-promise/download/es6-promise-4.2.5.tgz#da6d0d5692efb461e082c14817fe2427d8f5d054"
 
@@ -5017,12 +5021,6 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-easy-toast@^1.1.0:
-  version "1.1.0"
-  resolved "http://registry.npm.taobao.org/react-native-easy-toast/download/react-native-easy-toast-1.1.0.tgz#7d3a34ed298d32c4827b8d43ddfab6a71b98a2e3"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-modalbox@^1.6.0:
   version "1.6.0"
   resolved "http://registry.npm.taobao.org/react-native-modalbox/download/react-native-modalbox-1.6.0.tgz#ee353a2d568715a2b10db8eeb91132fb1f45952b"
@@ -5064,6 +5062,10 @@ react-native-svg@8.0.0:
     lodash "^4.16.6"
     pegjs "^0.10.0"
 
+react-native-swipe-gestures@^1.0.2:
+  version "1.0.2"
+  resolved "http://registry.npm.taobao.org/react-native-swipe-gestures/download/react-native-swipe-gestures-1.0.2.tgz#914e1a72a94bc55b322b4622a01103ab879296dd"
+
 react-native-swiper@^1.5.13:
   version "1.5.13"
   resolved "http://registry.npm.taobao.org/react-native-swiper/download/react-native-swiper-1.5.13.tgz#fa695cd4ab77b9a9df2d2bfee38ea7274dd07a2e"
@@ -5082,9 +5084,9 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-ui-lib@3.3.273:
-  version "3.3.273"
-  resolved "http://registry.npm.taobao.org/react-native-ui-lib/download/react-native-ui-lib-3.3.273.tgz#76b22155de61602b4a6ccc8d4ac346debd206e14"
+react-native-ui-lib@^3.3.273:
+  version "3.3.277"
+  resolved "http://registry.npm.taobao.org/react-native-ui-lib/download/react-native-ui-lib-3.3.277.tgz#52190c593a30a552cd9e0620245660c9f8a30eeb"
   dependencies:
     babel-plugin-transform-inline-environment-variables "^0.0.2"
     hoist-non-react-statics "^2.3.0"
@@ -5093,6 +5095,7 @@ react-native-ui-lib@3.3.273:
     prop-types "^15.5.10"
     react-native-animatable "^1.1.0"
     react-native-blur "^3.1.1"
+    react-native-swipe-gestures "^1.0.2"
     semver "^5.5.0"
     url-parse "^1.2.0"
 

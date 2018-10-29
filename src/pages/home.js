@@ -119,6 +119,7 @@ Assets.loadAssetsGroup('icons', {
     }).then(data => {
       startFetch(data.content, pageSize)
     }).catch(() => {
+      // alert(JSON.stringify(err))
       abortFetch()
     })
   }

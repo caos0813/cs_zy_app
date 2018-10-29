@@ -1,4 +1,5 @@
 import { AppRegistry, YellowBox } from 'react-native'
+import promise from 'es6-promise'
 import React, { Component } from 'react'
 import { Provider } from 'mobx-react/native'
 import Router from './src/router'
@@ -7,6 +8,7 @@ import * as WeChat from 'react-native-wechat'
 import theme from './src/theme'
 import {statusBarHeight} from './src/utils'
 import store from './src/store'
+promise.polyfill()
 class App extends Component {
   render() {
     return (
