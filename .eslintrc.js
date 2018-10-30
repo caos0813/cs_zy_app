@@ -4,10 +4,11 @@ module.exports = {
     "rules": {
         "arrow-parens": 0,
         "react/prop-types": 0,
-        "no-useless-constructor":0,
+        "no-useless-constructor": 0,
         "generator-star-spacing": 0
     },
-    "globals":{
-        "alert":true
+    "globals": {
+        "alert": true,
+        "fetch": true
     }
 }

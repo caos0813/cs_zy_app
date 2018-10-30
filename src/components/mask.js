@@ -46,7 +46,7 @@ export default class Progress extends Component {
   }
   render () {
     return (
-      <Animated.View style={[styles.wrap, this.props.style, { opacity: this.state.opacity }, { width: this.props.width }]}>
+      <Animated.View style={[styles.wrap, this.props.style]}>
       </Animated.View>
     )
   }
