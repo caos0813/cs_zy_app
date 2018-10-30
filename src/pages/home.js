@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from 'react-native-ui-lib'
+import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from '../../react-native-ui-lib/src'
 import JPushModule from 'jpush-react-native'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
-import SplashScreen from 'react-native-splash-screen'
 import { UltimateListView } from 'react-native-ultimate-listview'
+import _ from 'lodash'
 import {
   StyleSheet,
   StatusBar,
@@ -62,7 +62,7 @@ Assets.loadAssetsGroup('icons', {
   }
   renderHeader = () => {
     return (
-      <View>
+      <View flex useSafeArea>
         <View style={{ height: 250 }} >
           <Swiper height={250} style={styles.swiper}
             paginationStyle={{
@@ -209,18 +209,20 @@ Assets.loadAssetsGroup('icons', {
     )
   }
   async componentDidMount () {
-    const { setUserInfo, getUserInfo } = this.props.userStore
+    /* const { setUserInfo, getUserInfo } = this.props.userStore
     storage.load({
       key: 'userInfo'
     }).then(data => {
-      setUserInfo(data)
-      getUserInfo()
+      if (data && !_.isEmpty(data)) {
+        setUserInfo(data)
+        getUserInfo()
+      }
     }).catch(() => {
       //  setUserInfo({})
-    })
-    setTimeout(() => {
+    }) */
+    /*  setTimeout(() => {
       SplashScreen.hide()
-    }, 2000)
+    }, 2000) */
     this.update()
     JPushModule.initPush()
     //  getUserInfo()

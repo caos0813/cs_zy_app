@@ -1,4 +1,4 @@
-import { configure, observable, action, runInAction, reaction } from 'mobx'
+import { configure, observable, action, runInAction, reaction, computed } from 'mobx'
 import { axios, api, storage } from '../utils'
 import _ from 'lodash'
 configure({
@@ -6,6 +6,19 @@ configure({
 })
 class Store {
   @observable userInfo = {}
+  @computed get isVipValid () {
+    if (!_.isEmpty(this.userInfo)) {
+      const { isValid, level } = this.userInfo
+      if (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN')) {
+        return true
+      }
+    }
+  }
+  @computed get genderString () {
+    if (!_.isUndefined(this.userInfo.gender)) {
+      return this.userInfo.gender.toString()
+    }
+  }
   @action.bound
   setUserInfo (data) {
     this.userInfo = data
@@ -28,12 +41,12 @@ class Store {
 const userStore = new Store()
 /* 监听userInfo更新storage */
 reaction(() => userStore.userInfo, (data) => {
-  if (data && !_.isEmpty(data)) {
+  if (data) {
     storage.save({
       key: 'userInfo',
       data: data
     })
-    console.log('save userInfo:', data)
   }
 })
+
 export default userStore
