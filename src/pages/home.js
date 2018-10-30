@@ -119,6 +119,7 @@ Assets.loadAssetsGroup('icons', {
     }).then(data => {
       startFetch(data.content, pageSize)
     }).catch(() => {
+      startFetch([], pageSize)
       // alert(JSON.stringify(err))
       abortFetch()
     })
@@ -172,17 +173,24 @@ Assets.loadAssetsGroup('icons', {
   }
   render () {
     const { barStyle, headerOpacity } = this.props.homeStore
+    const { userInfo } = this.props.userStore
     return (
       <View flex useSafeArea>
         <StatusBar translucent backgroundColor='rgba(0,0,0,0)' animated barStyle={barStyle} />
         <View centerV paddingH-15 style={[styles.header, headerOpacity && styles.headerBottom]} >
-          <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
-            onPress={() => this.props.navigation.navigate('Login')}
-            imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
-          />
+          {!userInfo.token
+            ? <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
+              onPress={() => this.props.navigation.navigate('Login')}
+              imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
+            />
+            : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={{ uri: userInfo.image }}
+              backgroundColor={userInfo.image ? 'transparent' : colors.stable}
+              onPress={() => this.props.navigation.navigate('Mine')}
+            />
+          }
           <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
             <Image assetName='searchIcon' style={styles.searchIcon} />
-            <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 32 }} style={{ paddingTop: 2 }} editable={false} />
+            <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 30 }} style={{ paddingTop: 2 }} editable={false} />
           </TouchableOpacity>
           <Animated.View style={[styles.headerBg, { opacity: this.state.headerAnimate }]}></Animated.View>
         </View>
@@ -195,6 +203,7 @@ Assets.loadAssetsGroup('icons', {
           onScroll={this.onScroll}
           showsVerticalScrollIndicator={false}
           paginationFetchingView={() => <LoaderScreen loaderColor={colors.positive} message='正在加载...' />}
+          emptyView={() => <View flex center><Text>暂时没有内容</Text></View>}
         />
       </View>
     )
@@ -226,7 +235,7 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     flexDirection: 'row',
-    paddingTop: statusBarHeight,
+    paddingTop: statusBarHeight + 2,
     paddingHorizontal: 15,
     paddingBottom: 5,
     zIndex: 2

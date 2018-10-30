@@ -4,7 +4,6 @@ import { inject, observer } from 'mobx-react/native'
 import { api, axios, width, Toast } from '../utils'
 import { StyleSheet, Keyboard, StatusBar } from 'react-native'
 import Modal from 'react-native-modalbox'
-import SplashScreen from 'react-native-splash-screen'
 import { BoxShadow } from 'react-native-shadow'
 import { colors } from '../theme'
 let timer
@@ -26,7 +25,7 @@ sendSms = () => {
     if (data.code === 'ok') {
       Toast('短信发送成功')
       this.refs.modal.open()
-      setValue('tick', 150)
+      setValue('tick', 90)
       timer = setInterval(() => {
         countDown()
       }, 1000)
@@ -169,10 +168,6 @@ render () {
       </View>
     </View >
   )
-}
-componentDidMount () {
-  // this.refs.modal.open()
-  SplashScreen.hide()
 }
 componentWillUnmount () {
   this.clearTimer()

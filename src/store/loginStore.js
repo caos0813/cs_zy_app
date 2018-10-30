@@ -5,7 +5,7 @@ configure({
 class Store {
   @observable phoneNum = ''
   @observable verificationCode = ''
-  @observable tick = 150
+  @observable tick = 90
   /* 手机错误提示 */
   @computed get phoneErrorText () {
     if (!(/^1[34578]\d{9}$/.test(this.phoneNum)) && this.phoneNum) {

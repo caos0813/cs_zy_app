@@ -5,7 +5,7 @@ import { dark04, gray, light } from '../theme/colors'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
-import Test from '../pages/test'
+import Mine from '../pages/mine'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { Avatar, Assets } from 'react-native-ui-lib'
 Assets.loadAssetsGroup('icons', {
@@ -18,16 +18,16 @@ export default createStackNavigator({
       title: '登录'
     })
   },
-  Test: {
-    screen: Test,
-    navigationOptions: () => ({
-      title: 'Test'
-    })
-  },
   Home: {
     screen: Home,
     navigationOptions: () => ({
       header: null
+    })
+  },
+  Mine: {
+    screen: Mine,
+    navigationOptions: () => ({
+      title: '我的'
     })
   },
   Browser: {
@@ -58,7 +58,7 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Home',
+  initialRouteName: 'Mine',
   initialRouteParams: {
     type: 1,
     title: '无切换动画'
