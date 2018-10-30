@@ -1,6 +1,6 @@
 const config = {
   dev: {
-    baseUrl: 'https://testzhiyaapi.junyanginfo.com',
+    baseUrl: 'https://wechat.junyanginfo.com',
     webUrl: 'http://192.168.1.41:8080/#/'
   },
   stating: {},

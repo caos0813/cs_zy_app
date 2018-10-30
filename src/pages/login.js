@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native-ui-lib'
+import { View, Text, Button, TextInput, TouchableOpacity } from '../../react-native-ui-lib/src'
 import { inject, observer } from 'mobx-react/native'
 import { api, axios, width, Toast } from '../utils'
 import { StyleSheet, Keyboard, StatusBar } from 'react-native'
@@ -96,7 +96,7 @@ render () {
 
   const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
   return (
-    <View flex paddingH-23 paddingT-20>
+    <View flex useSafeArea paddingH-23 paddingT-20>
       <StatusBar barStyle='dark-content' />
       <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
         <View paddingH-23 paddingT-20 >

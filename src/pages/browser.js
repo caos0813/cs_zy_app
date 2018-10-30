@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { WebView, StyleSheet, StatusBar } from 'react-native'
-import { View, LoaderScreen } from 'react-native-ui-lib'
+import { View, LoaderScreen } from '../../react-native-ui-lib/src'
 import { colors } from './../theme'
 import { Progress, Mask } from '../components'
 import { width, BackPress } from '../utils'
@@ -158,7 +158,7 @@ export default class Browser extends Component {
     const { loading, animationConfig, maskShow } = this.state
     const path = getParam('path')
     return (
-      <View flex>
+      <View flex useSafeArea>
         <StatusBar translucent={false} barStyle='dark-content' />
         <Progress
           ref='progress'
