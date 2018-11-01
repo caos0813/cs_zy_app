@@ -212,6 +212,7 @@ function createStyles({size, labelColor, imageSource}) {
     container: {
       alignItems: 'center',
       justifyContent: 'center',
+      overflow:'hidden',
       width: size,
       height: size,
       borderRadius,

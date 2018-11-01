@@ -9,5 +9,10 @@ export default {
   /* 获取用户数据 */
   getUserInfo: '/user/users/current',
   /* 查询是否测评 */
-  isFinishTest: '/zhiyuan/holland/isFinishTest'
+  isFinishTest: '/zhiyuan/holland/isFinishTest',
+  /* 查询是否测评 */
+  area: '/user/static/area',
+  /* 查询学校 */
+  schoolList: '/user/schools/search/findByDistrict_Id',
+  updateUserInfo: '/user/users/updateUserInfo'
 }

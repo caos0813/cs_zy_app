@@ -4,12 +4,13 @@ import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView } from 'react-native'
 import { colors } from '../theme'
 import { ratio, dialog, OpenUrl } from '../utils'
+import { NavigationActions, StackActions } from 'react-navigation'
 Assets.loadAssetsGroup('icons', {
   vipIcon: require('../assets/mine/vip-icon.png'),
   vip: require('../assets/mine/vip.png'),
   arrowRight: require('../assets/mine/arrow-right.png')
 })
-@inject('userStore')
+@inject('userStore', 'infoStore')
 @observer class Info extends Component {
   constructor (props) {
     super(props)
@@ -17,10 +18,17 @@ Assets.loadAssetsGroup('icons', {
   }
   signOut=() => {
     const { setUserInfo } = this.props.userStore
-    const { replace } = this.props.navigation
+    const { clear } = this.props.infoStore
+    const { dispatch } = this.props.navigation
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Home' })]
+    })
     dialog.confirm('确定退出登录吗?').then(() => {
+      global.token = null
       setUserInfo({})
-      replace('Home')
+      clear()
+      dispatch(resetAction)
     })
   }
   openUrl = (path, query, auth) => {

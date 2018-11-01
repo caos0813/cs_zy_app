@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from '../../react-native-ui-lib/src'
-import JPushModule from 'jpush-react-native'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import { UltimateListView } from 'react-native-ultimate-listview'
-import _ from 'lodash'
+import JPushModule from 'jpush-react-native'
 import {
   StyleSheet,
   StatusBar,
   Animated,
-  Easing
+  Easing,
+  Linking
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { storage, api, axios, imageResize, ratio, statusBarHeight, OpenUrl } from '../utils'
+import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -161,15 +161,18 @@ Assets.loadAssetsGroup('icons', {
           <Card.Section >
             <Text text-18 dark>{item.name}</Text>
           </Card.Section>
-          <Card.Section style={{ marginBottom: 0 }}>
+          {/*  <Card.Section style={{ marginBottom: 0 }}>
             <Text text-14 dark06 numberOfLines={1}>现在好像没有描述</Text>
-          </Card.Section>
+          </Card.Section> */}
         </Card.Section>
       </Card>
     )
   }
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
+  }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
   }
   render () {
     const { barStyle, headerOpacity } = this.props.homeStore
@@ -180,12 +183,14 @@ Assets.loadAssetsGroup('icons', {
         <View centerV paddingH-15 style={[styles.header, headerOpacity && styles.headerBottom]} >
           {!userInfo.token
             ? <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
-              onPress={() => this.props.navigation.navigate('Login')}
+              onPress={() => this.openNative('Login', {
+                preRefresh: this.refresh
+              }, false)}
               imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
             />
             : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={{ uri: userInfo.image }}
               backgroundColor={userInfo.image ? 'transparent' : colors.stable}
-              onPress={() => this.props.navigation.navigate('Mine')}
+              onPress={() => this.openNative('Mine', {}, true)}
             />
           }
           <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
@@ -194,7 +199,7 @@ Assets.loadAssetsGroup('icons', {
           </TouchableOpacity>
           <Animated.View style={[styles.headerBg, { opacity: this.state.headerAnimate }]}></Animated.View>
         </View>
-        <UltimateListView keyExtractor={(item, index) => `${index} - ${item}`}
+        <UltimateListView ref='scroll' keyExtractor={(item, index) => `${index} - ${item}`}
           header={this.renderHeader}
           onFetch={this.onFetch}
           item={this.renderItem}
@@ -208,23 +213,29 @@ Assets.loadAssetsGroup('icons', {
       </View>
     )
   }
-  async componentDidMount () {
-    /* const { setUserInfo, getUserInfo } = this.props.userStore
-    storage.load({
-      key: 'userInfo'
-    }).then(data => {
-      if (data && !_.isEmpty(data)) {
-        setUserInfo(data)
-        getUserInfo()
+  refresh = () => {
+    this.refs.scroll.refresh()
+  }
+  openNotificationListener = (e) => {
+    const extras = JSON.parse(e.extras)
+    if (extras.type === 'article') {
+      this.openUrl(`article`, { id: extras.id })
+    } else if (extras.type === 'banner') {
+      if (extras.link) {
+        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
+      } else {
+        this.openUrl(`article`, { id: extras.id, type: 'banner' })
       }
-    }).catch(() => {
-      //  setUserInfo({})
-    }) */
-    /*  setTimeout(() => {
-      SplashScreen.hide()
-    }, 2000) */
+    }
+  }
+  componentDidMount () {
+    /* 监听点击推送时事件 */
+    JPushModule.notifyJSDidLoad(e => {
+      // alert(JSON.stringify(e))
+    })
+    JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
+    /* 监听点击推送时事件 */
     this.update()
-    JPushModule.initPush()
     //  getUserInfo()
   }
   componentWillUnmount () {

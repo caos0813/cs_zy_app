@@ -2,30 +2,36 @@ import React, { Component } from 'react'
 import { Text, View, Avatar, TextInput, RadioButton, RadioGroup, Assets, Button, Image } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { ScrollView, StyleSheet } from 'react-native'
+import _ from 'lodash'
 import Picker from 'react-native-picker'
 import { colors } from '../theme'
-import { ratio } from '../utils'
+import { ratio, axios, Toast, api } from '../utils'
 import { Mask } from '../components'
 Assets.loadAssetsGroup('icons', {
   arrow: require('../assets/mine/arrow.png')
 })
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
-  showYearPicker=(val) => {
-    const { update } = this.props.infoStore
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam('type') === 'complete' ? '完善用户信息' : '修改用户信息'
+    }
+  }
+  showYearPicker=() => {
+    const { updateUserInfo, userInfo } = this.props.infoStore
     let yearData = []
     for (let i = 0; i < 4; i++) {
-      yearData[i] = new Date().getFullYear() - i
+      yearData[i] = (new Date().getFullYear() - i).toString()
     }
     Picker.init({
       pickerData: yearData,
-      selectedValue: val ? [val] : [],
+      selectedValue: userInfo.startYear ? [userInfo.startYear] : [],
       pickerConfirmBtnText: '确定',
       pickerCancelBtnText: '取消',
       pickerTitleText: '请选择',
       onPickerConfirm: data => {
+        updateUserInfo('startYear', data[0])
         this.refs.mask.hide()
-        update('startYear', data.toString())
       },
       onPickerCancel: data => {
         this.refs.mask.hide()
@@ -37,20 +43,136 @@ Assets.loadAssetsGroup('icons', {
     Picker.show()
     this.refs.mask.show()
   }
+  showSchoolPicker=() => {
+    const { schoolPickerVal, schoolData, schoolPickerData, setValue } = this.props.infoStore
+    if (!schoolPickerData.length) {
+      Toast('该地区下暂无学校数据')
+      return
+    }
+    Picker.init({
+      pickerData: schoolPickerData,
+      selectedValue: [schoolPickerVal],
+      pickerConfirmBtnText: '确定',
+      pickerCancelBtnText: '取消',
+      pickerTitleText: '请选择',
+      pickerTextEllipsisLen: 24,
+      onPickerConfirm: data => {
+        this.refs.mask.hide()
+        setValue('schoolPickerVal', data[0])
+        const pickerItem = _.find(schoolData, (item) => { return item.name === data[0] })
+        setValue('schoolPickerId', pickerItem.id)
+        // updateUserInfo('startYear', data.toString())
+      },
+      onPickerCancel: data => {
+        this.refs.mask.hide()
+      },
+      onPickerSelect: data => {
+
+      }
+    })
+    Picker.show()
+    this.refs.mask.show()
+  }
+  showAreaPicker=(val) => {
+    const { areaPickerData, areaPickerVal, setValue, areaData, getSchoolList } = this.props.infoStore
+    Picker.init({
+      pickerData: areaPickerData,
+      selectedValue: areaPickerVal,
+      pickerConfirmBtnText: '确定',
+      pickerCancelBtnText: '取消',
+      pickerTitleText: '请选择',
+      onPickerConfirm: data => {
+        // alert(typeof data)
+        this.refs.mask.hide()
+        setValue('areaPickerVal', data)
+        /* 获取对应的id */
+        let idArr = []
+        const pickerItem = _.find(areaData, (item) => { return item.name === data[0] })
+        const pickCity = _.find(pickerItem.cities, (item) => { return item.name === data[1] })
+        const pickDistrict = _.find(pickCity.districts, (item) => { return item.name === data[2] })
+        idArr[0] = pickerItem.id
+        idArr[1] = pickCity.id
+        idArr[2] = pickDistrict.id
+        setValue('areaPickerId', idArr)
+        /* 重新获取学校 */
+        getSchoolList(pickDistrict.id)
+        setValue('schoolPickerVal', '')
+        setValue('schoolPickerId', '')
+      },
+      onPickerCancel: data => {
+        this.refs.mask.hide()
+      },
+      onPickerSelect: data => {
+
+      }
+    })
+    Picker.show()
+    this.refs.mask.show()
+  }
+  sexChange=(e) => {
+    const { updateUserInfo } = this.props.infoStore
+    let gender = e === 'true'
+    updateUserInfo('gender', gender)
+  }
+  submit=() => {
+    const { areaPickerId, schoolPickerId, userInfo, areaPickerValString } = this.props.infoStore
+    const { name, image, id, gender, startYear, nickName } = userInfo
+    const { getUserInfo } = this.props.userStore
+    const { getParam, replace } = this.props.navigation
+    if (!schoolPickerId || !name || !startYear || !areaPickerValString) {
+      Toast('请完善您的信息')
+      return
+    }
+    let params = {
+      name,
+      image,
+      id,
+      gender,
+      startYear,
+      nickName,
+      province: {
+        id: areaPickerId[0]
+      },
+      city: {
+        id: areaPickerId[1]
+      },
+      district: {
+        id: areaPickerId[2]
+      },
+      school: {
+        id: schoolPickerId
+      }
+    }
+    let url = api.updateUserInfo
+    if (getParam('type') === 'complete') {
+      url = api.personData
+    }
+    axios.post(url, params).then(data => {
+      Toast('保存成功')
+      getUserInfo()
+      if (getParam('type') === 'complete') {
+        replace('Home')
+      }
+    }).catch(() => {
+      Toast('保存失败，请稍后重试')
+    })
+  }
   render () {
-    let { userInfo, genderString } = this.props.infoStore
+    let { userInfo, genderString, areaPickerValString, schoolPickerVal, updateUserInfo } = this.props.infoStore
     // userInfo.gender = userInfo.gender.toString()
     return (
       <View flex useSafeArea >
         <Mask ref='mask' />
         <ScrollView>
           <View center paddingV-25>
+            {userInfo.image &&
             <Avatar
               imageSource={{ uri: userInfo.image }}
               containerStyle={{ width: 80, height: 80 }}
               imageStyle={{ width: 80, height: 80, borderRadius: 80 }}
               backgroundColor='transparent'
               imageProps={{ resizeMode: 'cover' }} />
+            }
           </View>
           <View>
             <View row center style={styles.item}>
@@ -59,58 +181,52 @@ Assets.loadAssetsGroup('icons', {
                 placeholder='请输入姓名'
                 value={userInfo.name}
                 text-15
-                containerStyle={[styles.inputWrap, styles.wrapRight]}
-                style={[styles.input, styles.inputRight]}
+                containerStyle={[styles.inputWrap]}
+                style={[styles.input]}
                 hideUnderline
+                onChangeText={val => updateUserInfo('name', val)}
                 enableErrors={false}
               />
             </View>
             <View row center style={styles.item}>
               <Text gray>性别</Text>
-              <RadioGroup flex row left centerV marginL-20 value={genderString}>
+              <RadioGroup flex row left centerV marginL-20 value={genderString} onValueChange={this.sexChange}>
                 <Text marginR-10 dark06 text-16>男</Text>
                 <RadioButton value='true' size={18} color={colors.calm} style={styles.radio} />
                 <Text marginR-10 marginL-30 dark06 text-16>女</Text>
                 <RadioButton value='false' size={18} color={colors.calm} style={styles.radio} />
               </RadioGroup>
             </View>
+
             <View row center style={styles.item}>
               <Text gray>地区</Text>
-              <TextInput
-                placeholder='请选择地区'
-                text-15
-                containerStyle={[styles.inputWrap]}
-                hideUnderline
-                enableErrors={false}
-                rightIconSource={Assets.icons.arrow}
-                expandable
-                renderExpandable={() => { alert(1) }}
-              />
+              <Button link style={styles.picker} onPress={() => this.showAreaPicker()}>
+                <View flex>
+                  {areaPickerValString ? <Text>{areaPickerValString}</Text> : <Text>请选择所在地区</Text>}
+                </View>
+                <Image assetName='arrow' />
+              </Button>
             </View>
             <View row center style={styles.item}>
               <Text gray>学校</Text>
-              <TextInput
-                placeholder='请选择学校'
-                text-15
-                containerStyle={[styles.inputWrap]}
-                hideUnderline
-                enableErrors={false}
-                rightIconSource={Assets.icons.arrow}
-                expandable
-                renderExpandable={() => { alert(1) }}
-              />
+              <Button link style={styles.picker} onPress={() => this.showSchoolPicker()}>
+                <View flex>
+                  {schoolPickerVal ? <Text>{schoolPickerVal}</Text> : <Text>请选择学校</Text>}
+                </View>
+                <Image assetName='arrow' />
+              </Button>
             </View>
             <View row center style={styles.item}>
               <Text gray>入学</Text>
-              <Button link style={styles.picker} onPress={() => this.showYearPicker(userInfo.startYear)}>
+              <Button link style={styles.picker} onPress={() => this.showYearPicker()}>
                 <View flex>
-                  <Text>{userInfo.startYear}</Text>
+                  {userInfo.startYear ? <Text>{userInfo.startYear}</Text> : <Text>请选择入学年份</Text>}
                 </View>
                 <Image assetName='arrow' />
               </Button>
             </View>
             <View padding-25>
-              <Button bg-calm label='提交' />
+              <Button bg-calm label='保存' onPress={this.submit} />
             </View>
           </View>
         </ScrollView>
@@ -118,8 +234,12 @@ Assets.loadAssetsGroup('icons', {
     )
   }
   componentDidMount () {
-    const { getUserInfo } = this.props.infoStore
-    getUserInfo()
+    const { getParam } = this.props.navigation
+    const { getUserInfo, getArea } = this.props.infoStore
+    if (getParam('type') !== 'complete') {
+      getUserInfo()
+    }
+    getArea()
     /* reaction(() => userStore.userInfo, (data) => {
       alert(JSON.stringify(data))
     }) */
@@ -167,7 +287,10 @@ const styles = StyleSheet.create({
     marginLeft: 13,
     height: 32,
     flexDirection: 'row',
-    paddingLeft: 10,
-    justifyContent: 'space-between'
+    paddingLeft: 15,
+    justifyContent: 'space-between',
+    backgroundColor: colors.stable,
+    borderRadius: 15,
+    paddingRight: 15
   }
 })
