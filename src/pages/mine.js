@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../../react-native-ui-lib/src'
+import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView } from 'react-native'
 import { colors } from '../theme'
@@ -85,7 +85,7 @@ Assets.loadAssetsGroup('icons', {
             </ListItem>
           </View>
           <View center paddingT-100>
-            <Button label='退出登录' calm link text-18 onPress={this.signOut} />
+            <Button label='退出登录' calm link text-18 onPress={this.signOut} labelStyle={{ textDecorationLine: 'underline' }} />
           </View>
         </ScrollView>
       </View>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   item: {
     justifyContent: 'space-between',
     paddingHorizontal: 36,
-    borderBottomColor: colors.stable,
+    borderBottomColor: colors.grey,
     borderBottomWidth: 1 / ratio
   }
 })

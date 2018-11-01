@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from '../../react-native-ui-lib/src'
+import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import { UltimateListView } from 'react-native-ultimate-listview'
@@ -60,10 +60,18 @@ Assets.loadAssetsGroup('icons', {
     const data = await this.refs.camera.takePictureAsync(options)
     alert(data.uri)
   }
-  renderHeader = () => {
+  bannerPress=(item) => {
+    if (item.link) {
+      Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
+    } else {
+      this.openUrl(`article`, { id: item.id, type: 'banner' })
+    }
+  }
+  renderHeader = (listData) => {
     return (
-      <View flex useSafeArea>
+      <View flex >
         <View style={{ height: 250 }} >
+          {listData.length > 0 &&
           <Swiper height={250} style={styles.swiper}
             paginationStyle={{
               bottom: 13
@@ -72,16 +80,15 @@ Assets.loadAssetsGroup('icons', {
             activeDot={<View style={{ backgroundColor: '#fff', width: 25, height: 5, borderRadius: 5, marginLeft: 5, marginRight: 5 }} />}
 
           >
-            <View >
-              <Image assetName='banner' resizeMode='cover' style={styles.bannerImg} />
-            </View>
-            <View >
-              <Image assetName='banner' resizeMode='cover' style={styles.bannerImg} />
-            </View>
-            <View >
-              <Image assetName='banner' resizeMode='cover' style={styles.bannerImg} />
-            </View>
+            {
+              listData.map(item => (
+                <TouchableOpacity activeOpacity={0.7} key={item.id} onPress={() => this.bannerPress(item)}>
+                  <Image source={{ uri: item.image }} resizeMode='cover' style={styles.bannerImg} />
+                </TouchableOpacity>
+              ))
+            }
           </Swiper>
+          }
         </View>
         <View row marginV-10>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
@@ -127,14 +134,14 @@ Assets.loadAssetsGroup('icons', {
   onScroll = (e) => {
     const { setValue } = this.props.homeStore
     const posY = e.nativeEvent.contentOffset.y
-    if (posY > 150) {
+    if (posY > 90) {
       setValue('barStyle', 'dark-content')
       Animated.timing(
         this.state.headerAnimate,
         {
           toValue: 1,
-          duration: 200,
-          easing: Easing.linear,
+          duration: 100,
+          easing: Easing.ease,
           useNativeDriver: true
         }
       ).start()
@@ -144,8 +151,8 @@ Assets.loadAssetsGroup('icons', {
         this.state.headerAnimate,
         {
           toValue: 0,
-          duration: 200,
-          easing: Easing.linear,
+          duration: 100,
+          easing: Easing.ease,
           useNativeDriver: true
         }
       ).start()
@@ -175,7 +182,7 @@ Assets.loadAssetsGroup('icons', {
     this.OpenUrl.openNative(path, query, auth)
   }
   render () {
-    const { barStyle, headerOpacity } = this.props.homeStore
+    const { barStyle, headerOpacity, bannerData } = this.props.homeStore
     const { userInfo } = this.props.userStore
     return (
       <View flex useSafeArea>
@@ -200,7 +207,7 @@ Assets.loadAssetsGroup('icons', {
           <Animated.View style={[styles.headerBg, { opacity: this.state.headerAnimate }]}></Animated.View>
         </View>
         <UltimateListView ref='scroll' keyExtractor={(item, index) => `${index} - ${item}`}
-          header={this.renderHeader}
+          header={() => this.renderHeader(bannerData)}
           onFetch={this.onFetch}
           item={this.renderItem}
           refreshable={false}
@@ -229,6 +236,10 @@ Assets.loadAssetsGroup('icons', {
     }
   }
   componentDidMount () {
+    const { setValue } = this.props.homeStore
+    axios.get(api.banner).then(data => {
+      setValue('bannerData', data.content)
+    })
     /* 监听点击推送时事件 */
     JPushModule.notifyJSDidLoad(e => {
       // alert(JSON.stringify(e))
@@ -292,10 +303,11 @@ const styles = StyleSheet.create({
     left: 15
   },
   swiper: {
-    backgroundColor: '#111'
+    // backgroundColor: '#111'
   },
   bannerImg: {
-    width: '100%'
+    width: '100%',
+    height: '100%'
   },
   iconButton: {
     flex: 1,

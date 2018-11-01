@@ -14,5 +14,7 @@ export default {
   area: '/user/static/area',
   /* 查询学校 */
   schoolList: '/user/schools/search/findByDistrict_Id',
-  updateUserInfo: '/user/users/updateUserInfo'
+  updateUserInfo: '/user/users/updateUserInfo',
+  /* banner列表 */
+  banner: '/zhiyuan/banner/getFour'
 }

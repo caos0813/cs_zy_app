@@ -67,7 +67,7 @@ login = () => {
       if (data.dataFlag) {
         getUserInfo()
         /* 刷新上一个页面并返回 */
-        preRefresh()
+        preRefresh && preRefresh()
         goBack()
       } else {
         replace('Info', {
