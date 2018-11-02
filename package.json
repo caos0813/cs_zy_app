@@ -13,8 +13,8 @@
   "dependencies": {
     "@remobile/react-native-toast": "^1.0.7",
     "axios": "^0.18.0",
-    "jcore-react-native": "^1.2.10",
-    "jpush-react-native": "^2.2.11",
+    "jcore-react-native": "^1.2.11",
+    "jpush-react-native": "^2.2.13",
     "lodash": "^4.17.11",
     "mobx": "^4.5.0",
     "mobx-react": "^5.3.4",

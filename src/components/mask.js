@@ -2,52 +2,48 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   Animated,
-  Easing
+  View
 } from 'react-native'
 import { width, height } from '../utils'
 export default class Progress extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      progress: new Animated.Value(0),
-      opacity: new Animated.Value(1)
+      // show: false,
+      opacity: new Animated.Value(0)
     }
   }
   show = () => {
-    this.state.progress.setValue(0)
-    this.state.opacity.setValue(1)
+    this.state.opacity.setValue(0)
+    this.setState({
+      show: true
+    })
     Animated.timing(
-      this.state.progress,
+      this.state.opacity,
       {
         toValue: 1,
-        duration: 10000,
-        easing: Easing.in
+        duration: 200
       }
     ).start()
   }
   hide = () => {
-    Animated.sequence([
-      Animated.timing(
-        this.state.progress,
-        {
-          toValue: 1,
-          duration: 1500,
-          easing: Easing.in
-        }
-      ),
-      Animated.timing(
-        this.state.opacity,
-        {
-          toValue: 0,
-          duration: 800
-        }
-      )
-    ]).start()
+    Animated.timing(
+      this.state.opacity,
+      {
+        toValue: 0,
+        duration: 200
+      }
+    ).start(() => {
+      this.setState({
+        show: false
+      })
+    })
   }
   render () {
     return (
-      <Animated.View style={[styles.wrap, this.props.style]}>
-      </Animated.View>
+      <View>
+        {this.state.show ? <Animated.View style={[styles.wrap, { opacity: this.state.opacity }]}></Animated.View> : null}
+      </View>
     )
   }
 }

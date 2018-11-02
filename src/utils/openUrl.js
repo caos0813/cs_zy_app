@@ -24,7 +24,7 @@ export default class OpenUrl {
           path: queryString
         })
       } else if (userInfo.token && !userInfo.dataFlag) {
-        navigation.navigate('Info')
+        navigation.navigate('Info', { type: 'complete' })
       } else {
         navigation.navigate('Login')
       }

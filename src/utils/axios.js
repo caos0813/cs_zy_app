@@ -4,27 +4,26 @@ import storage from './storage'
 axios.defaults.timeout = 5000
 axios.defaults.maxContentLength = 1048576
 axios.defaults.baseURL = config.baseUrl
-axios.defaults.headers['Accept'] = 'application/json'
-// axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+axios.defaults.headers['Accept'] = 'application/json, text/plain, */*'
 
 /* 添加拦截器 */
 /*
   判断全局变量是否存在,不存在则从storage取
 */
-let token
+
 axios.interceptors.request.use(async function (config) {
-  if (!token) {
+  if (!global.token) {
     try {
       const userInfo = await storage.load({
         key: 'userInfo'
       })
-      token = userInfo.token
+      global.token = userInfo.token
     } catch {
-      token = ''
+      global.token = ''
     }
   }
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`
+  if (global.token) {
+    config.headers['Authorization'] = `Bearer ${global.token}`
   }
   return config
 }, function (error) {

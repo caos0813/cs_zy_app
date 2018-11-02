@@ -1,0 +1,38 @@
+module.exports = {
+  get ActionBar() { return require('./actionBar').default; },
+  get ActionSheet() { return require('./actionSheet').default; },
+  get Avatar() { return require('./avatar').default; },
+  get Badge() { return require('./badge').default; },
+  get Button() { return require('./button').default; },
+  get Card() { return require('./card').default; },
+  get Carousel() { return require('./carousel').default; },
+  get Checkbox() { return require('./checkbox').default; },
+  get ConnectionStatusBar() { return require('./connectionStatusBar').default; },
+  get Dialog() { return require('./dialog').default; },
+  get FeatureHighlight() { return require('./featureHighlight').default; },
+  get Image() { return require('./image').default; },
+
+  get TextArea() { return require('./inputs').TextArea; },
+  get TextField() { return require('./inputs').TextField; },
+  get TextInput() { return require('./inputs').TextInput; },
+  get MaskedInput() { return require('./inputs').MaskedInput; },
+
+  get ListItem() { return require('./listItem').default; },
+  get Notification() { return require('./notification').default; },
+  get PageControl() { return require('./pageControl').default; },
+  get Picker() { return require('./picker').default; },
+  get Stepper() { return require('./stepper').default; },
+  get TabBar() { return require('./tabBar').default; },
+  get TagsInput() { return require('./tagsInput').default; },
+
+  get RadioButton() { return require('./radioButton').RadioButton; },
+  get RadioGroup() { return require('./radioButton').RadioGroup; },
+
+  get Switch() { return require('./switch').default; },
+  get Text() { return require('./text').default; },
+  get Toast() { return require('./toast').default; },
+  get TouchableOpacity() { return require('./touchableOpacity').default; },
+  get Tour() { return require('./tour').default; },
+  get View() { return require('./view').default; },
+  get WheelPickerDialog() { return require('./wheelPickerDialog').default; },
+};

@@ -1,11 +1,11 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation'
-import { PixelRatio } from 'react-native'
-import { dark04, gray, light } from '../theme/colors'
+import { dark04, light } from '../theme/colors'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
 import Mine from '../pages/mine'
+import Info from '../pages/info'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { Avatar, Assets } from 'react-native-ui-lib'
 Assets.loadAssetsGroup('icons', {
@@ -30,6 +30,9 @@ export default createStackNavigator({
       title: '我的'
     })
   },
+  Info: {
+    screen: Info
+  },
   Browser: {
     screen: Browser,
     navigationOptions: () => ({
@@ -44,9 +47,9 @@ export default createStackNavigator({
     headerStyle: {
       height: 44 + screenProps.statusBarHeight,
       paddingTop: screenProps.statusBarHeight,
-      borderBottomColor: gray,
+      // borderBottomColor: gray,
       elevation: 0,
-      borderBottomWidth: 1 / PixelRatio.get()
+      borderBottomWidth: 0
     },
     headerTitleStyle: {
       fontSize: 18,
@@ -58,11 +61,10 @@ export default createStackNavigator({
   cardStyle: {
     backgroundColor: light
   },
-  initialRouteName: 'Mine',
-  initialRouteParams: {
-    type: 1,
-    title: '无切换动画'
-  },
+  initialRouteName: 'Home',
+  /* initialRouteParams: {
+    type: 'complete'
+  }, */
   transitionConfig: () => ({
     screenInterpolator: StackViewStyleInterpolator.forHorizontal
   })

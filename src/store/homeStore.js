@@ -5,6 +5,7 @@ configure({
 class Store {
   @observable headerOpacity = false
   @observable barStyle='light-content'
+  @observable bannerData=[]
   @action.bound
   setValue (key, val) {
     this[key] = val

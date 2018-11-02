@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from 'react-native-ui-lib'
-import JPushModule from 'jpush-react-native'
+import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
-import SplashScreen from 'react-native-splash-screen'
 import { UltimateListView } from 'react-native-ultimate-listview'
+import JPushModule from 'jpush-react-native'
 import {
   StyleSheet,
   StatusBar,
   Animated,
-  Easing
+  Easing,
+  Linking
 } from 'react-native'
 // import { RNCamera } from 'react-native-camera'
 import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { storage, api, axios, imageResize, ratio, statusBarHeight, OpenUrl } from '../utils'
+import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -60,10 +60,18 @@ Assets.loadAssetsGroup('icons', {
     const data = await this.refs.camera.takePictureAsync(options)
     alert(data.uri)
   }
-  renderHeader = () => {
+  bannerPress=(item) => {
+    if (item.link) {
+      Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
+    } else {
+      this.openUrl(`article`, { id: item.id, type: 'banner' })
+    }
+  }
+  renderHeader = (listData) => {
     return (
-      <View>
+      <View flex >
         <View style={{ height: 250 }} >
+          {listData.length > 0 &&
           <Swiper height={250} style={styles.swiper}
             paginationStyle={{
               bottom: 13
@@ -72,16 +80,15 @@ Assets.loadAssetsGroup('icons', {
             activeDot={<View style={{ backgroundColor: '#fff', width: 25, height: 5, borderRadius: 5, marginLeft: 5, marginRight: 5 }} />}
 
           >
-            <View >
-              <Image assetName='banner' resizeMode='cover' style={styles.bannerImg} />
-            </View>
-            <View >
-              <Image assetName='banner' resizeMode='cover' style={styles.bannerImg} />
-            </View>
-            <View >
-              <Image assetName='banner' resizeMode='cover' style={styles.bannerImg} />
-            </View>
+            {
+              listData.map(item => (
+                <TouchableOpacity activeOpacity={0.7} key={item.id} onPress={() => this.bannerPress(item)}>
+                  <Image source={{ uri: item.image }} resizeMode='cover' style={styles.bannerImg} />
+                </TouchableOpacity>
+              ))
+            }
           </Swiper>
+          }
         </View>
         <View row marginV-10>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
@@ -127,14 +134,14 @@ Assets.loadAssetsGroup('icons', {
   onScroll = (e) => {
     const { setValue } = this.props.homeStore
     const posY = e.nativeEvent.contentOffset.y
-    if (posY > 150) {
+    if (posY > 90) {
       setValue('barStyle', 'dark-content')
       Animated.timing(
         this.state.headerAnimate,
         {
           toValue: 1,
-          duration: 200,
-          easing: Easing.linear,
+          duration: 100,
+          easing: Easing.ease,
           useNativeDriver: true
         }
       ).start()
@@ -144,8 +151,8 @@ Assets.loadAssetsGroup('icons', {
         this.state.headerAnimate,
         {
           toValue: 0,
-          duration: 200,
-          easing: Easing.linear,
+          duration: 100,
+          easing: Easing.ease,
           useNativeDriver: true
         }
       ).start()
@@ -161,9 +168,9 @@ Assets.loadAssetsGroup('icons', {
           <Card.Section >
             <Text text-18 dark>{item.name}</Text>
           </Card.Section>
-          <Card.Section style={{ marginBottom: 0 }}>
+          {/*  <Card.Section style={{ marginBottom: 0 }}>
             <Text text-14 dark06 numberOfLines={1}>现在好像没有描述</Text>
-          </Card.Section>
+          </Card.Section> */}
         </Card.Section>
       </Card>
     )
@@ -171,8 +178,11 @@ Assets.loadAssetsGroup('icons', {
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
   }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
+  }
   render () {
-    const { barStyle, headerOpacity } = this.props.homeStore
+    const { barStyle, headerOpacity, bannerData } = this.props.homeStore
     const { userInfo } = this.props.userStore
     return (
       <View flex useSafeArea>
@@ -180,12 +190,14 @@ Assets.loadAssetsGroup('icons', {
         <View centerV paddingH-15 style={[styles.header, headerOpacity && styles.headerBottom]} >
           {!userInfo.token
             ? <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
-              onPress={() => this.props.navigation.navigate('Login')}
+              onPress={() => this.openNative('Login', {
+                preRefresh: this.refresh
+              }, false)}
               imageProps={{ tintColor: headerOpacity ? colors.dark09 : colors.light }}
             />
             : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={{ uri: userInfo.image }}
               backgroundColor={userInfo.image ? 'transparent' : colors.stable}
-              onPress={() => this.props.navigation.navigate('Mine')}
+              onPress={() => this.openNative('Mine', {}, true)}
             />
           }
           <TouchableOpacity style={[styles.searchInput, headerOpacity && styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
@@ -194,8 +206,8 @@ Assets.loadAssetsGroup('icons', {
           </TouchableOpacity>
           <Animated.View style={[styles.headerBg, { opacity: this.state.headerAnimate }]}></Animated.View>
         </View>
-        <UltimateListView keyExtractor={(item, index) => `${index} - ${item}`}
-          header={this.renderHeader}
+        <UltimateListView ref='scroll' keyExtractor={(item, index) => `${index} - ${item}`}
+          header={() => this.renderHeader(bannerData)}
           onFetch={this.onFetch}
           item={this.renderItem}
           refreshable={false}
@@ -208,21 +220,33 @@ Assets.loadAssetsGroup('icons', {
       </View>
     )
   }
-  async componentDidMount () {
-    const { setUserInfo, getUserInfo } = this.props.userStore
-    storage.load({
-      key: 'userInfo'
-    }).then(data => {
-      setUserInfo(data)
-      getUserInfo()
-    }).catch(() => {
-      //  setUserInfo({})
+  refresh = () => {
+    this.refs.scroll.refresh()
+  }
+  openNotificationListener = (e) => {
+    const extras = JSON.parse(e.extras)
+    if (extras.type === 'article') {
+      this.openUrl(`article`, { id: extras.id })
+    } else if (extras.type === 'banner') {
+      if (extras.link) {
+        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
+      } else {
+        this.openUrl(`article`, { id: extras.id, type: 'banner' })
+      }
+    }
+  }
+  componentDidMount () {
+    const { setValue } = this.props.homeStore
+    axios.get(api.banner).then(data => {
+      setValue('bannerData', data.content)
     })
-    setTimeout(() => {
-      SplashScreen.hide()
-    }, 2000)
+    /* 监听点击推送时事件 */
+    JPushModule.notifyJSDidLoad(e => {
+      // alert(JSON.stringify(e))
+    })
+    JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
+    /* 监听点击推送时事件 */
     this.update()
-    JPushModule.initPush()
     //  getUserInfo()
   }
   componentWillUnmount () {
@@ -279,10 +303,11 @@ const styles = StyleSheet.create({
     left: 15
   },
   swiper: {
-    backgroundColor: '#111'
+    // backgroundColor: '#111'
   },
   bannerImg: {
-    width: '100%'
+    width: '100%',
+    height: '100%'
   },
   iconButton: {
     flex: 1,

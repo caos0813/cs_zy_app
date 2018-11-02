@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Assets, Image } from 'react-native-ui-lib'
+import { View, Text, Assets, Image } from '../../react-native-ui-lib/src'
 import { StyleSheet } from 'react-native'
 Assets.loadAssetsGroup('icons', {
   cycle: require('../assets/home/cycle.png')

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native-ui-lib'
+import { View, Text, Button, TextInput, TouchableOpacity } from '../../react-native-ui-lib/src'
 import { inject, observer } from 'mobx-react/native'
 import { api, axios, width, Toast } from '../utils'
 import { StyleSheet, Keyboard, StatusBar } from 'react-native'
@@ -43,6 +43,7 @@ login = () => {
   const { phoneNum, verificationCode } = this.props.loginStore
   const { getUserInfo, setUserInfo } = this.props.userStore
   const { goBack, replace } = this.props.navigation
+  const { preRefresh } = this.props.navigation.state.params
   if (verificationCode.length !== 6) {
     Toast('验证码长度不正确')
     return
@@ -65,9 +66,13 @@ login = () => {
       /* 如果已完善用户信息 */
       if (data.dataFlag) {
         getUserInfo()
+        /* 刷新上一个页面并返回 */
+        preRefresh && preRefresh()
         goBack()
       } else {
-        replace('Info')
+        replace('Info', {
+          type: 'complete'
+        })
       }
     } else {
       Toast(data.msg)
@@ -96,7 +101,7 @@ render () {
 
   const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
   return (
-    <View flex paddingH-23 paddingT-20>
+    <View flex useSafeArea paddingH-23 paddingT-20>
       <StatusBar barStyle='dark-content' />
       <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
         <View paddingH-23 paddingT-20 >
@@ -109,10 +114,10 @@ render () {
               />
             }
           </View>
-          <View center marginT-20>
+          <View center marginT-20 style={{ height: 32 }}>
             <View row style={style.codeWrap} >
               {getCodeArr.map((item, i) => (
-                <View center style={style.codeCeil} key={i} >
+                <View center style={[style.codeCeil, { height: 32 }]} key={i} >
                   <Text text-36 calm style={style.codeText}>{item.value}</Text>
                   <View style={[style.codeLine, {
                     opacity: item.type === 1 ? 0 : 1,
@@ -169,7 +174,12 @@ render () {
     </View >
   )
 }
+componentDidMount () {
+  // this.refs.modal.open()
+}
 componentWillUnmount () {
+  const { setValue } = this.props.loginStore
+  setValue('verificationCode', '')
   this.clearTimer()
 }
 }
@@ -184,6 +194,7 @@ const style = StyleSheet.create({
   },
   codeInputWrap: {
     width: '100%',
+    height: '100%',
     position: 'absolute',
     left: 0,
     top: 0,

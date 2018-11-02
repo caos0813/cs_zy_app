@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { WebView, StyleSheet, StatusBar } from 'react-native'
-import { View, LoaderScreen } from 'react-native-ui-lib'
+import { observer, inject } from 'mobx-react/native'
+import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress, Mask } from '../components'
-import { width, BackPress } from '../utils'
+import { width, BackPress, statusBarHeight } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
 import config from '../config'
-export default class Browser extends Component {
+@inject('userStore')
+@observer class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       header: null
@@ -35,7 +37,7 @@ export default class Browser extends Component {
       this.props.navigation.goBack()
     }
   }
-  onBackPress =() => {
+  onBackPress = () => {
     if (this.state.canGoBack) {
       this.refs.webview.goBack()
       return true
@@ -57,9 +59,10 @@ export default class Browser extends Component {
   }
   onLoadStart = () => {
     this.refs.progress.start()
+    this.setState({ loading: true })
   }
   onLoadEnd = () => {
-    this.postMessage()
+    this.initMessage()
     this.refs.progress.end()
     //  this.refs.webview.injectJavaScript(`document.body.style.paddingTop="${statusBarHeight}px"`)
     setTimeout(() => {
@@ -75,11 +78,14 @@ export default class Browser extends Component {
       }
     }, 800)
   }
-  postMessage = () => {
+  /* 打开浏览器时发送到webview的数据 */
+  initMessage = () => {
+    const { userInfo } = this.props.userStore
     this.refs.webview.postMessage(JSON.stringify({
-      type: 'userInfo',
+      type: 'initData',
       data: {
-        token: 1212
+        statusBarHeight: statusBarHeight,
+        ...userInfo
       }
     }))
   }
@@ -158,7 +164,7 @@ export default class Browser extends Component {
     const { loading, animationConfig, maskShow } = this.state
     const path = getParam('path')
     return (
-      <View flex>
+      <View flex useSafeArea>
         <StatusBar translucent={false} barStyle='dark-content' />
         <Progress
           ref='progress'
@@ -166,9 +172,9 @@ export default class Browser extends Component {
           width={width}
         />
         {loading && <LoaderScreen
-          color={colors.royal}
-          message='正在加载...'
-          messageStyle={{ color: colors.royal }}
+          color={colors.positive}
+          message='正在加载'
+          messageStyle={{ color: colors.positive }}
           overlay
           {...animationConfig}
         />}
@@ -187,6 +193,7 @@ export default class Browser extends Component {
     )
   }
 }
+export default Browser
 const styles = StyleSheet.create({
   progress: {
     position: 'absolute',

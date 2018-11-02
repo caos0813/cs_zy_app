@@ -9,6 +9,7 @@ module.exports = {
     },
     "globals": {
         "alert": true,
+        "eval": true,
         "fetch": true
     }
 }
