@@ -3,8 +3,10 @@ import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../..
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView } from 'react-native'
 import { colors } from '../theme'
-import { ratio, dialog, OpenUrl } from '../utils'
+import { ratio, dialog, OpenUrl, axios, api } from '../utils'
 import { NavigationActions, StackActions } from 'react-navigation'
+import * as WeChat from 'react-native-wechat'
+
 Assets.loadAssetsGroup('icons', {
   vipIcon: require('../assets/mine/vip-icon.png'),
   vip: require('../assets/mine/vip.png'),
@@ -16,7 +18,7 @@ Assets.loadAssetsGroup('icons', {
     super(props)
     this.OpenUrl = new OpenUrl(props)
   }
-  signOut=() => {
+  signOut = () => {
     const { setUserInfo } = this.props.userStore
     const { clear } = this.props.infoStore
     const { dispatch } = this.props.navigation
@@ -33,6 +35,26 @@ Assets.loadAssetsGroup('icons', {
   }
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
+  }
+  wxPay = () => {
+    axios.get(api.wxPay, {
+      params: {
+        payAmount: 0.01
+      }
+    }).then(data => {
+      WeChat.pay({
+        partnerId: data.partnerid,
+        prepayId: data.prepayid,
+        nonceStr: data.noncestr,
+        timeStamp: data.timestamp,
+        package: data.package,
+        sign: data.sign
+      }, result => {
+        alert(JSON.stringify(result))
+      })
+    }).catch(err => {
+      alert(JSON.stringify(err))
+    })
   }
   render () {
     const { userInfo, isVipValid } = this.props.userStore
@@ -54,7 +76,7 @@ Assets.loadAssetsGroup('icons', {
                 {!isVipValid ? <Text text-13 dark06>您还不是Vip</Text> : <Text text-13 positive>VIP至2021-07-31</Text>}
               </View>
             </View>
-            {!isVipValid && <Button bg-assertive label='开通Vip' size='small' marginT-12 onPress={() => this.openUrl('vip', {}, true)} />
+            {!isVipValid && <Button bg-assertive label='开通Vip' size='small' marginT-12 onPress={this.wxPay} />
             }
             <Image assetName='vip' style={styles.vipImg} tintColor={isVipValid ? colors.calm : colors.stable} />
           </View>

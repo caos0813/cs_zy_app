@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@monterosa/react-native-parallax-scroll": "^1.8.0",
     "@remobile/react-native-toast": "^1.0.7",
     "axios": "^0.18.0",
     "jcore-react-native": "^1.2.11",

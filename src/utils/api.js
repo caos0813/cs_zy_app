@@ -16,5 +16,6 @@ export default {
   schoolList: '/user/schools/search/findByDistrict_Id',
   updateUserInfo: '/user/users/updateUserInfo',
   /* banner列表 */
-  banner: '/zhiyuan/banner/getFour'
+  banner: '/zhiyuan/banner/getFour',
+  wxPay: 'zhiyuan/wxPay/wxPrePay'
 }
