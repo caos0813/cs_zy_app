@@ -13,175 +13,176 @@ let timer
     super(props)
     // this.backPress = new BackPress({ backPress: this.onBackPress })
   }
-sendSms = () => {
-  const { phoneNum, setValue, countDown } = this.props.loginStore
-  if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
-    Toast('手机格式错误')
-    return
-  }
-  Keyboard.dismiss()
-  this.clearTimer()
-  axios.get(`${api.sendSms}${phoneNum}`).then(data => {
-    if (data.code === 'ok') {
-      Toast('短信发送成功')
-      this.refs.modal.open()
-      setValue('tick', 90)
-      timer = setInterval(() => {
-        countDown()
-      }, 1000)
-    } else {
-      Toast(data.message)
+  sendSms = () => {
+    const { phoneNum, setValue, countDown } = this.props.loginStore
+    if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
+      Toast('手机格式错误')
+      return
     }
-  }).catch(() => {
-    Toast('请检查您的网络')
-  })
-}
-clearTimer = () => {
-  timer && clearInterval(timer)
-}
-login = () => {
-  const { phoneNum, verificationCode } = this.props.loginStore
-  const { getUserInfo, setUserInfo } = this.props.userStore
-  const { goBack, replace } = this.props.navigation
-  const { preRefresh } = this.props.navigation.state.params
-  if (verificationCode.length !== 6) {
-    Toast('验证码长度不正确')
-    return
-  }
-  Keyboard.dismiss()
-  axios.post(api.webLogin, {
-    phoneNum: phoneNum,
-    verificationCode: verificationCode
-  }).then(data => {
-    if (data.token) {
-      Toast('登录成功')
-      setUserInfo({
-        token: data.token,
-        level: data.level, // 会员等级
-        isValid: data.isValid, // 会员是否可用
-        dataFlag: data.dataFlag, // 是否完善信息
-        userCenterId: data.userCenterId,
-        phoneNum: data.phoneNum
-      })
-      /* 如果已完善用户信息 */
-      if (data.dataFlag) {
-        getUserInfo()
-        /* 刷新上一个页面并返回 */
-        preRefresh && preRefresh()
-        goBack()
+    Keyboard.dismiss()
+    this.clearTimer()
+    axios.get(`${api.sendSms}${phoneNum}`).then(data => {
+      if (data.code === 'ok') {
+        Toast('短信发送成功')
+        this.refs.modal.open()
+        setValue('tick', 90)
+        timer = setInterval(() => {
+          countDown()
+        }, 1000)
       } else {
-        replace('Info', {
-          type: 'complete'
-        })
+        Toast(data.message)
       }
-    } else {
-      Toast(data.msg)
-    }
-  }).catch(() => {
-    Toast('请检查您的网络')
-  })
-}
-render () {
-  /* setTimeout(() => {
-    this.setState({ progress: this.state.progress + (0.4 * Math.random()) })
-  }, 1000) */
-  const shadowOpt = {
-    width: width - 50,
-    height: 32,
-    color: '#000',
-    border: 30,
-    radius: 16,
-    opacity: 0.05,
-    x: 0,
-    y: 0,
-    style: {
-      height: 50
-    }
+    }).catch(() => {
+      Toast('请检查您的网络')
+    })
   }
+  clearTimer = () => {
+    timer && clearInterval(timer)
+  }
+  login = () => {
+    const { phoneNum, verificationCode } = this.props.loginStore
+    const { getUserInfo, setUserInfo } = this.props.userStore
+    const { goBack, replace } = this.props.navigation
+    console.log(this.props.navigation.state)
+    const { params } = this.props.navigation.state
+    if (verificationCode.length !== 6) {
+      Toast('验证码长度不正确')
+      return
+    }
+    Keyboard.dismiss()
+    axios.post(api.webLogin, {
+      phoneNum: phoneNum,
+      verificationCode: verificationCode
+    }).then(data => {
+      if (data.token) {
+        Toast('登录成功')
+        setUserInfo({
+          token: data.token,
+          level: data.level, // 会员等级
+          isValid: data.isValid, // 会员是否可用
+          dataFlag: data.dataFlag, // 是否完善信息
+          userCenterId: data.userCenterId,
+          phoneNum: data.phoneNum
+        })
+        /* 如果已完善用户信息 */
+        if (data.dataFlag) {
+          getUserInfo()
+          /* 刷新上一个页面并返回 */
+          params && params.preRefresh && params.preRefresh()
+          goBack()
+        } else {
+          replace('Info', {
+            type: 'complete'
+          })
+        }
+      } else {
+        Toast('登录失败请稍后再试')
+      }
+    }).catch(() => {
+      Toast('请检查您的网络')
+    })
+  }
+  render () {
+    /* setTimeout(() => {
+      this.setState({ progress: this.state.progress + (0.4 * Math.random()) })
+    }, 1000) */
+    const shadowOpt = {
+      width: width - 50,
+      height: 32,
+      color: '#000',
+      border: 30,
+      radius: 16,
+      opacity: 0.05,
+      x: 0,
+      y: 0,
+      style: {
+        height: 50
+      }
+    }
 
-  const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
-  return (
-    <View flex useSafeArea paddingH-23 paddingT-20>
-      <StatusBar barStyle='dark-content' />
-      <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
-        <View paddingH-23 paddingT-20 >
-          <Text text-20 marginH-12 dark>{tick > 0 ? '验证码已经发送成功' : '验证码已过期'}</Text>
-          <View row spread centerV paddingT-75 marginH-12>
-            <Text text-16 marginT-6 dark06>{phoneNum}</Text>
-            {
-              tick > 0 ? <Button label={tick + 's'} size='small' text-16 marginT-10 borderRadius={10} bg-light dark06
-              /> : <Button label='重新获取' size='small' text-16 marginT-10 borderRadius={10} onPress={this.sendSms}
-              />
-            }
-          </View>
-          <View center marginT-20 style={{ height: 32 }}>
-            <View row style={style.codeWrap} >
-              {getCodeArr.map((item, i) => (
-                <View center style={[style.codeCeil, { height: 32 }]} key={i} >
-                  <Text text-36 calm style={style.codeText}>{item.value}</Text>
-                  <View style={[style.codeLine, {
-                    opacity: item.type === 1 ? 0 : 1,
-                    backgroundColor: item.type === 0 ? colors.gray : colors.calm
-                  }]} />
-                </View>
-              ))}
-
+    const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
+    return (
+      <View flex useSafeArea paddingH-23 paddingT-20>
+        <StatusBar barStyle='dark-content' />
+        <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
+          <View paddingH-23 paddingT-20 >
+            <Text text-20 marginH-12 dark>{tick > 0 ? '验证码已经发送成功' : '验证码已过期'}</Text>
+            <View row spread centerV paddingT-75 marginH-12>
+              <Text text-16 marginT-6 dark06>{phoneNum}</Text>
+              {
+                tick > 0 ? <Button label={tick + 's'} size='small' text-16 marginT-10 borderRadius={10} bg-light dark06
+                /> : <Button label='重新获取' size='small' text-16 marginT-10 borderRadius={10} onPress={this.sendSms}
+                />
+              }
             </View>
-            <TextInput placeholder='输入验证码' containerStyle={style.codeInputWrap} style={style.codeInput}
-              onChangeText={val => setValue('verificationCode', val)}
-              returnKeyType='done'
-              onSubmitEditing={this.login}
-              maxLength={6}
-              keyboardType='phone-pad'
-              //  style={{ backgroundColor: colors.positive }}
-              hideUnderline
-            />
+            <View center marginT-20 style={{ height: 32 }}>
+              <View row style={style.codeWrap} >
+                {getCodeArr.map((item, i) => (
+                  <View center style={[style.codeCeil, { height: 32 }]} key={i} >
+                    <Text text-36 calm style={style.codeText}>{item.value}</Text>
+                    <View style={[style.codeLine, {
+                      opacity: item.type === 1 ? 0 : 1,
+                      backgroundColor: item.type === 0 ? colors.gray : colors.calm
+                    }]} />
+                  </View>
+                ))}
 
-            {/* <Button label='点击按钮代表同意《知涯用户协议》' text-10 marginT-20 dark09 link
-              /> */}
-          </View>
-          <View paddingT-100 paddingH-5>
-            <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
-            <TouchableOpacity activeOpacity={0.6}>
-              <View padding-10 center>
-                <Text text-12 gray>点击按钮表示同意<Text calm>《知涯用户协议》</Text></Text>
               </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      <Text text-20 marginH-12 dark>欢迎使用知涯志愿</Text>
-      <Text marginT-75 marginH-12 text-16 dark06>请输入您的手机号码</Text>
-      <View paddingT-23>
-        <BoxShadow setting={shadowOpt}>
-          <TextInput style={{ backgroundColor: colors.light, height: 32, borderRadius: 16, paddingHorizontal: 30, textAlign: 'center', marginBottom: 5 }}
-            text-14
-            placeholder='请输入手机号'
-            keyboardType='phone-pad'
-            error={phoneErrorText}
-            dark10
-            onChangeText={val => setValue('phoneNum', val)}
-            returnKeyType='next'
-            onSubmitEditing={this.sendSms}
-            hideUnderline
+              <TextInput placeholder='输入验证码' containerStyle={style.codeInputWrap} style={style.codeInput}
+                onChangeText={val => setValue('verificationCode', val)}
+                returnKeyType='done'
+                onSubmitEditing={this.login}
+                maxLength={6}
+                keyboardType='phone-pad'
+                //  style={{ backgroundColor: colors.positive }}
+                hideUnderline
+              />
 
-          />
-        </BoxShadow>
-      </View>
-      <View paddingT-100 paddingH-5>
-        <Button text-14 light label='下一步' bg-calm marginT-10 onPress={this.sendSms} disabled={phoneValid} />
-      </View>
-    </View >
-  )
-}
-componentDidMount () {
-  // this.refs.modal.open()
-}
-componentWillUnmount () {
-  const { setValue } = this.props.loginStore
-  setValue('verificationCode', '')
-  this.clearTimer()
-}
+              {/* <Button label='点击按钮代表同意《知涯用户协议》' text-10 marginT-20 dark09 link
+              /> */}
+            </View>
+            <View paddingT-100 paddingH-5>
+              <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
+              <TouchableOpacity activeOpacity={0.6}>
+                <View padding-10 center>
+                  <Text text-12 gray>点击按钮表示同意<Text calm>《知涯用户协议》</Text></Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <Text text-20 marginH-12 dark>欢迎使用知涯志愿</Text>
+        <Text marginT-75 marginH-12 text-16 dark06>请输入您的手机号码</Text>
+        <View paddingT-23>
+          <BoxShadow setting={shadowOpt}>
+            <TextInput style={{ backgroundColor: colors.light, height: 32, borderRadius: 16, paddingHorizontal: 30, textAlign: 'center', marginBottom: 5 }}
+              text-14
+              placeholder='请输入手机号'
+              keyboardType='phone-pad'
+              error={phoneErrorText}
+              dark10
+              onChangeText={val => setValue('phoneNum', val)}
+              returnKeyType='next'
+              onSubmitEditing={this.sendSms}
+              hideUnderline
+
+            />
+          </BoxShadow>
+        </View>
+        <View paddingT-100 paddingH-5>
+          <Button text-14 light label='下一步' bg-calm marginT-10 onPress={this.sendSms} disabled={phoneValid} />
+        </View>
+      </View >
+    )
+  }
+  componentDidMount () {
+    // this.refs.modal.open()
+  }
+  componentWillUnmount () {
+    const { setValue } = this.props.loginStore
+    setValue('verificationCode', '')
+    this.clearTimer()
+  }
 }
 const style = StyleSheet.create({
   modal: {

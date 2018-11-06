@@ -6,6 +6,9 @@ import Home from '../pages/home'
 import Browser from '../pages/browser'
 import Mine from '../pages/mine'
 import Info from '../pages/info'
+import Feedback from '../pages/feedback'
+import About from '../pages/about'
+import Pay from '../pages/pay'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { Avatar, Assets } from 'react-native-ui-lib'
 Assets.loadAssetsGroup('icons', {
@@ -28,6 +31,24 @@ export default createStackNavigator({
     screen: Mine,
     navigationOptions: () => ({
       title: '我的'
+    })
+  },
+  Feedback: {
+    screen: Feedback,
+    navigationOptions: () => ({
+      title: '反馈'
+    })
+  },
+  Pay: {
+    screen: Pay,
+    navigationOptions: () => ({
+      title: '开通升学卡'
+    })
+  },
+  About: {
+    screen: About,
+    navigationOptions: () => ({
+      title: '关于'
     })
   },
   Info: {
@@ -63,8 +84,8 @@ export default createStackNavigator({
   },
   initialRouteName: 'Home',
   /* initialRouteParams: {
-    type: 'complete'
-  }, */
+        type: 'complete'
+      }, */
   transitionConfig: () => ({
     screenInterpolator: StackViewStyleInterpolator.forHorizontal
   })

@@ -8,8 +8,6 @@ import ParallaxScroll from '@monterosa/react-native-parallax-scroll'
 import {
   StyleSheet,
   StatusBar,
-  Animated,
-  Easing,
   Linking
 } from 'react-native'
 import codePush from 'react-native-code-push'
@@ -62,7 +60,7 @@ Assets.loadAssetsGroup('icons', {
             onPress={() => this.openNative('Login', {
               preRefresh: this.refresh
             }, false)}
-            imageProps={{ tintColor: colors.grey }}
+            imageProps={{ tintColor: headerLine ? colors.grey : colors.light }}
           />
           : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={{ uri: userInfo.image }}
             backgroundColor={userInfo.image ? 'transparent' : colors.stable}

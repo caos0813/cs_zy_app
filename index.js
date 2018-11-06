@@ -7,6 +7,7 @@ import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
 import _ from 'lodash'
 import SplashScreen from 'react-native-splash-screen'
+
 /* eslint-disable */
 import theme from './src/theme'
 import { statusBarHeight, storage, platform } from './src/utils'
@@ -37,7 +38,6 @@ class App extends Component {
     storage.load({
       key: 'userInfo'
     }).then(data => {
-      //alert(JSON.stringify(data))
       if (data.dataFlag) {
         try {
           let tag = __DEV__ ? `dev_${data.province.id}` : `pro_${data.province.id}`
