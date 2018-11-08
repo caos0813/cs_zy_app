@@ -8,7 +8,7 @@ import JPushModule from 'jpush-react-native'
 import _ from 'lodash'
 import SplashScreen from 'react-native-splash-screen'
 import Config from 'react-native-config'
-//  import codePush from 'react-native-code-push'
+import codePush from 'react-native-code-push'
 
 /* eslint-disable */
 import theme from './src/theme'
@@ -28,18 +28,18 @@ class App extends Component {
   }
   update = () => {
     codePush.sync({
-      /* updateDialog: {
+      updateDialog: {
         appendReleaseDescription: true,
         descriptionPrefix: '检查到更新',
         title: '更新',
         mandatoryUpdateMessage: '',
         mandatoryContinueButtonLabel: '确定'
-      }, */
-      mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART
+      },
+      //mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART
     })
   }
   componentDidMount () {
-    // this.update()
+    this.update()
     /* 初始化极光 */
     if (platform === 'android') {
       JPushModule.initPush()

@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "react-native run-android",
-    "android:staging": "cd android &&  gradlew assembleStagingRelease",
-    "android:release": "cd android &&  gradlew assembleRelease",
+    "android:staging": "cd android &&  ./gradlew assembleStagingRelease",
+    "android:release": "cd android &&  ./gradlew assembleRelease",
     "ios": "react-native run-ios",
     "dev": "react-devtools",
     "reset-cache": "react-native start --reset-cache",
