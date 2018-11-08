@@ -19,11 +19,11 @@ export default class OpenUrl {
         path: queryString
       })
     } else {
-      if (userInfo.token && userInfo.dataFlag) {
+      if (userInfo.token && userInfo.startYear) {
         navigation.navigate('Browser', {
           path: queryString
         })
-      } else if (userInfo.token && !userInfo.dataFlag) {
+      } else if (userInfo.token && !userInfo.startYear) {
         navigation.navigate('Info', { type: 'complete' })
       } else {
         navigation.navigate('Login')
@@ -36,9 +36,9 @@ export default class OpenUrl {
     if (!needAuth) {
       navigation.navigate(path, query)
     } else {
-      if (userInfo.token && userInfo.dataFlag) {
+      if (userInfo.token && userInfo.startYear) {
         navigation.navigate(path, query)
-      } else if (userInfo.token && !userInfo.dataFlag) {
+      } else if (userInfo.token && !userInfo.startYear) {
         navigation.navigate('Info')
       } else {
         navigation.navigate('Login')

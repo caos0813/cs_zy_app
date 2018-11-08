@@ -101,6 +101,7 @@ let timer
     }
 
     const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
+    const { navigate } = this.props.navigation
     return (
       <View flex useSafeArea paddingH-23 paddingT-20>
         <StatusBar barStyle='dark-content' />
@@ -143,7 +144,7 @@ let timer
             </View>
             <View paddingT-100 paddingH-5>
               <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => navigate('Browser', { path: 'agreement-regist' })}>
                 <View padding-10 center>
                   <Text text-12 gray>点击按钮表示同意<Text calm>《知涯用户协议》</Text></Text>
                 </View>

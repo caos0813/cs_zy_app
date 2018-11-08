@@ -20,14 +20,6 @@ class Store {
   @observable schoolPickerVal = ''
   @observable schoolPickerId = ''
 
-  @computed get isVipValid () {
-    if (!_.isEmpty(this.userInfo)) {
-      const { isValid, level } = this.userInfo
-      if (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN')) {
-        return true
-      }
-    }
-  }
   @computed get genderString () {
     // alert(1)
     if (!_.isUndefined(this.userInfo.gender)) {

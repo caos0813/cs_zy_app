@@ -5,14 +5,14 @@ import { inject, observer } from 'mobx-react/native'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import JPushModule from 'jpush-react-native'
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll'
+import _ from 'lodash'
 import {
   StyleSheet,
   StatusBar,
   Linking
 } from 'react-native'
-import codePush from 'react-native-code-push'
 import Swiper from 'react-native-swiper'
-import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl, width } from '../utils'
+import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl, width, dialog, Toast } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -31,18 +31,6 @@ Assets.loadAssetsGroup('icons', {
   constructor (props) {
     super(props)
     this.OpenUrl = new OpenUrl(props)
-  }
-  update = () => {
-    codePush.sync({
-      /* updateDialog: {
-        appendReleaseDescription: true,
-        descriptionPrefix: '检查到更新',
-        title: '更新',
-        mandatoryUpdateMessage: '',
-        mandatoryContinueButtonLabel: '确定'
-      }, */
-      mandatoryInstallMode: codePush.InstallMode.IMMEDIATE
-    })
   }
   bannerPress = (item) => {
     if (item.link) {
@@ -98,6 +86,37 @@ Assets.loadAssetsGroup('icons', {
       </View>
     )
   }
+  entryZhiyuan = () => {
+    // () => this.openUrl(`volunteer-index`, {}, true)
+    const { setUserInfo, userInfo } = this.props.userStore
+    const { phoneNumber, token, level, isValid, startYear } = userInfo
+    const { navigate } = this.props.navigation
+    if (!token) {
+      navigate('Login')
+    } else if (!startYear) {
+      navigate('Info', {
+        type: 'complete'
+      })
+    } else if (!level) {
+      axios.post(api.tiralBinding, { phoneNumber }).then(data => {
+        const copyUserInfo = _.clone(userInfo)
+        copyUserInfo.level = 'EXPERIENCE'
+        copyUserInfo.isValid = true
+        setUserInfo(copyUserInfo)
+        Toast('恭喜您获得3天升学卡专属功能体验期，体验期后可在会员中心购买升学卡')
+        this.openUrl(`volunteer-index`)
+      })
+    } else {
+      // if(level==='ZHI_YUAN'||level==='FULL_FEATURED'||level==='EXPERIENCE')
+      if (['ZHI_YUAN', 'FULL_FEATURED', 'EXPERIENCE'].indexOf(level) > -1 && isValid) {
+        this.openUrl(`volunteer-index`)
+      } else {
+        dialog.confirm('您得体验期已到期，进入会员中心开通升学卡，即可继续享受升学卡专属功能').then(() => {
+          navigate('Pay')
+        })
+      }
+    }
+  }
   renderContainer = () => {
     return (
       <View>
@@ -114,7 +133,7 @@ Assets.loadAssetsGroup('icons', {
             <Image assetName='icon03' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查职业</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`volunteer-index`, {}, true)}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
             <Image assetName='icon04' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>填志愿</Text>
           </TouchableOpacity>
@@ -237,7 +256,6 @@ Assets.loadAssetsGroup('icons', {
     })
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
-    this.update()
     //  getUserInfo()
   }
   componentWillUnmount () {

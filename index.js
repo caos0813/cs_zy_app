@@ -7,6 +7,8 @@ import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
 import _ from 'lodash'
 import SplashScreen from 'react-native-splash-screen'
+import Config from 'react-native-config'
+//  import codePush from 'react-native-code-push'
 
 /* eslint-disable */
 import theme from './src/theme'
@@ -24,8 +26,20 @@ class App extends Component {
       </Provider>
     )
   }
-  
+  update = () => {
+    codePush.sync({
+      /* updateDialog: {
+        appendReleaseDescription: true,
+        descriptionPrefix: '检查到更新',
+        title: '更新',
+        mandatoryUpdateMessage: '',
+        mandatoryContinueButtonLabel: '确定'
+      }, */
+      mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART
+    })
+  }
   componentDidMount () {
+    // this.update()
     /* 初始化极光 */
     if (platform === 'android') {
       JPushModule.initPush()
@@ -40,7 +54,7 @@ class App extends Component {
     }).then(data => {
       if (data.dataFlag) {
         try {
-          let tag = __DEV__ ? `dev_${data.province.id}` : `pro_${data.province.id}`
+          let tag = Config.ENV==='production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
           JPushModule.setTags([tag], (e) => {
             //alert(JSON.stringify(e))
           })

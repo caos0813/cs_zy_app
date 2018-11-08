@@ -99,9 +99,9 @@ const listItems = [{
             <Avatar imageSource={assets.icons.close} containerStyle={styles.closeWrap} backgroundColor='transparent' imageStyle={styles.closeImage} onPress={() => this.refs.modal.close()} />
           </View>
           {payType === 'wechat' &&
-          <View center padding-10>
-            <Text calm text-28>¥{payAmount}</Text>
-          </View>
+            <View center padding-10>
+              <Text calm text-28>¥{payAmount}</Text>
+            </View>
           }
           <RadioGroup value={payType} onValueChange={e => setValue('payType', e)}>
             <View row centerV spread style={styles.payItem}>
@@ -164,6 +164,8 @@ const listItems = [{
             Toast(result.errStr)
           }
         })
+      }).catch(() => {
+        Toast('创建订单失败')
       })
     } else {
       if (!cardNumber.length || !password.length) {
@@ -172,7 +174,7 @@ const listItems = [{
         axios.post(api.bindingCard, {
           cardNumber,
           password,
-          phoneNumber: userInfo.phoneNum
+          phoneNumber: userInfo.phoneNumber
         }).then(data => {
           getUserInfo()
           Toast('激活成功')

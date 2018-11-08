@@ -3,7 +3,7 @@ import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../..
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView } from 'react-native'
 import { colors } from '../theme'
-import { ratio, dialog, OpenUrl } from '../utils'
+import { ratio, dialog, OpenUrl, formatDate } from '../utils'
 import { NavigationActions, StackActions } from 'react-navigation'
 
 Assets.loadAssetsGroup('icons.mine', {
@@ -52,7 +52,7 @@ Assets.loadAssetsGroup('icons.mine', {
                   <Text text-22>{userInfo.name}</Text>
                   {isVipValid ? <Image assetName='vipIcon' style={styles.vipIcon} assetGroup='icons.mine' /> : null}
                 </View>
-                {!isVipValid ? <Text text-13 dark06>您还未开通升学卡</Text> : <Text text-13 positive>VIP至2021-07-31</Text>}
+                {!isVipValid ? <Text text-13 dark06>您还未开通升学卡</Text> : <Text text-13 positive>升学卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
             {!isVipValid && <Button bg-assertive label='开通升学卡' size='small' marginT-12 onPress={() => navigate('Pay')} />

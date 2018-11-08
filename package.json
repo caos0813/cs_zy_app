@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "react-native run-android",
+    "android:staging": "cd android &&  gradlew assembleStagingRelease",
+    "android:release": "cd android &&  gradlew assembleRelease",
     "ios": "react-native run-ios",
     "dev": "react-devtools",
     "reset-cache": "react-native start --reset-cache",
@@ -23,6 +25,7 @@
     "react-native": "0.57.2",
     "react-native-camera": "^1.3.0",
     "react-native-code-push": "^5.4.2",
+    "react-native-config": "^0.11.5",
     "react-native-keyboard-aware-scroll-view": "^0.7.4",
     "react-native-modalbox": "^1.6.0",
     "react-native-picker": "^4.3.7",

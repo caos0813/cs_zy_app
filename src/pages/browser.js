@@ -7,7 +7,7 @@ import { Progress, Mask } from '../components'
 import { width, BackPress, statusBarHeight } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
-import config from '../config'
+import Config from 'react-native-config'
 @inject('userStore')
 @observer class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -181,7 +181,7 @@ import config from '../config'
         {maskShow && <Mask />}
         <WebView ref='webview'
           style={styles.flex_1}
-          source={{ uri: `${config.webUrl}${path}` }}
+          source={{ uri: `${Config.WEB_URL}${path}` }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}
