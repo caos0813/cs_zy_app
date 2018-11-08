@@ -59,7 +59,7 @@
 		343D0827C2A04B268F8511A2 /* libRCTWeChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63ECC7BAC6AF49A3AC0977AE /* libRCTWeChat.a */; };
 		A1942F50D8B946889B30C5B8 /* RCTWeChatTests.xctest in Resources */ = {isa = PBXBuildFile; fileRef = 51C86D5212864E8189B62DCD /* RCTWeChatTests.xctest */; };
 		559E64CCC37A4B5AA1876282 /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE01991B09B34B84B8C7D033 /* libRCTBEEPickerManager.a */; };
-		D28BAD6F5EE140BFA7E58C69 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABCC7380A90F4E6280A90170 /* libCodePush.a */; };
+		D5B9783F72794E9BB06EC89E /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 332C2F2F75AD40F48BAE6384 /* libCodePush.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -396,8 +396,8 @@
 		51C86D5212864E8189B62DCD /* RCTWeChatTests.xctest */ = {isa = PBXFileReference; name = "RCTWeChatTests.xctest"; path = "RCTWeChatTests.xctest"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.cfbundle; explicitFileType = undefined; includeInIndex = 0; };
 		88C8FCB17E26432BBF7798A1 /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; name = "RCTBEEPickerManager.xcodeproj"; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		FE01991B09B34B84B8C7D033 /* libRCTBEEPickerManager.a */ = {isa = PBXFileReference; name = "libRCTBEEPickerManager.a"; path = "libRCTBEEPickerManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		AFD2733D8D7448CA96910335 /* CodePush.xcodeproj */ = {isa = PBXFileReference; name = "CodePush.xcodeproj"; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		ABCC7380A90F4E6280A90170 /* libCodePush.a */ = {isa = PBXFileReference; name = "libCodePush.a"; path = "libCodePush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		C916DC3E6FC9446F8D1926FD /* CodePush.xcodeproj */ = {isa = PBXFileReference; name = "CodePush.xcodeproj"; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		332C2F2F75AD40F48BAE6384 /* libCodePush.a */ = {isa = PBXFileReference; name = "libCodePush.a"; path = "libCodePush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -446,7 +446,7 @@
 				343D0827C2A04B268F8511A2 /* libRCTWeChat.a in Frameworks */,
 				A1942F50D8B946889B30C5B8 /* RCTWeChatTests.xctest in Resources */,
 				559E64CCC37A4B5AA1876282 /* libRCTBEEPickerManager.a in Frameworks */,
-				D28BAD6F5EE140BFA7E58C69 /* libCodePush.a in Frameworks */,
+				D5B9783F72794E9BB06EC89E /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,7 +654,7 @@
 				85F19407B0D9412DA16B48AC /* reactnativeuilib.xcodeproj */,
 				30CBD36F6D57443B8615788E /* RCTWeChat.xcodeproj */,
 				88C8FCB17E26432BBF7798A1 /* RCTBEEPickerManager.xcodeproj */,
-				AFD2733D8D7448CA96910335 /* CodePush.xcodeproj */,
+				C916DC3E6FC9446F8D1926FD /* CodePush.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";

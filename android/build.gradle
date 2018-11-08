@@ -9,8 +9,14 @@ buildscript {
         supportLibVersion = "27.1.1"
     }
     repositories {
-        jcenter()
         google()
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            name 'Google'
+        }
+        jcenter({
+            url 'http://jcenter.bintray.com/'
+        })
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
@@ -28,7 +34,13 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
-        google()
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            name 'Google'
+        }
+        jcenter({
+            url 'http://jcenter.bintray.com/'
+        })
     }
 }
 
