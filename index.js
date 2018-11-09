@@ -35,7 +35,7 @@ class App extends Component {
         mandatoryUpdateMessage: '',
         mandatoryContinueButtonLabel: '确定'
       },
-      //mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART
+      installMode: codePush.InstallMode.IMMEDIATE
     })
   }
   componentDidMount () {
@@ -43,7 +43,7 @@ class App extends Component {
     /* 初始化极光 */
     if (platform === 'android') {
       JPushModule.initPush()
-      
+
     } else {
       JPushModule.setupPush()
     }
@@ -54,7 +54,7 @@ class App extends Component {
     }).then(data => {
       if (data.dataFlag) {
         try {
-          let tag = Config.ENV==='production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
+          let tag = Config.ENV === 'production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
           JPushModule.setTags([tag], (e) => {
             //alert(JSON.stringify(e))
           })
