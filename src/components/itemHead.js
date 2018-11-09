@@ -10,7 +10,7 @@ export default class itemHead extends Component {
     return (
       <View row padding-15 style={[styles.wrap, style]}>
         <Text dark text-24 style={styles.text}>{title}</Text>
-        {/* <Image assetName='cycle' style={styles.icon} /> */}
+        <Image assetName='cycle' style={styles.icon} />
       </View>
     )
   }

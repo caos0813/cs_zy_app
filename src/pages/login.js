@@ -46,7 +46,7 @@ let timer
     console.log(this.props.navigation.state)
     const { params } = this.props.navigation.state
     if (verificationCode.length !== 6) {
-      Toast('验证码长度不正确')
+      Toast('验证码长度不正确!')
       return
     }
     Keyboard.dismiss()

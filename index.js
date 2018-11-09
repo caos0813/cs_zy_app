@@ -8,7 +8,7 @@ import JPushModule from 'jpush-react-native'
 import _ from 'lodash'
 import SplashScreen from 'react-native-splash-screen'
 import Config from 'react-native-config'
-//  import codePush from 'react-native-code-push'
+import codePush from 'react-native-code-push'
 
 /* eslint-disable */
 import theme from './src/theme'
@@ -28,22 +28,22 @@ class App extends Component {
   }
   update = () => {
     codePush.sync({
-      /* updateDialog: {
+      updateDialog: {
         appendReleaseDescription: true,
         descriptionPrefix: '检查到更新',
         title: '更新',
         mandatoryUpdateMessage: '',
         mandatoryContinueButtonLabel: '确定'
-      }, */
-      mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART
+      },
+      installMode: codePush.InstallMode.IMMEDIATE
     })
   }
   componentDidMount () {
-    // this.update()
+    this.update()
     /* 初始化极光 */
     if (platform === 'android') {
       JPushModule.initPush()
-      
+
     } else {
       JPushModule.setupPush()
     }
@@ -54,7 +54,7 @@ class App extends Component {
     }).then(data => {
       if (data.dataFlag) {
         try {
-          let tag = Config.ENV==='production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
+          let tag = Config.ENV === 'production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
           JPushModule.setTags([tag], (e) => {
             //alert(JSON.stringify(e))
           })
