@@ -147,15 +147,16 @@ const listItems = [{
     if (payType === 'wechat') {
       axios.post(api.wxPay, {
         payAmount
-      }).then(data => {
-        WeChat.pay({
+      }).then(async (data) => {
+        await WeChat.pay({
           partnerId: data.partnerid,
           prepayId: data.prepayid,
           nonceStr: data.noncestr,
           timeStamp: data.timestamp,
           package: data.package,
           sign: data.sign
-        }, result => {
+        }).then(result => {
+          // alert(JSON.stringify(result))
           if (result.errCode === 0) {
             getUserInfo()
             Toast('激活成功')
@@ -163,6 +164,9 @@ const listItems = [{
           } else {
             Toast(result.errStr)
           }
+        }).catch(() => {
+          // Toast('用户取消')
+          // alert(JSON.stringify(err))
         })
       }).catch(() => {
         Toast('创建订单失败')

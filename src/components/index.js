@@ -1,4 +1,5 @@
 import Progress from './progress'
 import Mask from './mask'
 import ItemHead from './itemHead'
-export { Progress, Mask, ItemHead }
+import CodeInput from './codeInput'
+export { Progress, Mask, ItemHead, CodeInput }

@@ -12,7 +12,7 @@ class Store {
       return '手机号码格式错误'
     }
   }
-  @computed get getCodeArr () {
+  /* @computed get getCodeArr () {
     let arr = []
     for (let i = 0; i < 6; i++) {
       if (!this.verificationCode.length) {
@@ -42,7 +42,7 @@ class Store {
     }
     // return '手机号码格式错误'
     return arr
-  }
+  } */
   /* 是否禁用下一步按钮  */
   @computed get phoneValid () {
     if (!(/^1[34578]\d{9}$/.test(this.phoneNum))) {

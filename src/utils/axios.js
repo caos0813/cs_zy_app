@@ -5,7 +5,6 @@ axios.defaults.timeout = 5000
 axios.defaults.maxContentLength = 1048576
 axios.defaults.baseURL = Config.BASE_URL
 axios.defaults.headers['Accept'] = 'application/json, text/plain, */*'
-
 /* 添加拦截器 */
 /*
   判断全局变量是否存在,不存在则从storage取

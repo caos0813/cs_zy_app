@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Button, TextInput, TouchableOpacity } from '../../react-native-ui-lib/src'
 import { inject, observer } from 'mobx-react/native'
+import { CodeInput } from '../components'
 import { api, axios, width, Toast } from '../utils'
 import { StyleSheet, Keyboard, StatusBar } from 'react-native'
 import Modal from 'react-native-modalbox'
@@ -71,6 +72,7 @@ let timer
           params && params.preRefresh && params.preRefresh()
           goBack()
         } else {
+          getUserInfo()
           replace('Info', {
             type: 'complete'
           })
@@ -100,7 +102,7 @@ let timer
       }
     }
 
-    const { phoneValid, phoneErrorText, getCodeArr, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
+    const { phoneValid, phoneErrorText, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
     const { navigate } = this.props.navigation
     return (
       <View flex useSafeArea paddingH-23 paddingT-20>
@@ -116,31 +118,22 @@ let timer
                 />
               }
             </View>
-            <View center marginT-20 style={{ height: 32 }}>
-              <View row style={style.codeWrap} >
-                {getCodeArr.map((item, i) => (
-                  <View center style={[style.codeCeil, { height: 32 }]} key={i} >
-                    <Text text-36 calm style={style.codeText}>{item.value}</Text>
-                    <View style={[style.codeLine, {
-                      opacity: item.type === 1 ? 0 : 1,
-                      backgroundColor: item.type === 0 ? colors.gray : colors.calm
-                    }]} />
-                  </View>
-                ))}
-
-              </View>
-              <TextInput placeholder='输入验证码' containerStyle={style.codeInputWrap} style={style.codeInput}
-                onChangeText={val => setValue('verificationCode', val)}
-                returnKeyType='done'
-                onSubmitEditing={this.login}
-                maxLength={6}
-                keyboardType='phone-pad'
-                //  style={{ backgroundColor: colors.positive }}
-                hideUnderline
+            <View center marginT-20 >
+              <CodeInput
+                ref='codeInput'
+                activeColor={colors.calm}
+                inactiveColor={colors.gray}
+                className={'border-b'}
+                space={12}
+                size={34}
+                codeLength={6}
+                inputPosition='left'
+                onFulfill={(code) => setValue('verificationCode', code)}
+                codeInputStyle={{
+                  fontSize: 32,
+                  color: colors.calm
+                }}
               />
-
-              {/* <Button label='点击按钮代表同意《知涯用户协议》' text-10 marginT-20 dark09 link
-              /> */}
             </View>
             <View paddingT-100 paddingH-5>
               <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
@@ -182,6 +175,7 @@ let timer
   componentWillUnmount () {
     const { setValue } = this.props.loginStore
     setValue('verificationCode', '')
+    this.refs.codeInput.clear()
     this.clearTimer()
   }
 }

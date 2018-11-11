@@ -117,6 +117,16 @@ Assets.loadAssetsGroup('icons', {
       }
     }
   }
+  entryHolland=() => {
+    const { userInfo } = this.props.userStore
+    const { isFinishTest } = userInfo
+    if (isFinishTest) {
+      this.openUrl(`report`, {}, true)
+    } else {
+      this.openUrl(`holland-entry`, {}, true)
+    }
+    // this.openUrl(`holland-entry`, {}, true)
+  }
   renderContainer = () => {
     return (
       <View>
@@ -137,7 +147,7 @@ Assets.loadAssetsGroup('icons', {
             <Image assetName='icon04' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>填志愿</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`holland-entry`, {}, true)}>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
             <Image assetName='icon05' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>测一测</Text>
           </TouchableOpacity>
