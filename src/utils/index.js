@@ -8,9 +8,10 @@ import BackPress from './backPress'
 import imageResize from './imageResize'
 import Toast from './toast'
 import OpenUrl from './openUrl'
+import formatDate from './formatDate'
 
 const platform = Platform.OS
 const ratio = PixelRatio.get()
 const statusBarHeight = StatusBar.currentHeight
 let { width, height } = Dimensions.get('window')
-export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl }
+export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate }

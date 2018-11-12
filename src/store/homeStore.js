@@ -3,7 +3,7 @@ configure({
   enforceActions: 'always'
 })
 class Store {
-  @observable headerOpacity = false
+  @observable headerLine = false
   @observable barStyle='light-content'
   @observable bannerData=[]
   @action.bound

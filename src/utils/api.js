@@ -16,5 +16,13 @@ export default {
   schoolList: '/user/schools/search/findByDistrict_Id',
   updateUserInfo: '/user/users/updateUserInfo',
   /* banner列表 */
-  banner: '/zhiyuan/banner/getFour'
+  banner: '/zhiyuan/banner/getFour',
+  wxPay: 'zhiyuan/wxPay/wxPrePay',
+  getPayAmount: 'zhiyuan/wxPay/getPayAmount',
+  feedback: 'xuanke/userInformation/saveFeedback',
+  /* 绑定卡 */
+  bindingCard: '/login/weblogin/binding',
+  /* 开通体检卡 */
+  tiralBinding: '/login/weblogin/tiralBinding'
+
 }

@@ -3,11 +3,12 @@ import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../..
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView } from 'react-native'
 import { colors } from '../theme'
-import { ratio, dialog, OpenUrl } from '../utils'
+import { ratio, dialog, OpenUrl, formatDate } from '../utils'
 import { NavigationActions, StackActions } from 'react-navigation'
-Assets.loadAssetsGroup('icons', {
+
+Assets.loadAssetsGroup('icons.mine', {
   vipIcon: require('../assets/mine/vip-icon.png'),
-  vip: require('../assets/mine/vip.png'),
+  vipImg: require('../assets/mine/vip.png'),
   arrowRight: require('../assets/mine/arrow-right.png')
 })
 @inject('userStore', 'infoStore')
@@ -16,7 +17,7 @@ Assets.loadAssetsGroup('icons', {
     super(props)
     this.OpenUrl = new OpenUrl(props)
   }
-  signOut=() => {
+  signOut = () => {
     const { setUserInfo } = this.props.userStore
     const { clear } = this.props.infoStore
     const { dispatch } = this.props.navigation
@@ -44,19 +45,19 @@ Assets.loadAssetsGroup('icons', {
             <View row>
               <Avatar containerStyle={styles.avatar} imageStyle={{ width: 50, height: 50 }} imageSource={{ uri: userInfo.image }}
                 backgroundColor={userInfo.image ? 'transparent' : colors.stable}
-                onPress={() => this.props.navigation.navigate('Mine')}
+                onPress={() => navigate('Mine')}
               />
               <View paddingL-10 paddingR-24>
                 <View row>
                   <Text text-22>{userInfo.name}</Text>
-                  {isVipValid ? <Image assetName='vipIcon' style={styles.vipIcon} /> : null}
+                  {isVipValid ? <Image assetName='vipIcon' style={styles.vipIcon} assetGroup='icons.mine' /> : null}
                 </View>
-                {!isVipValid ? <Text text-13 dark06>您还不是Vip</Text> : <Text text-13 positive>VIP至2021-07-31</Text>}
+                {!isVipValid ? <Text text-13 dark06>您还未开通升学卡</Text> : <Text text-13 positive>升学卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
-            {!isVipValid && <Button bg-assertive label='开通Vip' size='small' marginT-12 onPress={() => this.openUrl('vip', {}, true)} />
+            {!isVipValid && <Button bg-assertive label='开通升学卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            <Image assetName='vip' style={styles.vipImg} tintColor={isVipValid ? colors.calm : colors.stable} />
+            <Image assetName='vipImg' assetGroup='icons.mine' style={styles.vipImg} tintColor={isVipValid ? colors.calm : colors.stable} />
           </View>
           <View row paddingH-11 marginV-20>
             <Card containerStyle={styles.card} onPress={() => navigate('Info')} elevation={2}>
@@ -67,20 +68,20 @@ Assets.loadAssetsGroup('icons', {
             </Card>
           </View>
           <View>
-            <ListItem style={styles.item} height={42} >
+            <ListItem style={styles.item} height={42} onPress={() => navigate('Feedback')}>
               <ListItem.Part left>
-                <Text>反馈</Text>
+                <Text text-16>反馈</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' />
+                <Image assetName='arrowRight' assetGroup='icons.mine' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.item} height={42}>
+            <ListItem style={styles.item} height={42} onPress={() => navigate('About')}>
               <ListItem.Part left>
-                <Text>关于</Text>
+                <Text text-16>关于</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' />
+                <Image assetName='arrowRight' assetGroup='icons.mine' />
               </ListItem.Part>
             </ListItem>
           </View>

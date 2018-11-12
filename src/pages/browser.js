@@ -4,10 +4,10 @@ import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress, Mask } from '../components'
-import { width, BackPress, statusBarHeight } from '../utils'
+import { width, BackPress, statusBarHeight, OpenUrl } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
-import config from '../config'
+import Config from 'react-native-config'
 @inject('userStore')
 @observer class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -29,6 +29,10 @@ import config from '../config'
       canGoBack: false
     }
     this.backPress = new BackPress({ backPress: this.onBackPress })
+    this.OpenUrl = new OpenUrl(props)
+  }
+  openUrl = (path, query, auth) => {
+    this.OpenUrl.openBrowser(path, query, auth)
   }
   goBack = () => {
     if (this.state.canGoBack) {
@@ -149,6 +153,10 @@ import config from '../config'
         case 'goBack':
           this.goBack()
           break
+        case 'routeChange':
+          // const { path, query, auth } = data.data
+          // this.openUrl(path, query, auth)
+          break
       }
     }
   }
@@ -180,8 +188,8 @@ import config from '../config'
         />}
         {maskShow && <Mask />}
         <WebView ref='webview'
-          style={styles.flex_1}
-          source={{ uri: `${config.webUrl}${path}` }}
+          style={{ backgroundColor: colors.stable }}
+          source={{ uri: `${Config.WEB_URL}${path}` }}
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}

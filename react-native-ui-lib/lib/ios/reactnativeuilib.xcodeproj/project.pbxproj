@@ -5,7 +5,6 @@
 	};
 	objectVersion = 48;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		D8AFAC9F204E004D00D28FED /* SafeAreaSpacerViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D8AFAC99204E004C00D28FED /* SafeAreaSpacerViewManager.m */; };
 		D8AFACA0204E004D00D28FED /* SafeAreaSpacerShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8AFAC9A204E004C00D28FED /* SafeAreaSpacerShadowView.m */; };
@@ -14,6 +13,8 @@
 		D8D93E7520161B1F00A39331 /* HighlighterView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8D93E7220161B1F00A39331 /* HighlighterView.m */; };
 		D8D93E7620161B1F00A39331 /* HighlighterViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D8D93E7420161B1F00A39331 /* HighlighterViewManager.m */; };
 		D8E5A538204C4F170000DA01 /* SafeAreaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D8E5A537204C4F170000DA01 /* SafeAreaManager.m */; };
+		2B78999DD9D346249F34FD8D /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BEB5280A3C4CF6B5E73A1F /* libCodePush.a */; };
+		10D572D7926C4C138BFDDE2A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B5ABC68EDAA14E41A8398013 /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +45,9 @@
 		D8D93E7420161B1F00A39331 /* HighlighterViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HighlighterViewManager.m; sourceTree = "<group>"; };
 		D8E5A536204C4F170000DA01 /* SafeAreaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SafeAreaManager.h; sourceTree = "<group>"; };
 		D8E5A537204C4F170000DA01 /* SafeAreaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SafeAreaManager.m; sourceTree = "<group>"; };
+		642BC3756535461A84A3EC86 /* CodePush.xcodeproj */ = {isa = PBXFileReference; name = "CodePush.xcodeproj"; path = "../../../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		42BEB5280A3C4CF6B5E73A1F /* libCodePush.a */ = {isa = PBXFileReference; name = "libCodePush.a"; path = "libCodePush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		B5ABC68EDAA14E41A8398013 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B78999DD9D346249F34FD8D /* libCodePush.a in Frameworks */,
+				10D572D7926C4C138BFDDE2A /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +68,8 @@
 			children = (
 				D8D93E6620161A7F00A39331 /* reactnativeuilib */,
 				D8D93E6520161A7F00A39331 /* Products */,
+				21D9FF8DA8504A79BE035EE3 /* Libraries */,
+				9629CA47017442418FAAE2B3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,6 +118,24 @@
 			path = safearea;
 			sourceTree = "<group>";
 		};
+		21D9FF8DA8504A79BE035EE3 /* Libraries */ = {
+			isa = "PBXGroup";
+			children = (
+				642BC3756535461A84A3EC86 /* CodePush.xcodeproj */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+			path = "";
+		};
+		9629CA47017442418FAAE2B3 /* Frameworks */ = {
+			isa = "PBXGroup";
+			children = (
+				B5ABC68EDAA14E41A8398013 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+			path = "";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,7 +162,7 @@
 		D8D93E5C20161A7F00A39331 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 920;
 				ORGANIZATIONNAME = wix;
 				TargetAttributes = {
 					D8D93E6320161A7F00A39331 = {
@@ -292,6 +318,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 			};
 			name = Debug;
 		};
@@ -303,6 +333,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 			};
 			name = Release;
 		};
