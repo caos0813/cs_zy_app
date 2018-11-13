@@ -8,6 +8,7 @@ import { width, BackPress, statusBarHeight, OpenUrl } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
 import Config from 'react-native-config'
+import _ from 'lodash'
 @inject('userStore')
 @observer class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -94,6 +95,8 @@ import Config from 'react-native-config'
     }))
   }
   onMessage = (e) => {
+    const { userInfo, setUserInfo } = this.props.userStore
+    const { navigate } = this.props.navigation
     let data
     try {
       data = JSON.parse(e.nativeEvent.data)
@@ -153,9 +156,19 @@ import Config from 'react-native-config'
         case 'goBack':
           this.goBack()
           break
+        case 'updateUserInfo':
+          alert(JSON.stringify(data))
+          let newUserInfo = _.clone(userInfo)
+          newUserInfo[data.data.name] = data.data.value
+          setUserInfo(newUserInfo)
+          break
         case 'routeChange':
           // const { path, query, auth } = data.data
           // this.openUrl(path, query, auth)
+          break
+        case 'navigate':
+          const { path, query } = data.data
+          navigate(path, query)
           break
       }
     }

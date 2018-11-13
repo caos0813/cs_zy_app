@@ -117,15 +117,18 @@ Assets.loadAssetsGroup('icons', {
       }
     }
   }
-  entryHolland=() => {
+  entryHolland = () => {
     const { userInfo } = this.props.userStore
-    const { isFinishTest } = userInfo
+    const { isFinishTest, continues } = userInfo
     if (isFinishTest) {
-      this.openUrl(`report`, {}, true)
+      if (continues) {
+        this.openUrl(`holland-entry`, {}, true)
+      } else {
+        this.openUrl(`report`, {}, true)
+      }
     } else {
       this.openUrl(`holland-entry`, {}, true)
     }
-    // this.openUrl(`holland-entry`, {}, true)
   }
   renderContainer = () => {
     return (

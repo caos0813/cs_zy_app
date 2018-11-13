@@ -1,3 +1,72 @@
 {
-  "java.configuration.updateBuildConfiguration": "automatic"
+    "javascript.implicitProjectConfig.experimentalDecorators": true,
+   "java.configuration.updateBuildConfiguration": "automatic",
+    "git.ignoreMissingGitWarning": true,
+    "editor.minimap.enabled": false,
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "One Dark Pro Vivid",
+    "editor.fontSize": 18,
+    "editor.tabSize": 2,
+    //"editor.fontFamily": "Monaco,Menlo,  'Courier New', monospace",
+    "explorer.confirmDelete": false,
+    "diffEditor.ignoreTrimWhitespace": true,
+    "vsicons.dontShowNewVersionMessage": true,
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+    "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "vetur.format.defaultFormatter.html": "js-beautify-html",
+    "vetur.format.defaultFormatter.js": "vscode-typescript",
+    "element-helper.language": "zh-CN",
+    "element-helper.version": "2.3",
+    "element-helper.indent-size": 2,
+    "element-helper.quotes": "double", // html vue qoutes
+    "element-helper.pug-quotes": "single", // jade/pug quotes
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 200,
+    "files.insertFinalNewline": true,
+    "eslint.autoFixOnSave": true,
+    "emmet.includeLanguages": {
+        "vue-html": "html"
+    },
+    "vetur.format.defaultFormatterOptions": {
+        "js-beautify-html": {
+            "unformatted": [
+                "area",
+                "base",
+                "br",
+                "col",
+                "embed",
+                "hr",
+                "input",
+                "keygen",
+                "link",
+                "menuitem",
+                "meta",
+                "param",
+                "source",
+                "track",
+                "wbr"
+            ]
+        }
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "html",
+        "vue-html",
+        "vue",
+        {
+            "language": "html",
+            "autoFix": true
+        },
+        {
+            "language": "vue",
+            "autoFix": true
+        }
+    ],
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "window.zoomLevel": 0,
+    "html.format.endWithNewline": true
 }

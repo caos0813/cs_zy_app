@@ -19,10 +19,7 @@ Assets.loadAssetsGroup('icons', {
   }
   showYearPicker=() => {
     const { updateUserInfo, userInfo } = this.props.infoStore
-    let yearData = []
-    for (let i = 0; i < 4; i++) {
-      yearData[i] = (new Date().getFullYear() - i).toString()
-    }
+    let yearData = ['高一', '高二', '高三']
     Picker.init({
       pickerData: yearData,
       selectedValue: userInfo.startYear ? [userInfo.startYear] : [],
@@ -118,7 +115,7 @@ Assets.loadAssetsGroup('icons', {
     const { areaPickerId, schoolPickerId, userInfo, areaPickerValString } = this.props.infoStore
     const { name, image, id, gender, startYear, nickName } = userInfo
     const { getUserInfo } = this.props.userStore
-    const { getParam, replace } = this.props.navigation
+    const { getParam, replace, goBack } = this.props.navigation
     if (!schoolPickerId || !name || !startYear || !areaPickerValString) {
       Toast('请完善您的信息')
       return
@@ -152,6 +149,8 @@ Assets.loadAssetsGroup('icons', {
       getUserInfo()
       if (getParam('type') === 'complete') {
         replace('Home')
+      } else {
+        goBack()
       }
     }).catch(() => {
       Toast('保存失败，请稍后重试')
@@ -217,7 +216,7 @@ Assets.loadAssetsGroup('icons', {
               </Button>
             </View>
             <View row center style={styles.item}>
-              <Text gray>入学</Text>
+              <Text gray>年级</Text>
               <Button link style={styles.picker} onPress={() => this.showYearPicker()}>
                 <View flex>
                   {userInfo.startYear ? <Text>{userInfo.startYear}</Text> : <Text>请选择入学年份</Text>}

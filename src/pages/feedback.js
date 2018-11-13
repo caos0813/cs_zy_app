@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Keyboard } from 'react-native'
 import { observer, inject } from 'mobx-react/native'
-import { View, TextArea, Button } from '../../react-native-ui-lib'
+import { View, TextArea, Button, Text } from '../../react-native-ui-lib'
 import { ratio, api, axios, Toast } from '../utils'
 import { colors } from '../theme'
 @inject('userStore')
@@ -21,6 +21,10 @@ import { colors } from '../theme'
     const { goBack } = this.props.navigation
     Keyboard.dismiss()
     const { userInfo } = this.props.userStore
+    if (this.state.feedback.length > 500) {
+      Toast('最多输入500字')
+      return
+    }
     axios.post(api.feedback, {
       name: userInfo.name,
       phoneNum: userInfo.phoneNumber,
@@ -38,6 +42,7 @@ import { colors } from '../theme'
         <View style={styles.textArea} >
           <TextArea placeholder='请输入文字' value={this.state.feedback} onChangeText={this.onChangeText} text-16 />
         </View>
+        <View right paddingV-10 paddingH-20><Text>{500 - this.state.feedback.length}/500</Text></View>
         <View padding-25><Button label='提交' bg-calm onPress={this.submit} /></View>
       </View>
     )

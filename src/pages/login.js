@@ -78,7 +78,7 @@ let timer
           })
         }
       } else {
-        Toast('登录失败请稍后再试')
+        Toast(data.msg)
       }
     }).catch(() => {
       Toast('请检查您的网络')
@@ -175,7 +175,7 @@ let timer
   componentWillUnmount () {
     const { setValue } = this.props.loginStore
     setValue('verificationCode', '')
-    this.refs.codeInput.clear()
+    this.refs.codeInput && this.refs.codeInput.clear()
     this.clearTimer()
   }
 }

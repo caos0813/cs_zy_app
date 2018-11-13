@@ -35,11 +35,12 @@ const listItems = [{
 @observer class Pay extends Component {
   render () {
     const { payType, setValue, payAmount } = this.props.payStore
+    const { isVipValid } = this.props.userStore
     return (
       <View flex useSafeArea bg-stable >
         <View flex style={{ zIndex: 0 }}>
           <ScrollView>
-            <View paddingH-12 paddingV-3>
+            <View paddingH-12 paddingV-3 center>
               <Image assetName='card' style={styles.imgStyle} />
             </View>
             <View center padding-25>
@@ -88,10 +89,12 @@ const listItems = [{
               ))}
             </View>
           </ScrollView>
-          <View paddingV-8 paddingH-13 bg-light style={styles.footer} row spread>
-            <Text calm text-28>¥{payAmount}</Text>
-            <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />
-          </View>
+          {isVipValid !== 2 &&
+            <View paddingV-8 paddingH-13 bg-light style={styles.footer} row spread>
+              <Text calm text-28>¥{payAmount}</Text>
+              <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />
+            </View>
+          }
         </View>
         <Modal ref='modal' style={styles.modal} backdropPressToClose={false}>
           <View center padding-8 >
@@ -178,6 +181,7 @@ const listItems = [{
         axios.post(api.bindingCard, {
           cardNumber,
           password,
+          fromApp: true,
           phoneNumber: userInfo.phoneNumber
         }).then(data => {
           getUserInfo()

@@ -40,7 +40,7 @@ axios.interceptors.response.use(function (response) {
   return response.data
 }, function (err) {
   console.log(err)
-  const errorObj = err.response ? err.response : { err: '网络请求错误' }
+  const errorObj = err.response ? err.response.data : { err: '网络请求错误' }
   if (errorObj && errorObj.status === 401) {
     /* error({
       statusCode: 401,

@@ -42,7 +42,7 @@ export default createStackNavigator({
   Pay: {
     screen: Pay,
     navigationOptions: () => ({
-      title: '开通升学卡'
+      title: '我的升学卡'
     })
   },
   About: {
@@ -84,8 +84,8 @@ export default createStackNavigator({
   },
   initialRouteName: 'Home',
   /* initialRouteParams: {
-        type: 'complete'
-      }, */
+          type: 'complete'
+        }, */
   transitionConfig: () => ({
     screenInterpolator: StackViewStyleInterpolator.forHorizontal
   })

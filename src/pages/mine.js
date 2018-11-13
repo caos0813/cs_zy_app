@@ -50,14 +50,16 @@ Assets.loadAssetsGroup('icons.mine', {
               <View paddingL-10 paddingR-24>
                 <View row>
                   <Text text-22>{userInfo.name}</Text>
-                  {isVipValid ? <Image assetName='vipIcon' style={styles.vipIcon} assetGroup='icons.mine' /> : null}
+                  {isVipValid === 2 && <Image assetName='vipIcon' style={styles.vipIcon} assetGroup='icons.mine' />}
                 </View>
-                {!isVipValid ? <Text text-13 dark06>您还未开通升学卡</Text> : <Text text-13 positive>升学卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
+                {isVipValid === 0 && <Text text-13 dark06>您还未开通升学卡</Text> }
+                {isVipValid === 2 && <Text text-13 positive>升学卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
+                {isVipValid === 1 && <Text text-13 positive>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
-            {!isVipValid && <Button bg-assertive label='开通升学卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
+            {isVipValid !== 2 && <Button bg-assertive label='开通升学卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            <Image assetName='vipImg' assetGroup='icons.mine' style={styles.vipImg} tintColor={isVipValid ? colors.calm : colors.stable} />
+            <Image assetName='vipImg' assetGroup='icons.mine' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />
           </View>
           <View row paddingH-11 marginV-20>
             <Card containerStyle={styles.card} onPress={() => navigate('Info')} elevation={2}>
@@ -68,9 +70,17 @@ Assets.loadAssetsGroup('icons.mine', {
             </Card>
           </View>
           <View>
+            <ListItem style={styles.item} height={42} onPress={() => navigate('Pay')}>
+              <ListItem.Part left>
+                <Text text-18 dark>会员中心</Text>
+              </ListItem.Part>
+              <ListItem.Part >
+                <Image assetName='arrowRight' assetGroup='icons.mine' />
+              </ListItem.Part>
+            </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => navigate('Feedback')}>
               <ListItem.Part left>
-                <Text text-16>反馈</Text>
+                <Text text-18 dark>反馈</Text>
               </ListItem.Part>
               <ListItem.Part >
                 <Image assetName='arrowRight' assetGroup='icons.mine' />
@@ -78,7 +88,7 @@ Assets.loadAssetsGroup('icons.mine', {
             </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => navigate('About')}>
               <ListItem.Part left>
-                <Text text-16>关于</Text>
+                <Text text-18 dark>关于</Text>
               </ListItem.Part>
               <ListItem.Part >
                 <Image assetName='arrowRight' assetGroup='icons.mine' />

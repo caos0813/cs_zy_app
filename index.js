@@ -74,6 +74,9 @@ class App extends Component {
       SplashScreen.hide()
     }, 2000);
   }
+  componentWillMount(){
+    console.log('componentWillUnmount')
+  }
 }
 AppRegistry.registerComponent('app', () => App)
 WeChat.registerApp('wx998c32e026b70535')

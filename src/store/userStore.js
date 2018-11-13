@@ -9,8 +9,12 @@ class Store {
   @computed get isVipValid () {
     if (!_.isEmpty(this.userInfo)) {
       const { isValid, level } = this.userInfo
-      if (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN' || level === 'EXPERIENCE')) {
-        return true
+      if (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN')) {
+        return 2
+      } else if (isValid || level === 'EXPERIENCE') {
+        return 1
+      } else {
+        return 0
       }
     }
   }
