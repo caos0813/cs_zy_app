@@ -29,10 +29,13 @@ class Store {
   }
   @action.bound
   getUserInfo () {
-    Promise.all([axios.get(api.getUserInfo), axios.get(api.isFinishTest)]).then(
-      (data) => {
+    Promise.all([axios.get(api.getUserInfo), axios.get(api.isFinishTest), storage.load({
+      key: 'hollandContinues'
+    })]).then(
+      data => {
         let userInfo = data[0]
         userInfo.isFinishTest = data[1]
+        userInfo.continues = data[2]
         runInAction(() => {
           this.userInfo = { ...this.userInfo, ...userInfo }
         })
@@ -49,6 +52,10 @@ reaction(() => userStore.userInfo, (data) => {
     storage.save({
       key: 'userInfo',
       data: data
+    })
+    storage.save({
+      key: 'hollandContinues',
+      data: !!data.continues
     })
   }
 })

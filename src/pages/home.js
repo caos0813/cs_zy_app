@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen } from '../../react-native-ui-lib'
+import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen, Button } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import JPushModule from 'jpush-react-native'
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll'
+import * as Animatable from 'react-native-animatable'
 import _ from 'lodash'
 import {
   StyleSheet,
@@ -12,7 +13,7 @@ import {
   Linking
 } from 'react-native'
 import Swiper from 'react-native-swiper'
-import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl, width, dialog, Toast } from '../utils'
+import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl, width, dialog, Toast, height, storage } from '../utils'
 import { colors } from '../theme'
 import { ItemHead } from '../components'
 
@@ -24,13 +25,21 @@ Assets.loadAssetsGroup('icons', {
   icon02: require('../assets/home/icon02.png'),
   icon03: require('../assets/home/icon03.png'),
   icon04: require('../assets/home/icon04.png'),
-  icon05: require('../assets/home/icon05.png')
+  icon05: require('../assets/home/icon05.png'),
+  splash1: require('../assets/splash/1.jpg'),
+  splash2: require('../assets/splash/2.jpg'),
+  splash3: require('../assets/splash/3.jpg'),
+  splash4: require('../assets/splash/4.jpg'),
+  splash5: require('../assets/splash/5.jpg')
 })
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
   constructor (props) {
     super(props)
     this.OpenUrl = new OpenUrl(props)
+    this.state = {
+      animationConfig: {}
+    }
   }
   bannerPress = (item) => {
     if (item.link) {
@@ -76,8 +85,8 @@ Assets.loadAssetsGroup('icons', {
           >
             {
               listData.map(item => (
-                <TouchableOpacity activeOpacity={0.7} key={item.id} onPress={() => this.bannerPress(item)}>
-                  <Image source={{ uri: item.image }} resizeMode='cover' style={styles.bannerImg} />
+                <TouchableOpacity activeOpacity={0.7} key={item.id} onPress={() => this.bannerPress(item)} style={{ width: '100%', height: 250 }}>
+                  <Image source={{ uri: item.image }} resizeMode='cover' style={{ width: '100%', height: 250 }} />
                 </TouchableOpacity>
               ))
             }
@@ -103,15 +112,16 @@ Assets.loadAssetsGroup('icons', {
         copyUserInfo.level = 'EXPERIENCE'
         copyUserInfo.isValid = true
         setUserInfo(copyUserInfo)
-        Toast('恭喜您获得3天升学卡专属功能体验期，体验期后可在会员中心购买升学卡')
-        this.openUrl(`volunteer-index`)
+        Toast('恭喜您获得3天升学卡专属功能体验期，体验期后可在会员中心购买升学卡', () => {
+          this.openUrl(`volunteer-index`)
+        })
       })
     } else {
       // if(level==='ZHI_YUAN'||level==='FULL_FEATURED'||level==='EXPERIENCE')
       if (['ZHI_YUAN', 'FULL_FEATURED', 'EXPERIENCE'].indexOf(level) > -1 && isValid) {
         this.openUrl(`volunteer-index`)
       } else {
-        dialog.confirm('您得体验期已到期，进入会员中心开通升学卡，即可继续享受升学卡专属功能').then(() => {
+        dialog.confirm('您的体验期已到期，进入会员中心开通升学卡，即可继续享受升学卡专属功能').then(() => {
           navigate('Pay')
         })
       }
@@ -205,22 +215,47 @@ Assets.loadAssetsGroup('icons', {
       setValue('headerLine', false)
     }
   }
+  hideSplash = () => {
+    const { setValue } = this.props.homeStore
+    this.setState({
+      animationConfig: {
+        animation: 'fadeOut',
+        onAnimationEnd: () => {
+          setValue('showSplash', false)
+          storage.save({
+            key: 'showSplash',
+            data: false
+          })
+        }
+      }
+    })
+  }
   render () {
-    const { barStyle, bannerData, headerLine } = this.props.homeStore
+    const { barStyle, bannerData, headerLine, showSplash } = this.props.homeStore
     const { userInfo } = this.props.userStore
+    const { animationConfig } = this.state
     return (
       <View flex useSafeArea>
         <StatusBar translucent animated barStyle={barStyle} />
+        {showSplash && <Animatable.View style={styles.splash} {...animationConfig}>
+          <Swiper height={height} loop={false}>
+            {[1, 2, 3, 4, 5].map(item => (
+              <View key={item} style={{ backgroundColor: colors.calm }}>
+                <Image assetName={`splash${item}`} style={{ height: height, width: width }} />
+                {item === 5 && <View center paddingV-50 style={{ position: 'absolute', width: '100%', bottom: 0, left: 0 }}><Button bg-calm label='立即体检' onPress={this.hideSplash} /></View>}
+              </View>
+            ))}
+          </Swiper>
+        </Animatable.View>}
         <ParallaxScroll
           renderHeader={({ animatedValue }) => this.renderHeader(animatedValue, headerLine, userInfo)}
           headerHeight={40 + statusBarHeight}
           parallaxHeight={250}
           renderParallaxForeground={({ animatedValue }) => this.renderTopContainer(animatedValue, bannerData)}
-          parallaxBackgroundScrollSpeed={1}
-          parallaxForegroundScrollSpeed={1.5}
           headerBackgroundColor='rgba(255, 255, 255, 0)'
           headerFixedBackgroundColor='rgba(255, 255, 255, 1)'
           onHeaderFixed={this.onHeaderFixed}
+          parallaxForegroundScrollSpeed={500000}
           isHeaderFixed
         >
           <UltimateListView style={{ zIndex: 20, backgroundColor: colors.light }} ref='scroll' keyExtractor={(item, index) => `${index} - ${item}`}
@@ -247,6 +282,7 @@ Assets.loadAssetsGroup('icons', {
     this.refs.scroll.refresh()
   }
   openNotificationListener = (e) => {
+    /* alert(JSON.stringify(e)) */
     const extras = JSON.parse(e.extras)
     if (extras.type === 'article') {
       this.openUrl(`article`, { id: extras.id })
@@ -257,6 +293,16 @@ Assets.loadAssetsGroup('icons', {
         this.openUrl(`article`, { id: extras.id, type: 'banner' })
       }
     }
+  }
+  componentWillMount () {
+    const { setValue } = this.props.homeStore
+    storage.load({
+      key: 'showSplash'
+    }).then(data => {
+      setValue('showSplash', false)
+    }).catch(() => {
+      setValue('showSplash', true)
+    })
   }
   componentDidMount () {
     const { setValue } = this.props.homeStore
@@ -277,6 +323,19 @@ Assets.loadAssetsGroup('icons', {
 }
 
 const styles = StyleSheet.create({
+  splashButton: {
+    position: 'absolute'
+
+  },
+  splash: {
+    position: 'absolute',
+    backgroundColor: colors.light,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 1001
+  },
   header: {
     width: '100%',
     // position: 'absolute',
@@ -323,10 +382,6 @@ const styles = StyleSheet.create({
   },
   swiper: {
     // backgroundColor: '#111'
-  },
-  bannerImg: {
-    width: '100%',
-    height: '100%'
   },
   iconButton: {
     flex: 1,

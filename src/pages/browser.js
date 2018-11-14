@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { WebView, StyleSheet, StatusBar } from 'react-native'
+import { WebView, StyleSheet, StatusBar, DeviceEventEmitter } from 'react-native'
 import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
@@ -157,7 +157,7 @@ import _ from 'lodash'
           this.goBack()
           break
         case 'updateUserInfo':
-          alert(JSON.stringify(data))
+          // alert(JSON.stringify(data))
           let newUserInfo = _.clone(userInfo)
           newUserInfo[data.data.name] = data.data.value
           setUserInfo(newUserInfo)
@@ -179,6 +179,7 @@ import _ from 'lodash'
   }
   componentWillUnmount () {
     this.backPress.componentWillUnmount()
+    DeviceEventEmitter.emit('updateUserInfo')
   }
   render () {
     const { getParam } = this.props.navigation

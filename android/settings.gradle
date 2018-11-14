@@ -18,6 +18,6 @@ include ':jpush-react-native'
 project(':jpush-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/jpush-react-native/android')
 
 include ':@remobile_react-native-toast'
-project(':@remobile_react-native-toast').projectDir = new File(rootProject.projectDir, '../node_modules/@remobile/react-native-toast/android')
+project(':@remobile_react-native-toast').projectDir = new File(rootProject.projectDir, '../react-native-toast/android')
 
 include ':app'

@@ -17,7 +17,7 @@ Assets.loadAssetsGroup('icons', {
       title: navigation.getParam('type') === 'complete' ? '完善用户信息' : '修改用户信息'
     }
   }
-  showYearPicker=() => {
+  showYearPicker = () => {
     const { updateUserInfo, userInfo } = this.props.infoStore
     let yearData = ['高一', '高二', '高三']
     Picker.init({
@@ -40,7 +40,7 @@ Assets.loadAssetsGroup('icons', {
     Picker.show()
     this.refs.mask.show()
   }
-  showSchoolPicker=() => {
+  showSchoolPicker = () => {
     const { schoolPickerVal, schoolData, schoolPickerData, setValue } = this.props.infoStore
     if (!schoolPickerData.length) {
       Toast('该地区下暂无学校数据')
@@ -70,7 +70,7 @@ Assets.loadAssetsGroup('icons', {
     Picker.show()
     this.refs.mask.show()
   }
-  showAreaPicker=(val) => {
+  showAreaPicker = (val) => {
     const { areaPickerData, areaPickerVal, setValue, areaData, getSchoolList } = this.props.infoStore
     Picker.init({
       pickerData: areaPickerData,
@@ -106,19 +106,25 @@ Assets.loadAssetsGroup('icons', {
     Picker.show()
     this.refs.mask.show()
   }
-  sexChange=(e) => {
+  sexChange = (e) => {
     const { updateUserInfo } = this.props.infoStore
     let gender = e === 'true'
     updateUserInfo('gender', gender)
   }
-  submit=() => {
+  submit = () => {
     const { areaPickerId, schoolPickerId, userInfo, areaPickerValString } = this.props.infoStore
     const { name, image, id, gender, startYear, nickName } = userInfo
     const { getUserInfo } = this.props.userStore
     const { getParam, replace, goBack } = this.props.navigation
     if (!schoolPickerId || !name || !startYear || !areaPickerValString) {
-      Toast('请完善您的信息')
+      Toast('请先完善您的信息')
       return
+    } else {
+      let reg = /[^\u4e00-\u9fa5]/
+      if (reg.test(name)) {
+        Toast('姓名必需为中文')
+        return
+      }
     }
     let params = {
       name,
@@ -165,12 +171,12 @@ Assets.loadAssetsGroup('icons', {
         <ScrollView>
           <View center paddingV-25>
             {userInfo.image &&
-            <Avatar
-              imageSource={{ uri: userInfo.image }}
-              containerStyle={{ width: 80, height: 80 }}
-              imageStyle={{ width: 80, height: 80, borderRadius: 80 }}
-              backgroundColor='transparent'
-              imageProps={{ resizeMode: 'cover' }} />
+              <Avatar
+                imageSource={{ uri: userInfo.image }}
+                containerStyle={{ width: 80, height: 80 }}
+                imageStyle={{ width: 80, height: 80, borderRadius: 80 }}
+                backgroundColor='transparent'
+                imageProps={{ resizeMode: 'cover' }} />
             }
           </View>
           <View>
@@ -219,7 +225,7 @@ Assets.loadAssetsGroup('icons', {
               <Text gray>年级</Text>
               <Button link style={styles.picker} onPress={() => this.showYearPicker()}>
                 <View flex>
-                  {userInfo.startYear ? <Text>{userInfo.startYear}</Text> : <Text>请选择入学年份</Text>}
+                  {userInfo.startYear ? <Text>{userInfo.startYear}</Text> : <Text>请选择年级</Text>}
                 </View>
                 <Image assetName='arrow' />
               </Button>

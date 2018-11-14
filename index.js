@@ -1,4 +1,4 @@
-import { AppRegistry, YellowBox } from 'react-native'
+import { AppRegistry, YellowBox, DeviceEventEmitter } from 'react-native'
 import promise from 'es6-promise'
 import React, { Component } from 'react'
 import { Provider } from 'mobx-react/native'
@@ -52,7 +52,7 @@ class App extends Component {
     storage.load({
       key: 'userInfo'
     }).then(data => {
-      if (data.dataFlag) {
+      if (data.school && data.school.id) {
         try {
           let tag = Config.ENV === 'production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
           JPushModule.setTags([tag], (e) => {
@@ -73,8 +73,11 @@ class App extends Component {
     setTimeout(() => {
       SplashScreen.hide()
     }, 2000);
+    DeviceEventEmitter.addListener('updateUserInfo', () => {
+      getUserInfo()
+    })
   }
-  componentWillMount(){
+  componentWillMount () {
     console.log('componentWillUnmount')
   }
 }

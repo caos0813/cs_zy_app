@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
-import { StyleSheet, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'
 import { ratio, dialog, OpenUrl, formatDate } from '../utils'
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -103,6 +103,7 @@ Assets.loadAssetsGroup('icons.mine', {
     )
   }
   componentDidMount () {
+    DeviceEventEmitter.emit('updateUserInfo')
     // this.refs.modal.open()
   }
 }
