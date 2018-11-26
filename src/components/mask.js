@@ -26,6 +26,9 @@ export default class Progress extends Component {
       }
     ).start()
   }
+  status () {
+    return this.state.show
+  }
   hide = () => {
     Animated.timing(
       this.state.opacity,
@@ -55,6 +58,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
-    zIndex: 1001
+    zIndex: 100
   }
 })

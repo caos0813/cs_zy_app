@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
-import { View, Text, Assets, Image } from '../../react-native-ui-lib/src'
+import { View, Text } from '../../react-native-ui-lib/src'
 import { StyleSheet } from 'react-native'
-Assets.loadAssetsGroup('icons', {
-  cycle: require('../assets/home/cycle.png')
-})
 export default class itemHead extends Component {
   render () {
     const { title, style } = this.props
     return (
       <View row padding-15 style={[styles.wrap, style]}>
         <Text dark text-24 style={styles.text}>{title}</Text>
-        <Image assetName='cycle' style={styles.icon} />
+        {/* <Image assetName='cycle' style={styles.icon} /> */}
       </View>
     )
   }

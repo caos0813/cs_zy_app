@@ -8,7 +8,7 @@ class About extends Component {
       <View flex useSafeArea>
         <ScrollView style={styles.scroll}>
           <View marginB-15>
-            <Text style={styles.text}>钧扬网络成立于2018年，是一家致力于为青少年提供生涯决策服务的互联网公司，创始团队由上海交大、武汉大学、湖南大学等名校大牛组成。钧扬创立之初已获得百万美金级天使轮投资，和国内多所名牌中学和著名高校建立了项目合作。
+            <Text style={styles.text}>湖南钧扬网络技术有限公司成立于2018年，是一家致力于为青少年提供生涯决策服务的互联网公司，创始团队由上海交大、武汉大学、湖南大学等名校大牛组成。钧扬创立之初已获得百万美金级天使轮投资，和国内多所名牌中学和著名高校建立了项目合作。
             </Text>
           </View>
           <View marginB-15>

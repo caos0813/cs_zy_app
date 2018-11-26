@@ -8,6 +8,7 @@ class Store {
   @observable userInfo = {
     name: '',
     gender: true,
+    isStudent: true,
     startYear: ''
   }
   @observable areaData = []
@@ -26,6 +27,14 @@ class Store {
       return this.userInfo.gender.toString()
     }
   }
+  @computed get isStudentString () {
+    // alert(1)
+    if (!_.isUndefined(this.userInfo.isStudent) && !_.isNull(this.userInfo.isStudent)) {
+      return this.userInfo.isStudent.toString()
+    } else {
+      return 'true'
+    }
+  }
   @computed get areaPickerValString () {
     return this.areaPickerVal.join('-')
   }
@@ -39,9 +48,10 @@ class Store {
     this.schoolPickerData = []
     this.schoolPickerVal = ''
     this.schoolPickerId = ''
-    this.areaData = {
+    this.userInfo = {
       name: '',
       gender: true,
+      isStudent: true,
       startYear: ''
     }
   }

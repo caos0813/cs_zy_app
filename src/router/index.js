@@ -9,11 +9,10 @@ import Info from '../pages/info'
 import Feedback from '../pages/feedback'
 import About from '../pages/about'
 import Pay from '../pages/pay'
+import { BackAvatar } from '../components'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { Avatar, Assets } from 'react-native-ui-lib'
-Assets.loadAssetsGroup('icons', {
-  ic_back: require('../assets/icons/ic_back.png')
-})
+
 export default createStackNavigator({
   Login: {
     screen: Login,
@@ -63,8 +62,8 @@ export default createStackNavigator({
 },
 {
   navigationOptions: ({ navigation, screenProps }) => ({
-    gesturesEnabled: true,
-    headerLeft: <Avatar imageSource={Assets.icons.ic_back} resizeMode='cover' backgroundColor='transparent' containerStyle={{ marginLeft: 15, width: 24, height: 24 }} imageStyle={{ width: 24, height: 24 }} onPress={() => navigation.goBack()} />,
+    // gesturesEnabled: true,
+    headerLeft: <BackAvatar onPress={navigation.goBack} />,
     headerStyle: {
       height: 44 + screenProps.statusBarHeight,
       paddingTop: screenProps.statusBarHeight,

@@ -18,3 +18,5 @@
 -keep class com.tencent.mm.sdk.** {
    *;
 }
+# BuildConfig --- on final of file
+-keep class com.zhiyazhiyuan.zyzy.BuildConfig { *; }

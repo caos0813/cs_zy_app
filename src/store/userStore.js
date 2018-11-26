@@ -11,7 +11,7 @@ class Store {
       const { isValid, level } = this.userInfo
       if (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN')) {
         return 2
-      } else if (isValid || level === 'EXPERIENCE') {
+      } else if (isValid && level === 'EXPERIENCE') {
         return 1
       } else {
         return 0
@@ -26,6 +26,8 @@ class Store {
   @action.bound
   setUserInfo (data) {
     this.userInfo = data
+    /* 设置token */
+    global.token = data.token
   }
   @action.bound
   getUserInfo () {

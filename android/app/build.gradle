@@ -74,8 +74,8 @@ import com.android.build.OutputFile
 
 project.ext.envConfigFiles = [
     debug: ".env.development",
-    release: ".env.production",
-    stagingrelease: ".env.staging"
+    stagingrelease: ".env.staging",
+    release: ".env.production"
 ]
 
 project.ext.react = [
@@ -99,7 +99,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -109,11 +109,11 @@ android {
         applicationId "com.zhiyazhiyuan.zyzy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.2"
+        versionCode project.env.get("APP_VERSION_CODE").toInteger()
+        versionName project.env.get("APP_VERSION_NAME")
         manifestPlaceholders = [
                 JPUSH_APPKEY: "97ab5a6f89c340b6f61c74c4",
-                APP_CHANNEL : "default"
+                APP_CHANNEL : project.env.get("APP_CHANNEL")
         ]
 
         ndk {
@@ -145,13 +145,14 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             buildConfigField "String", "CODEPUSH_KEY", '"DtFr1Uk8dYnWutlbf3mdkSlF2pa84ksvOXqog"'
             signingConfig signingConfigs.release
-        }  
+            matchingFallbacks = ['release']
+        }
         stagingRelease {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             buildConfigField "String", "CODEPUSH_KEY", '"Xi80Uvc9OUYwDKDaQrc99aZhFrC94ksvOXqog"'
             signingConfig signingConfigs.release
-            matchingFallbacks = ['debug']
+            matchingFallbacks = ['release']
         }
         debug{
             buildConfigField "String", "CODEPUSH_KEY", '"Xi80Uvc9OUYwDKDaQrc99aZhFrC94ksvOXqog"'
@@ -173,6 +174,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':react-native-code-push')
     compile project(':react-native-wechat')
     compile project(':react-native-svg')

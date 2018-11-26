@@ -3,12 +3,12 @@ import { View, Text, Button, TextInput, TouchableOpacity } from '../../react-nat
 import { inject, observer } from 'mobx-react/native'
 import { CodeInput } from '../components'
 import { api, axios, width, Toast } from '../utils'
-import { StyleSheet, Keyboard, StatusBar } from 'react-native'
+import { StyleSheet, Keyboard } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { BoxShadow } from 'react-native-shadow'
 import { colors } from '../theme'
 let timer
-@inject('loginStore', 'userStore')
+@inject('loginStore', 'userStore', 'routeStore')
 @observer class Login extends Component {
   constructor (props) {
     super(props)
@@ -18,7 +18,6 @@ let timer
     const { phoneNum, setValue, countDown } = this.props.loginStore
     if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
       Toast('手机格式错误')
-      return
     }
     Keyboard.dismiss()
     this.clearTimer()
@@ -43,9 +42,10 @@ let timer
   login = () => {
     const { phoneNum, verificationCode } = this.props.loginStore
     const { getUserInfo, setUserInfo } = this.props.userStore
-    const { goBack, replace } = this.props.navigation
-    console.log(this.props.navigation.state)
-    const { params } = this.props.navigation.state
+    const { replace } = this.props.navigation
+    /* const { routes } = this.props.routeStore
+    const preRoute = routes[routes.length - 2] */
+    // const { params } = this.props.navigation.state
     if (verificationCode.length !== 6) {
       Toast('验证码长度不正确!')
       return
@@ -68,9 +68,7 @@ let timer
         /* 如果已完善用户信息 */
         if (data.dataFlag) {
           getUserInfo()
-          /* 刷新上一个页面并返回 */
-          params && params.preRefresh && params.preRefresh()
-          goBack()
+          replace('Home')
         } else {
           getUserInfo()
           replace('Info', {
@@ -102,11 +100,10 @@ let timer
       }
     }
 
-    const { phoneValid, phoneErrorText, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
-    const { navigate } = this.props.navigation
+    const { phoneValid, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
+    const { push } = this.props.navigation
     return (
       <View flex useSafeArea paddingH-23 paddingT-20>
-        <StatusBar barStyle='dark-content' />
         <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
           <View paddingH-23 paddingT-20 >
             <Text text-20 marginH-12 dark>{tick > 0 ? '验证码已经发送成功' : '验证码已过期'}</Text>
@@ -137,7 +134,7 @@ let timer
             </View>
             <View paddingT-100 paddingH-5>
               <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
-              <TouchableOpacity activeOpacity={0.6} onPress={() => navigate('Browser', { path: 'agreement-regist' })}>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => push('Browser', { path: 'agreement-regist' })}>
                 <View padding-10 center>
                   <Text text-12 gray>点击按钮表示同意<Text calm>《知涯用户协议》</Text></Text>
                 </View>
@@ -153,7 +150,7 @@ let timer
               text-14
               placeholder='请输入手机号'
               keyboardType='phone-pad'
-              error={phoneErrorText}
+              // error={phoneErrorText}
               dark10
               onChangeText={val => setValue('phoneNum', val)}
               returnKeyType='next'
@@ -170,6 +167,7 @@ let timer
     )
   }
   componentDidMount () {
+    console.log('componentDidMount', this.props.routeStore.routes)
     // this.refs.modal.open()
   }
   componentWillUnmount () {
@@ -186,7 +184,7 @@ const style = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'absolute',
-    zIndex: 1001
+    zIndex: 99
   },
   codeInputWrap: {
     width: '100%',

@@ -1,20 +1,31 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, TextInput, RadioButton, RadioGroup, Assets, Button, Image } from '../../react-native-ui-lib'
+import { Text, View, Avatar, TextInput, RadioButton, RadioGroup, Button, Image } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { ScrollView, StyleSheet } from 'react-native'
 import _ from 'lodash'
 import Picker from 'react-native-picker'
 import { colors } from '../theme'
-import { ratio, axios, Toast, api } from '../utils'
+import { ratio, axios, Toast, api, BackPress } from '../utils'
 import { Mask } from '../components'
-Assets.loadAssetsGroup('icons', {
-  arrow: require('../assets/mine/arrow.png')
-})
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('type') === 'complete' ? '完善用户信息' : '修改用户信息'
+    }
+  }
+  constructor (props) {
+    super(props)
+    this.backPress = new BackPress({ backPress: this.onBackPress })
+  }
+  onBackPress = () => {
+    const maskStatus = this.refs.mask.status()
+    if (maskStatus) {
+      Picker.hide()
+      this.refs.mask.hide()
+      return true
+    } else {
+      return false
     }
   }
   showYearPicker = () => {
@@ -71,9 +82,20 @@ Assets.loadAssetsGroup('icons', {
     this.refs.mask.show()
   }
   showAreaPicker = (val) => {
+    const { getParam } = this.props.navigation
     const { areaPickerData, areaPickerVal, setValue, areaData, getSchoolList } = this.props.infoStore
+    const { province } = this.props.infoStore.userInfo
+    let pickerData = areaPickerData
+    if (getParam('type') !== 'complete') {
+      pickerData = [_.find(areaPickerData, (obj) => {
+        for (let x in obj) {
+          return x === province.name
+        }
+      })]
+      // pickerData = api.personData
+    }
     Picker.init({
-      pickerData: areaPickerData,
+      pickerData: pickerData,
       selectedValue: areaPickerVal,
       pickerConfirmBtnText: '确定',
       pickerCancelBtnText: '取消',
@@ -111,9 +133,14 @@ Assets.loadAssetsGroup('icons', {
     let gender = e === 'true'
     updateUserInfo('gender', gender)
   }
+  identityChange = (e) => {
+    const { updateUserInfo } = this.props.infoStore
+    let gender = e === 'true'
+    updateUserInfo('isStudent', gender)
+  }
   submit = () => {
     const { areaPickerId, schoolPickerId, userInfo, areaPickerValString } = this.props.infoStore
-    const { name, image, id, gender, startYear, nickName } = userInfo
+    const { name, image, id, gender, startYear, nickName, isStudent } = userInfo
     const { getUserInfo } = this.props.userStore
     const { getParam, replace, goBack } = this.props.navigation
     if (!schoolPickerId || !name || !startYear || !areaPickerValString) {
@@ -131,6 +158,7 @@ Assets.loadAssetsGroup('icons', {
       image,
       id,
       gender,
+      isStudent,
       startYear,
       nickName,
       province: {
@@ -158,12 +186,12 @@ Assets.loadAssetsGroup('icons', {
       } else {
         goBack()
       }
-    }).catch(() => {
-      Toast('保存失败，请稍后重试')
+    }).catch((err) => {
+      Toast(err.message)
     })
   }
   render () {
-    let { userInfo, genderString, areaPickerValString, schoolPickerVal, updateUserInfo } = this.props.infoStore
+    let { userInfo, genderString, isStudentString, areaPickerValString, schoolPickerVal, updateUserInfo } = this.props.infoStore
     // userInfo.gender = userInfo.gender.toString()
     return (
       <View flex useSafeArea >
@@ -180,6 +208,15 @@ Assets.loadAssetsGroup('icons', {
             }
           </View>
           <View>
+            <View row center style={styles.item}>
+              <Text gray>身份</Text>
+              <RadioGroup flex row left centerV marginL-20 value={isStudentString} onValueChange={this.identityChange}>
+                <Text marginR-10 dark06 text-16>学生</Text>
+                <RadioButton value='true' size={18} color={colors.calm} style={styles.radio} />
+                <Text marginR-10 marginL-30 dark06 text-16>家长</Text>
+                <RadioButton value='false' size={18} color={colors.calm} style={styles.radio} />
+              </RadioGroup>
+            </View>
             <View row center style={styles.item}>
               <Text gray>姓名</Text>
               <TextInput
@@ -207,7 +244,7 @@ Assets.loadAssetsGroup('icons', {
               <Text gray>地区</Text>
               <Button link style={styles.picker} onPress={() => this.showAreaPicker()}>
                 <View flex>
-                  {areaPickerValString ? <Text>{areaPickerValString}</Text> : <Text>请选择所在地区</Text>}
+                  {areaPickerValString ? <Text dark>{areaPickerValString}</Text> : <Text dark>请选择所在地区</Text>}
                 </View>
                 <Image assetName='arrow' />
               </Button>
@@ -216,7 +253,7 @@ Assets.loadAssetsGroup('icons', {
               <Text gray>学校</Text>
               <Button link style={styles.picker} onPress={() => this.showSchoolPicker()}>
                 <View flex>
-                  {schoolPickerVal ? <Text>{schoolPickerVal}</Text> : <Text>请选择学校</Text>}
+                  {schoolPickerVal ? <Text dark>{schoolPickerVal}</Text> : <Text dark>请选择学校</Text>}
                 </View>
                 <Image assetName='arrow' />
               </Button>
@@ -225,7 +262,7 @@ Assets.loadAssetsGroup('icons', {
               <Text gray>年级</Text>
               <Button link style={styles.picker} onPress={() => this.showYearPicker()}>
                 <View flex>
-                  {userInfo.startYear ? <Text>{userInfo.startYear}</Text> : <Text>请选择年级</Text>}
+                  {userInfo.startYear ? <Text dark>{userInfo.startYear}</Text> : <Text dark>请选择年级</Text>}
                 </View>
                 <Image assetName='arrow' />
               </Button>
@@ -245,9 +282,14 @@ Assets.loadAssetsGroup('icons', {
       getUserInfo()
     }
     getArea()
+    this.backPress.componentDidMount()
     /* reaction(() => userStore.userInfo, (data) => {
       alert(JSON.stringify(data))
     }) */
+  }
+  componentWillUnmount () {
+    Picker.hide()
+    this.backPress.componentWillUnmount()
   }
 }
 export default Info

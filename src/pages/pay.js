@@ -4,32 +4,33 @@ import { observer, inject } from 'mobx-react/native'
 import * as WeChat from 'react-native-wechat'
 import { View, Button, Text, Assets, Image, Card, RadioGroup, RadioButton, Avatar, TextInput } from '../../react-native-ui-lib/'
 import Modal from 'react-native-modalbox'
-import { ratio, api, axios, Toast } from '../utils'
+import { ratio, api, axios, Toast, width } from '../utils'
 import { colors } from '../theme'
-import assets from '../../react-native-ui-lib/src/assets'
-Assets.loadAssetsGroup('icons', {
-  card: require('../assets/pay/card.png'),
-  vip: require('../assets/pay/vip.png'),
-  wechat: require('../assets/pay/wechat.png'),
-  select: require('../assets/icons/checked.png'),
-  close: require('../assets/icons/close.png')
-})
-const items = ['智能填报志愿表', '最全职业库', '权威测评', '信息最快同步', '志愿合理性分析', '录取率分析']
+const items = ['智能填报志愿表', '志愿合理性分析', '招生信息查询', '专家咨询服务']
 const listItems = [{
-  title: '模拟填报志愿表',
-  text: '根据你的高考分数推荐最合适的大学及专业,根据你的高考分数推荐最合适的大学及专业',
-  leftImg: 'http://5b0988e595225.cdn.sohucs.com/images/20180524/ba57f10d665f48bcaf8a313eaacdd7c3.jpeg',
-  img: 'http://5b0988e595225.cdn.sohucs.com/images/20180524/ba57f10d665f48bcaf8a313eaacdd7c3.jpeg'
+  title: '最科学的填报志愿方法',
+  text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
+  img: 'payitem01'
 }, {
-  title: '模拟填报志愿表',
-  text: '根据你的高考分数推荐最合适的大学及专业,根据你的高考分数推荐最合适的大学及专业',
-  leftImg: 'http://5b0988e595225.cdn.sohucs.com/images/20180524/ba57f10d665f48bcaf8a313eaacdd7c3.jpeg',
-  img: 'http://5b0988e595225.cdn.sohucs.com/images/20180524/ba57f10d665f48bcaf8a313eaacdd7c3.jpeg'
+  title: '最精准的数据支撑',
+  text: '院校、专业录取数据、招生计划与考试院同步更新。根据你的高考分数推荐最合适的大学及专业',
+  img: 'payitem02'
 }, {
-  title: '模拟填报志愿表',
-  text: '根据你的高考分数推荐最合适的大学及专业,根据你的高考分数推荐最合适的大学及专业',
-  leftImg: 'http://5b0988e595225.cdn.sohucs.com/images/20180524/ba57f10d665f48bcaf8a313eaacdd7c3.jpeg',
-  img: 'http://5b0988e595225.cdn.sohucs.com/images/20180524/ba57f10d665f48bcaf8a313eaacdd7c3.jpeg'
+  title: '最专业的生涯顾问服务',
+  text: '生涯规划专家、教育专家、高级教师实时指导，为学生提供精准定制服务，辅助生涯规划决策。根据你的高考分数推荐最合适的大学及专业',
+  img: 'payitem03'
+}, {
+  title: '最智能的生涯测评',
+  text: '为你提供最全面、最客观的”专业“评价，让你更多元、更深入的了解专业。',
+  img: 'payitem04'
+}, {
+  title: '最全面的大学、专业、职业库',
+  text: '生动、形象的介绍，让你更多元、更深入地了解大学、专业、职业。',
+  img: 'payitem05'
+}, {
+  title: '最实用的生涯规划课程',
+  text: '帮助学生探索自我和外部变化的环境，找到人生努力的方向，最大化实现自我价值。',
+  img: 'payitem06'
 }]
 @inject('userStore', 'payStore')
 @observer class Pay extends Component {
@@ -43,63 +44,67 @@ const listItems = [{
             <View paddingH-12 paddingV-3 center>
               <Image assetName='card' style={styles.imgStyle} />
             </View>
-            <View center padding-25>
-              <Text text-18>知涯升学专享功能</Text>
+            <View center padding-25 row>
+              <Image assetName='vip' />
+              <Text text-18 marginH-5>知涯升学专享功能</Text>
+              <Image assetName='vip' />
             </View>
             <View row paddingH-20 style={styles.itemWrap}>
               {items.map((item, index) => (
-                <View row centerV style={styles.item} key={index} marginB-8>
-                  <View row centerV>
-                    <Image assetName='vip' />
-                    <Text text-15 dark06 marginL-5>{item}</Text>
-                  </View>
-                  <Image assetName='select' />
+                <View center style={styles.item} key={index} marginB-8>
+                  <Image assetName={`pay0${index + 1}`} />
+                  <View marginV-2><Image assetName='select' /></View>
+                  <Text text-16 dark06 marginL-5>{item}</Text>
                 </View>
               ))}
             </View>
-            <View paddingH-20 paddingT-30 >
-              <Card borderRadius={8}>
+            <View center row padding-25>
+              <Image assetName='vip' />
+              <Text text-18 marginH-5 >特色功能介绍</Text>
+              <Image assetName='vip' />
+            </View>
+            <View style={styles.listWrap} paddingH-25>
+              {listItems.map((item, index) => (
+                <View key={index} marginB-15>
+                  <View row centerV>
+                    <Image assetName='select' />
+                    <Text text-18 dark marginL-5 >{item.title}</Text>
+                  </View>
+                  <Text marginT-2 marginB-10 text-13 gray>{item.text}</Text>
+                  <Image assetName={item.img}
+                    style={{ width: '100%', height: (width - 50) * 165 / 315 }}
+                  />
+                </View>
+              ))}
+            </View>
+            <View paddingH-20 paddingV-30 >
+              <Card borderRadius={8} enableShadow={false}>
                 <Card.Item row>
                   <View padding-11 flex center>
                     <Text text-16 dark06 >适用人群说明</Text>
                   </View>
                 </Card.Item>
                 <Card.Item>
-                  <Text text-12 gray marginH-15 marginB-20 marginT-4>图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络图片来自网络</Text>
+                  <View paddingH-15 paddingB-20>
+                    <Text text-12 gray marginT-4>适用考生：普通类文理科考生（上海、浙江即将上线）</Text>
+                    <Text text-12 gray marginT-4>适用批次：普通类非提前批 </Text>
+                    <Text text-12 gray marginT-4>适用范围：全国28个省市（西藏、云南除外）</Text>
+                    <Text text-12 gray marginT-4>使用日期：购买日起至3年后结束</Text>
+                  </View>
                 </Card.Item>
               </Card>
             </View>
-            <View center padding-25>
-              <Text text-18>特色功能介绍</Text>
-            </View>
-            <View style={styles.listWrap} paddingH-20>
-              {listItems.map((item, index) => (
-                <View row key={index} marginB-10>
-                  <Image source={{ uri: item.leftImg }}
-                    style={{ width: 50, height: 40 }}
-                  />
-                  <View paddingH-10>
-                    <Text dark06 text-16>{item.title}</Text>
-                    <Text text-12 gray>{item.text}</Text>
-                    <Image source={{ uri: item.img }}
-                      style={{ width: 180, height: 120 }}
-                    />
-                  </View>
-                </View>
-              ))}
-            </View>
+
           </ScrollView>
-          {isVipValid !== 2 &&
-            <View paddingV-8 paddingH-13 bg-light style={styles.footer} row spread>
-              <Text calm text-28>¥{payAmount}</Text>
-              <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />
-            </View>
-          }
+          <View paddingV-8 centerV paddingH-13 bg-light style={styles.footer} row spread>
+            {isVipValid === 2 ? <Text dark06 text-14>我的升学卡</Text> : <Text calm text-28>¥{payAmount}</Text>}
+            {isVipValid === 2 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />}
+          </View>
         </View>
         <Modal ref='modal' style={styles.modal} backdropPressToClose={false}>
           <View center padding-8 >
             <Text text-20 dark>选择支付方式</Text>
-            <Avatar imageSource={assets.icons.close} containerStyle={styles.closeWrap} backgroundColor='transparent' imageStyle={styles.closeImage} onPress={() => this.refs.modal.close()} />
+            <Avatar imageSource={Assets.icons.close} containerStyle={styles.closeWrap} backgroundColor='transparent' imageStyle={styles.closeImage} onPress={() => this.refs.modal.close()} />
           </View>
           {payType === 'wechat' &&
             <View center padding-10>
@@ -112,14 +117,14 @@ const listItems = [{
                 <Image assetName='wechat' />
                 <Text marginL-25>微信支付</Text>
               </View>
-              <RadioButton color={colors.balanced} value='wechat' size={18} imageSource={assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
+              <RadioButton color={colors.balanced} value='wechat' size={18} imageSource={Assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
             </View>
             <View row centerV spread style={styles.payItem}>
               <View row centerV>
                 <Image assetName='vip' style={{ width: 28, height: 25 }} />
                 <Text marginL-25>激活志愿卡</Text>
               </View>
-              <RadioButton color={colors.balanced} value='vip' size={18} imageSource={assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
+              <RadioButton color={colors.balanced} value='vip' size={18} imageSource={Assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
             </View>
           </RadioGroup>
           {payType === 'vip' && <View paddingT-15>
@@ -225,7 +230,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     paddingHorizontal: 25,
-    zIndex: 1001
+    zIndex: 99
   },
   closeWrap: {
     width: 40,

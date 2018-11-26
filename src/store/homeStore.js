@@ -3,9 +3,7 @@ configure({
   enforceActions: 'always'
 })
 class Store {
-  @observable headerLine = false
   @observable showSplash = false
-  @observable barStyle='light-content'
   @observable bannerData=[]
   @action.bound
   setValue (key, val) {

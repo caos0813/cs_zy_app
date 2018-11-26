@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, Assets, Image, Button, Card, ListItem } from '../../react-native-ui-lib'
+import { Text, View, Avatar, Image, Button, Card, ListItem } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'
-import { ratio, dialog, OpenUrl, formatDate } from '../utils'
+import { ratio, dialog, OpenUrl, formatDate, imageFormat } from '../utils'
 import { NavigationActions, StackActions } from 'react-navigation'
+import DeviceInfo from 'react-native-device-info'
+import Config from 'react-native-config'
 
-Assets.loadAssetsGroup('icons.mine', {
-  vipIcon: require('../assets/mine/vip-icon.png'),
-  vipImg: require('../assets/mine/vip.png'),
-  arrowRight: require('../assets/mine/arrow-right.png')
-})
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
+  static defaultProps = {
+    version: DeviceInfo.getVersion()
+  }
   constructor (props) {
     super(props)
     this.OpenUrl = new OpenUrl(props)
@@ -26,7 +26,6 @@ Assets.loadAssetsGroup('icons.mine', {
       actions: [NavigationActions.navigate({ routeName: 'Home' })]
     })
     dialog.confirm('确定退出登录吗?').then(() => {
-      global.token = null
       setUserInfo({})
       clear()
       dispatch(resetAction)
@@ -38,34 +37,35 @@ Assets.loadAssetsGroup('icons.mine', {
   render () {
     const { userInfo, isVipValid } = this.props.userStore
     const { navigate } = this.props.navigation
+    const { version } = this.props
     return (
       <View flex useSafeArea>
         <ScrollView>
           <View row top paddingH-25 paddingV-15 style={styles.infoWrap}>
             <View row>
-              <Avatar containerStyle={styles.avatar} imageStyle={{ width: 50, height: 50 }} imageSource={{ uri: userInfo.image }}
+              <Avatar containerStyle={styles.avatar} imageStyle={{ width: 50, height: 50 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
                 backgroundColor={userInfo.image ? 'transparent' : colors.stable}
                 onPress={() => navigate('Mine')}
               />
               <View paddingL-10 paddingR-24>
                 <View row>
                   <Text text-22>{userInfo.name}</Text>
-                  {isVipValid === 2 && <Image assetName='vipIcon' style={styles.vipIcon} assetGroup='icons.mine' />}
+                  {isVipValid === 2 && <Image assetName='vipIcon' style={styles.vipIcon} />}
                 </View>
-                {isVipValid === 0 && <Text text-13 dark06>您还未开通升学卡</Text> }
+                {isVipValid === 0 && <Text text-13 dark06>您还未开通升学卡</Text>}
                 {isVipValid === 2 && <Text text-13 positive>升学卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
                 {isVipValid === 1 && <Text text-13 positive>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
             {isVipValid !== 2 && <Button bg-assertive label='开通升学卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            <Image assetName='vipImg' assetGroup='icons.mine' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />
+            <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />
           </View>
           <View row paddingH-11 marginV-20>
-            <Card containerStyle={styles.card} onPress={() => navigate('Info')} elevation={2}>
+            <Card containerStyle={styles.card} onPress={() => navigate('Info')} elevation={1}>
               <Text text-18 dark>我的信息</Text>
             </Card>
-            <Card containerStyle={styles.card} onPress={() => this.openUrl('favorite', {}, true)} elevation={2}>
+            <Card containerStyle={styles.card} onPress={() => this.openUrl('favorite', {}, true)} elevation={1}>
               <Text text-18 dark>我的关注</Text>
             </Card>
           </View>
@@ -75,7 +75,7 @@ Assets.loadAssetsGroup('icons.mine', {
                 <Text text-18 dark>会员中心</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' assetGroup='icons.mine' />
+                <Image assetName='arrowRight' />
               </ListItem.Part>
             </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => navigate('Feedback')}>
@@ -83,7 +83,7 @@ Assets.loadAssetsGroup('icons.mine', {
                 <Text text-18 dark>反馈</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' assetGroup='icons.mine' />
+                <Image assetName='arrowRight' />
               </ListItem.Part>
             </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => navigate('About')}>
@@ -91,12 +91,14 @@ Assets.loadAssetsGroup('icons.mine', {
                 <Text text-18 dark>关于</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' assetGroup='icons.mine' />
+                {Config.ENV !== 'production' && <Text marginR-8>test</Text>}
+                <Text gray marginR-10>v{version}</Text>
+                <Image assetName='arrowRight' />
               </ListItem.Part>
             </ListItem>
           </View>
-          <View center paddingT-100>
-            <Button label='退出登录' calm link text-18 onPress={this.signOut} labelStyle={{ textDecorationLine: 'underline' }} />
+          <View paddingT-100 paddingH-50>
+            <Button label='退出登录' bg-calm text-18 onPress={this.signOut} />
           </View>
         </ScrollView>
       </View>

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import storage from './storage'
 import Config from 'react-native-config'
+import navigator from './navigator'
+import userStore from '../store/userStore'
 axios.defaults.timeout = 5000
 axios.defaults.maxContentLength = 1048576
 axios.defaults.baseURL = Config.BASE_URL
@@ -9,7 +11,6 @@ axios.defaults.headers['Accept'] = 'application/json, text/plain, */*'
 /*
   判断全局变量是否存在,不存在则从storage取
 */
-
 axios.interceptors.request.use(async function (config) {
   if (!global.token) {
     try {
@@ -39,9 +40,11 @@ axios.interceptors.request.use(async function (config) {
 axios.interceptors.response.use(function (response) {
   return response.data
 }, function (err) {
-  console.log(err)
   const errorObj = err.response ? err.response.data : { err: '网络请求错误' }
-  if (errorObj && errorObj.status === 401) {
+  if (err.response && err.response.status === 401) {
+    const { setUserInfo } = userStore
+    setUserInfo({})
+    navigator.replace('Login')
     /* error({
       statusCode: 401,
       message: '您的登录状态已经过期，请重新登录。'

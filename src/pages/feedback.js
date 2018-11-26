@@ -28,6 +28,7 @@ import { colors } from '../theme'
     axios.post(api.feedback, {
       name: userInfo.name,
       phoneNum: userInfo.phoneNumber,
+      source: '知涯志愿app',
       content: this.state.feedback
     }).then(data => {
       goBack()

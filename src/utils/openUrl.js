@@ -15,12 +15,12 @@ export default class OpenUrl {
       queryString = queryString.slice(0, -1)
     }
     if (!needAuth) {
-      navigation.push('Browser', {
+      navigation.navigate('Browser', {
         path: queryString
       })
     } else {
       if (userInfo.token && userInfo.startYear) {
-        navigation.push('Browser', {
+        navigation.navigate('Browser', {
           path: queryString
         })
       } else if (userInfo.token && !userInfo.startYear) {

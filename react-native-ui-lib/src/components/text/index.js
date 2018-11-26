@@ -44,6 +44,8 @@ export default class Text extends BaseComponent {
   render() {
     const color = this.getThemeProps().color || this.extractColorValue();
     const typography = this.extractTypographyValue();
+    const textSize = this.extractTextValue();
+    const weightSize = this.extractWeightValue();
     const {style, center, uppercase, ...others} = this.getThemeProps();
     const {margins} = this.state;
     const textStyle = [
@@ -51,6 +53,8 @@ export default class Text extends BaseComponent {
       typography,
       color && {color},
       margins,
+      textSize,
+      weightSize,
       center && {textAlign: 'center'},
       style,
     ];

@@ -1,43 +1,28 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, Card, LoaderScreen, Button } from '../../react-native-ui-lib'
+import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, LoaderScreen } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
-import { UltimateListView } from 'react-native-ultimate-listview'
 import JPushModule from 'jpush-react-native'
-import ParallaxScroll from '@monterosa/react-native-parallax-scroll'
-import * as Animatable from 'react-native-animatable'
+import { UltimateListView } from 'react-native-ultimate-listview'
+import SplashScreen from 'react-native-splash-screen'
+import { BoxShadow } from 'react-native-shadow'
 import _ from 'lodash'
 import {
   StyleSheet,
   StatusBar,
   Linking
 } from 'react-native'
-import Swiper from 'react-native-swiper'
-import { api, axios, imageResize, ratio, statusBarHeight, OpenUrl, width, dialog, Toast, height, storage } from '../utils'
+import { api, axios, imageResize, OpenUrl, width, dialog, Toast, storage, imageFormat, statusBarHeight } from '../utils'
 import { colors } from '../theme'
-import { ItemHead } from '../components'
+import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
 
-Assets.loadAssetsGroup('icons', {
-  headIcon: require('../assets/home/account.png'),
-  searchIcon: require('../assets/home/ic_search_24.png'),
-  banner: require('../assets/home/banner.png'),
-  icon01: require('../assets/home/icon01.png'),
-  icon02: require('../assets/home/icon02.png'),
-  icon03: require('../assets/home/icon03.png'),
-  icon04: require('../assets/home/icon04.png'),
-  icon05: require('../assets/home/icon05.png'),
-  splash1: require('../assets/splash/1.jpg'),
-  splash2: require('../assets/splash/2.jpg'),
-  splash3: require('../assets/splash/3.jpg'),
-  splash4: require('../assets/splash/4.jpg'),
-  splash5: require('../assets/splash/5.jpg')
-})
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
   constructor (props) {
     super(props)
     this.OpenUrl = new OpenUrl(props)
     this.state = {
+      bannerActiveIndex: 0,
       animationConfig: {}
     }
   }
@@ -48,53 +33,7 @@ Assets.loadAssetsGroup('icons', {
       this.openUrl(`article`, { id: item.id, type: 'banner' })
     }
   }
-  renderHeader = (animatedValue, headerLine, userInfo) => {
-    return (
-      <View animatedValue={animatedValue} centerV paddingH-15 style={[styles.header]} >
-        {headerLine && <View style={[styles.headerLine]} />}
-        {!userInfo.token
-          ? <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
-            onPress={() => this.openNative('Login', {
-              preRefresh: this.refresh
-            }, false)}
-            imageProps={{ tintColor: headerLine ? colors.grey : colors.light }}
-          />
-          : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={{ uri: userInfo.image }}
-            backgroundColor={userInfo.image ? 'transparent' : colors.stable}
-            onPress={() => this.openNative('Mine', {}, true)}
-          />
-        }
-        <TouchableOpacity style={[styles.searchInput, styles.searchInputBorder]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
-          <Image assetName='searchIcon' style={styles.searchIcon} />
-          <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 30 }} style={{ paddingTop: 2 }} editable={false} />
-        </TouchableOpacity>
-      </View>
-    )
-  }
-  renderTopContainer = (animatedValue, listData) => {
-    return (
-      <View style={{ height: 250 }} animatedValue={animatedValue}>
-        {listData.length > 0 &&
-          <Swiper height={250} style={styles.swiper}
-            paginationStyle={{
-              bottom: 13
-            }}
-            dot={<View style={{ backgroundColor: 'rgba(255,255,255,.3)', width: 5, height: 5, borderRadius: 5, marginLeft: 5, marginRight: 5 }} />}
-            activeDot={<View style={{ backgroundColor: '#fff', width: 25, height: 5, borderRadius: 5, marginLeft: 5, marginRight: 5 }} />}
 
-          >
-            {
-              listData.map(item => (
-                <TouchableOpacity activeOpacity={0.7} key={item.id} onPress={() => this.bannerPress(item)} style={{ width: '100%', height: 250 }}>
-                  <Image source={{ uri: item.image }} resizeMode='cover' style={{ width: '100%', height: 250 }} />
-                </TouchableOpacity>
-              ))
-            }
-          </Swiper>
-        }
-      </View>
-    )
-  }
   entryZhiyuan = () => {
     // () => this.openUrl(`volunteer-index`, {}, true)
     const { setUserInfo, userInfo } = this.props.userStore
@@ -115,17 +54,37 @@ Assets.loadAssetsGroup('icons', {
         Toast('恭喜您获得3天升学卡专属功能体验期，体验期后可在会员中心购买升学卡', () => {
           this.openUrl(`volunteer-index`)
         })
+      }).catch(err => {
+        if (err.code === 2) {
+          this.openUrl(`volunteer-index`)
+        }
       })
     } else {
       // if(level==='ZHI_YUAN'||level==='FULL_FEATURED'||level==='EXPERIENCE')
       if (['ZHI_YUAN', 'FULL_FEATURED', 'EXPERIENCE'].indexOf(level) > -1 && isValid) {
         this.openUrl(`volunteer-index`)
-      } else {
+      } else if (level === 'EXPERIENCE' && !isValid) {
         dialog.confirm('您的体验期已到期，进入会员中心开通升学卡，即可继续享受升学卡专属功能').then(() => {
           navigate('Pay')
         })
+      } else {
+        navigate('Pay')
       }
     }
+  }
+  hideSplash = () => {
+    const { setValue } = this.props.homeStore
+    setValue('showSplash', false)
+    storage.save({
+      key: 'showSplash',
+      data: false
+    })
+  }
+  openUrl = (path, query, auth) => {
+    this.OpenUrl.openBrowser(path, query, auth)
+  }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
   }
   entryHolland = () => {
     const { userInfo } = this.props.userStore
@@ -139,35 +98,6 @@ Assets.loadAssetsGroup('icons', {
     } else {
       this.openUrl(`holland-entry`, {}, true)
     }
-  }
-  renderContainer = () => {
-    return (
-      <View>
-        <View row marginV-10>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
-            <Image assetName='icon01' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>查大学</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`major-index`, {}, true)}>
-            <Image assetName='icon02' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>查专业</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`profession-list`, {}, true)}>
-            <Image assetName='icon03' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>查职业</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
-            <Image assetName='icon04' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>填志愿</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
-            <Image assetName='icon05' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>测一测</Text>
-          </TouchableOpacity>
-        </View>
-        <ItemHead title='热门专题' />
-      </View>
-    )
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 5
@@ -184,102 +114,98 @@ Assets.loadAssetsGroup('icons', {
       abortFetch()
     })
   }
-
-  renderItem = (item, index, separator) => {
-    return (
-      <Card borderRadius={8} style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article`, { id: item.id }, false)}>
-        <Card.Image height={110} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
-        <Card.Section body >
-          <Card.Section >
-            <Text text-18 dark>{item.name}</Text>
-          </Card.Section>
-          {/*  <Card.Section style={{ marginBottom: 0 }}>
-            <Text text-14 dark06 numberOfLines={1}>现在好像没有描述</Text>
-          </Card.Section> */}
-        </Card.Section>
-      </Card>
-    )
-  }
-  openUrl = (path, query, auth) => {
-    this.OpenUrl.openBrowser(path, query, auth)
-  }
-  openNative = (path, query, auth) => {
-    this.OpenUrl.openNative(path, query, auth)
-  }
-  onHeaderFixed = (e) => {
-    const { setValue } = this.props.homeStore
-    if (e) {
-      setValue('barStyle', 'dark-content')
-      setValue('headerLine', true)
-    } else {
-      setValue('headerLine', false)
-    }
-  }
-  hideSplash = () => {
-    const { setValue } = this.props.homeStore
-    this.setState({
-      animationConfig: {
-        animation: 'fadeOut',
-        onAnimationEnd: () => {
-          setValue('showSplash', false)
-          storage.save({
-            key: 'showSplash',
-            data: false
-          })
-        }
-      }
-    })
-  }
-  render () {
-    const { barStyle, bannerData, headerLine, showSplash } = this.props.homeStore
+  renderHeader = () => {
     const { userInfo } = this.props.userStore
-    const { animationConfig } = this.state
+    const shadowOpt = {
+      width: width - 73,
+      height: 30,
+      color: '#000',
+      border: 15,
+      radius: 15,
+      opacity: 0.05,
+      x: 0,
+      y: 0,
+      style: {
+        marginLeft: 15
+      }
+    }
     return (
-      <View flex useSafeArea>
-        <StatusBar translucent animated barStyle={barStyle} />
-        {showSplash && <Animatable.View style={styles.splash} {...animationConfig}>
-          <Swiper height={height} loop={false}>
-            {[1, 2, 3, 4, 5].map(item => (
-              <View key={item} style={{ backgroundColor: colors.calm }}>
-                <Image assetName={`splash${item}`} style={{ height: height, width: width }} />
-                {item === 5 && <View center paddingV-50 style={{ position: 'absolute', width: '100%', bottom: 0, left: 0 }}><Button bg-calm label='立即体检' onPress={this.hideSplash} /></View>}
-              </View>
-            ))}
-          </Swiper>
-        </Animatable.View>}
-        <ParallaxScroll
-          renderHeader={({ animatedValue }) => this.renderHeader(animatedValue, headerLine, userInfo)}
-          headerHeight={40 + statusBarHeight}
-          parallaxHeight={250}
-          renderParallaxForeground={({ animatedValue }) => this.renderTopContainer(animatedValue, bannerData)}
-          headerBackgroundColor='rgba(255, 255, 255, 0)'
-          headerFixedBackgroundColor='rgba(255, 255, 255, 1)'
-          onHeaderFixed={this.onHeaderFixed}
-          parallaxForegroundScrollSpeed={500000}
-          isHeaderFixed
-        >
-          <UltimateListView style={{ zIndex: 20, backgroundColor: colors.light }} ref='scroll' keyExtractor={(item, index) => `${index} - ${item}`}
-            header={this.renderContainer}
-            onFetch={this.onFetch}
-            item={this.renderItem}
-            refreshable={false}
-
-            allLoadedText='--我是有底线的--'
-            // onScroll={this.onScroll}
-            showsVerticalScrollIndicator={false}
-            paginationFetchingView={() => <LoaderScreen loaderColor={colors.positive} message='正在加载...' />}
-            emptyView={() => <View flex center><Text>暂时没有内容</Text></View>}
+      <View centerV paddingH-15 style={[styles.header]} >
+        {!userInfo.token
+          ? <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
+            onPress={() => this.openNative('Login', {}, false)}
+            imageProps={{ tintColor: colors.grey }}
           />
-        </ParallaxScroll>
+          : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
+            backgroundColor={userInfo.image ? 'transparent' : colors.stable}
+            onPress={() => this.openNative('Mine', {}, true)}
+          />
+        }
+        <BoxShadow setting={shadowOpt}>
+          <TouchableOpacity style={[styles.searchInput]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
+            <Image assetName='searchIcon' style={styles.searchIcon} tintColor={colors.dark} />
+            <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 30 }} style={{ paddingTop: 2 }} editable={false} />
+          </TouchableOpacity>
+        </BoxShadow>
       </View>
     )
   }
-  refresh = () => {
-    const { setValue } = this.props.homeStore
-    axios.get(api.banner).then(data => {
-      setValue('bannerData', data.content)
+  renderBadge = () => {
+    const { userInfo } = this.props.userStore
+    const { level, isValid, token } = userInfo
+    if (token) {
+      if (!level || (level === 'EXPERIENCE' && isValid)) {
+        return (
+          <View bg-assertive paddingH-6 paddingV-2 borderRadius={8} style={{ position: 'absolute', top: -5, right: -5 }}>
+            <Text light text-12>免费体验</Text>
+          </View>
+        )
+      } else if ((level === 'ZHI_YUAN' || level === 'FULL_FEATURED') && isValid) {
+        return (
+          <View bg-assertive paddingH-6 paddingV-2 borderRadius={10} style={{ position: 'absolute', top: -5, right: -5 }}>
+            <Text light text-12>VIP</Text>
+          </View>
+        )
+      }
+    }
+    return null
+  }
+  renderContainer = () => {
+    const { bannerData } = this.props.homeStore
+    let banner = bannerData.map(item => {
+      return item
     })
-    this.refs.scroll.refresh()
+    return (
+      <View>
+        <View style={{ height: 165 }} paddingT-10 paddingB-5>
+          {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
+        </View>
+        <View row marginV-10>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
+            <Image assetName='icon01' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>查大学</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`major-index`, {}, true)}>
+            <Image assetName='icon02' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>查专业</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`profession-list`, {}, true)}>
+            <Image assetName='icon03' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>查职业</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
+            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>填志愿</Text>
+            {this.renderBadge()}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
+            <Image assetName='icon05' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>测一测</Text>
+          </TouchableOpacity>
+        </View>
+        <ItemHead title='编辑推荐' />
+      </View>
+    )
   }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
@@ -294,6 +220,63 @@ Assets.loadAssetsGroup('icons', {
       }
     }
   }
+  renderItem = (item, index, separator) => {
+    return (
+      <View paddingH-15 marginB-20 >
+        <TouchableOpacity activeOpacity={0.7} onPress={() => this.openUrl(`article`, { id: item.id }, false)}>
+          <Image source={{ uri: imageResize(item.image, 500) }} style={{ width: '100%', height: 115, borderRadius: 8 }} />
+          <View paddingV-10>
+            <Text text-18 dark>{item.name}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      // <Card borderRadius={8} style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article`, { id: item.id }, false)}>
+      //   <Card.Image height={110} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
+      //   <Card.Section body >
+      //     <Card.Section >
+      //       <Text text-18 dark>{item.name}</Text>
+      //     </Card.Section>
+      //     {/*  <Card.Section style={{ marginBottom: 0 }}>
+      //       <Text text-14 dark06 numberOfLines={1}>现在好像没有描述</Text>
+      //     </Card.Section> */}
+      //   </Card.Section>
+      // </Card>
+    )
+  }
+  render () {
+    const { showSplash } = this.props.homeStore
+    const { animationConfig } = this.state
+    return (
+      <View flex useSafeArea>
+        <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
+        {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
+        {this.renderHeader()}
+        <NoNetwork refresh={this.refresh} />
+        <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+          header={this.renderContainer}
+          onFetch={this.onFetch}
+          item={this.renderItem}
+          refreshable={false}
+          waitingSpinnerText='正在加载...'
+          spinnerColor={colors.calm}
+          allLoadedText='--我是有底线的--'
+          // onScroll={this.onScroll}
+          showsVerticalScrollIndicator={false}
+          paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+          emptyView={() => <View flex center><Text dark06>暂时没有内容</Text></View>}
+        />
+      </View >
+    )
+  }
+  refresh = () => {
+    const { state, replace } = this.props.navigation
+    replace(state)
+    /* const { setValue } = this.props.homeStore
+    this.refs.scroll.refresh()
+    axios.get(api.banner).then(data => {
+      setValue('bannerData', data.content)
+    }) */
+  }
   componentWillMount () {
     const { setValue } = this.props.homeStore
     storage.load({
@@ -305,6 +288,9 @@ Assets.loadAssetsGroup('icons', {
     })
   }
   componentDidMount () {
+    setTimeout(() => {
+      SplashScreen.hide()
+    }, 1000)
     const { setValue } = this.props.homeStore
     axios.get(api.banner).then(data => {
       setValue('bannerData', data.content)
@@ -315,43 +301,19 @@ Assets.loadAssetsGroup('icons', {
     })
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
-    //  getUserInfo()
-  }
-  componentWillUnmount () {
-    console.log('componentWillUnmount')
   }
 }
 
 const styles = StyleSheet.create({
-  splashButton: {
-    position: 'absolute'
 
-  },
-  splash: {
-    position: 'absolute',
-    backgroundColor: colors.light,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 1001
-  },
   header: {
     width: '100%',
-    // position: 'absolute',
     flexDirection: 'row',
+    backgroundColor: colors.light,
     paddingTop: statusBarHeight + 5,
     paddingHorizontal: 15,
     paddingBottom: 5,
     zIndex: 2
-  },
-  headerLine: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: width,
-    height: 1 / ratio,
-    backgroundColor: colors.grey
   },
   avatar: {
     width: 28,
@@ -360,18 +322,13 @@ const styles = StyleSheet.create({
     zIndex: 1
   },
   searchInput: {
-    // height: 30,
     borderRadius: 20,
     backgroundColor: colors.light,
-    borderWidth: 1 / ratio,
-    borderColor: colors.grey,
     flex: 1,
-    marginLeft: 16,
     zIndex: 1
   },
   searchInputBorder: {
-    borderWidth: 1 / ratio,
-    borderColor: colors.grey
+    elevation: 30
   },
   searchIcon: {
     position: 'absolute',
@@ -379,9 +336,6 @@ const styles = StyleSheet.create({
     height: 16,
     top: 8,
     left: 15
-  },
-  swiper: {
-    // backgroundColor: '#111'
   },
   iconButton: {
     flex: 1,

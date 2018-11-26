@@ -578,10 +578,6 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@monterosa/react-native-parallax-scroll@^1.8.0":
-  version "1.8.0"
-  resolved "http://registry.npm.taobao.org/@monterosa/react-native-parallax-scroll/download/@monterosa/react-native-parallax-scroll-1.8.0.tgz#04339a772c02818b229582a8b903aca4f9106005"
-
 "@remobile/react-native-toast@^1.0.7":
   version "1.0.7"
   resolved "http://registry.npm.taobao.org/@remobile/react-native-toast/download/@remobile/react-native-toast-1.0.7.tgz#b2e3684cdb13e1c9d9b4ed08e667157d4ad0fab2"
@@ -2463,7 +2459,7 @@ fbjs-scripts@^0.8.1:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@0.8.17, fbjs@^0.8.0, fbjs@^0.8.9:
+fbjs@0.8.17, fbjs@^0.8.0, fbjs@^0.8.4, fbjs@^0.8.9:
   version "0.8.17"
   resolved "http://registry.npm.taobao.org/fbjs/download/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   dependencies:
@@ -4961,6 +4957,14 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-addons-shallow-compare@15.6.2:
+  version "15.6.2"
+  resolved "http://registry.npm.taobao.org/react-addons-shallow-compare/download/react-addons-shallow-compare-15.6.2.tgz#198a00b91fc37623db64a28fd17b596ba362702f"
+  integrity sha1-GYoAuR/DdiPbZKKP0XtZa6NicC8=
+  dependencies:
+    fbjs "^0.8.4"
+    object-assign "^4.1.0"
+
 react-clone-referenced-element@^1.0.1:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/react-clone-referenced-element/download/react-clone-referenced-element-1.1.0.tgz#9cdda7f2aeb54fea791f3ab8c6ab96c7a77d0158"
@@ -5018,6 +5022,14 @@ react-native-config@^0.11.5:
   version "0.11.5"
   resolved "http://registry.npm.taobao.org/react-native-config/download/react-native-config-0.11.5.tgz#516cb7b6ec437c7739236ca075971db3aabdcb95"
 
+react-native-confirmation-code-input@^1.0.4:
+  version "1.0.4"
+  resolved "http://registry.npm.taobao.org/react-native-confirmation-code-input/download/react-native-confirmation-code-input-1.0.4.tgz#f5c2cced66f26b61050fea8bfd17473af1ad5ff9"
+  integrity sha1-9cLM7Wbya2EFD+qL/RdHOvGtX/k=
+  dependencies:
+    lodash "^4.17.4"
+    prop-types "^15.5.10"
+
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/react-native-dismiss-keyboard/download/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
@@ -5069,6 +5081,14 @@ react-native-screens@^1.0.0-alpha.11:
 react-native-shadow@^1.2.2:
   version "1.2.2"
   resolved "http://registry.npm.taobao.org/react-native-shadow/download/react-native-shadow-1.2.2.tgz#08991cd14b71e32f2fc6363911c139d231949a66"
+
+react-native-snap-carousel@^3.7.5:
+  version "3.7.5"
+  resolved "http://registry.npm.taobao.org/react-native-snap-carousel/download/react-native-snap-carousel-3.7.5.tgz#7172456d40ab9161523055eb302f9b03b244240a"
+  integrity sha1-cXJFbUCrkWFSMFXrMC+bA7JEJAo=
+  dependencies:
+    prop-types "^15.6.1"
+    react-addons-shallow-compare "15.6.2"
 
 react-native-splash-screen@^3.1.1:
   version "3.1.1"

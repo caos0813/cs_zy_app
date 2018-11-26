@@ -5,14 +5,12 @@ import { Provider } from 'mobx-react/native'
 import Router from './src/router'
 import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
-import _ from 'lodash'
-import SplashScreen from 'react-native-splash-screen'
 import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
-
+require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
-import { statusBarHeight, storage, platform } from './src/utils'
+import { statusBarHeight, storage, platform, navigator } from './src/utils'
 import store from './src/store'
 promise.polyfill()
 class App extends Component {
@@ -22,7 +20,14 @@ class App extends Component {
   render () {
     return (
       <Provider {...store}>
-        <Router screenProps={{ statusBarHeight: statusBarHeight }} />
+        <Router screenProps={{ statusBarHeight: statusBarHeight }} onNavigationStateChange={(prev, current, action) => {
+          const { routes } = current
+          console.log(routes)
+          const { setRoutes } = store.routeStore
+          setRoutes(routes)
+        }} ref={navigatorRef => {
+          navigator.setTopLevelNavigator(navigatorRef);
+        }} />
       </Provider>
     )
   }
@@ -38,7 +43,7 @@ class App extends Component {
       installMode: codePush.InstallMode.IMMEDIATE
     })
   }
-  componentDidMount () {
+  async componentDidMount () {
     this.update()
     /* 初始化极光 */
     if (platform === 'android') {
@@ -48,33 +53,34 @@ class App extends Component {
       JPushModule.setupPush()
     }
     /* 初始化极光 */
-    const { setUserInfo, getUserInfo, userInfo } = store.userStore
-    storage.load({
-      key: 'userInfo'
-    }).then(data => {
-      if (data.school && data.school.id) {
+    const { setUserInfo, getUserInfo } = store.userStore
+    try {
+      const userStorage = await storage.load({
+        key: 'userInfo'
+      })
+      const { school, token } = userStorage
+      if (token) {
+        setUserInfo(userStorage)
+        getUserInfo()
+      }
+      if (school && school.id) {
+        let tag = Config.ENV === 'production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
         try {
-          let tag = Config.ENV === 'production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
           JPushModule.setTags([tag], (e) => {
             //alert(JSON.stringify(e))
           })
-          //JPushModule.setAlias(data.userId)
         } catch (err) {
 
         }
       }
-      if (data && !_.isEmpty(data)) {
-        setUserInfo(data)
+    } catch (err) {
+
+    }
+    DeviceEventEmitter.addListener('updateUserInfo', () => {
+      const { userInfo } = store.userStore
+      if (userInfo.token) {
         getUserInfo()
       }
-    }).catch(() => {
-      //  setUserInfo({})
-    })
-    setTimeout(() => {
-      SplashScreen.hide()
-    }, 2000);
-    DeviceEventEmitter.addListener('updateUserInfo', () => {
-      getUserInfo()
     })
   }
   componentWillMount () {

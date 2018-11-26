@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import _ from 'lodash';
-import {Typography, Colors, BorderRadiuses, Spacings, ThemeManager} from '../style';
-import {DocsGenerator} from '../helpers';
+import { Typography, Colors, BorderRadiuses, Spacings, ThemeManager } from '../style';
+import { DocsGenerator } from '../helpers';
 
 const FLEX_KEY_PATTERN = /^flex(G|S)?(-\d*)?$/;
 const PADDING_KEY_PATTERN = new RegExp(`padding[LTRBHV]?-([0-9]*|${Spacings.getKeysPattern()})`);
 const MARGIN_KEY_PATTERN = new RegExp(`margin[LTRBHV]?-([0-9]*|${Spacings.getKeysPattern()})`);
 const ALIGNMENT_KEY_PATTERN = /(left|top|right|bottom|center|centerV|centerH|spread)/;
+const TEXT_KEY_PATTERN = new RegExp(`text?-([0-9]*|${Spacings.getKeysPattern()})`);
+const WEIGHT_KEY_PATTERN = new RegExp(`weight?-([0-9]*|${Spacings.getKeysPattern()})`);
 
-export default function baseComponent(usePure) {
+export default function baseComponent (usePure) {
   const parent = usePure ? React.PureComponent : React.Component;
   class BaseComponent extends parent {
     static propTypes = {
@@ -23,7 +25,7 @@ export default function baseComponent(usePure) {
       useNativeDriver: true,
     };
 
-    static extractOwnProps(props, ignoreProps) {
+    static extractOwnProps (props, ignoreProps) {
       const ownPropTypes = this.propTypes;
       const ownProps = _.chain(props)
         .pickBy((value, key) => _.includes(Object.keys(ownPropTypes), key))
@@ -44,11 +46,11 @@ export default function baseComponent(usePure) {
       };
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps (nextProps) {
       this.updateModifiers(this.props, nextProps);
     }
 
-    getThemeProps() {
+    getThemeProps () {
       const componentName = this.constructor.displayName || this.constructor.name;
       let themeProps;
       if (_.isFunction(ThemeManager.components[componentName])) {
@@ -56,14 +58,14 @@ export default function baseComponent(usePure) {
       } else {
         themeProps = ThemeManager.components[componentName];
       }
-      return {...themeProps, ...this.props};
+      return { ...themeProps, ...this.props };
     }
 
-    getSnippet() {
+    getSnippet () {
       return DocsGenerator.generateSnippet(DocsGenerator.extractComponentInfo(this));
     }
 
-    updateModifiers(currentProps, nextProps) {
+    updateModifiers (currentProps, nextProps) {
       const allKeys = _.union([..._.keys(currentProps), ..._.keys(nextProps)]);
       const changedKeys = _.filter(allKeys, key => !_.isEqual(currentProps[key], nextProps[key]));
 
@@ -95,11 +97,11 @@ export default function baseComponent(usePure) {
       }
     }
 
-    generateStyles() {
+    generateStyles () {
       this.styles = StyleSheet.create({});
     }
 
-    extractAnimationProps() {
+    extractAnimationProps () {
       return _.pick(this.props, [
         'animation',
         'duration',
@@ -114,7 +116,7 @@ export default function baseComponent(usePure) {
       ]);
     }
 
-    extractContainerStyle(props) {
+    extractContainerStyle (props) {
       let containerStyle = {};
       if (props.containerStyle) {
         containerStyle = _.pickBy(props.containerStyle, (value, key) => {
@@ -125,7 +127,7 @@ export default function baseComponent(usePure) {
       return containerStyle;
     }
 
-    extractTypographyValue() {
+    extractTypographyValue () {
       const typographyPropsKeys = _.chain(this.props)
         .keys(this.props)
         .filter(key => Typography.getKeysPattern().test(key))
@@ -140,18 +142,18 @@ export default function baseComponent(usePure) {
       return typography;
     }
 
-    extractColorValue() {
+    extractColorValue () {
       const props = this.getThemeProps();
       const allColorsKeys = _.keys(Colors);
       const colorPropsKeys = _.chain(props).keys().filter(key => _.includes(allColorsKeys, key)).value();
-      
-      
+
+
       const color = _.findLast(colorPropsKeys, colorKey => props[colorKey] === true);
       return Colors[color];
     }
 
     // todo: refactor this and use BACKGROUND_KEY_PATTERN
-    extractBackgroundColorValue(props = this.props) {
+    extractBackgroundColorValue (props = this.props) {
       let backgroundColor;
       _.forEach(Colors, (value, key) => {
         if (props[`background-${key}`] === true || props[`bg-${key}`] === true) {
@@ -161,8 +163,39 @@ export default function baseComponent(usePure) {
 
       return backgroundColor;
     }
+    extractTextValue (props = this.props) {
+      let textObj = {};
+      const textPropsKeys = _.chain(props)
+        .keys()
+        .filter(key => TEXT_KEY_PATTERN.test(key))
+        .value()[0];
+      if (textPropsKeys) {
+        const [textKey, textValue] = textPropsKeys.split('-');
+        textObj = {
+          fontSize: Number(textValue)
+        }
+      }
+      return textObj;
 
-    extractBorderRadiusValue(props = this.props) {
+    }
+    extractWeightValue (props = this.props) {
+      let weightObj = {};
+      const textPropsKeys = _.chain(props)
+        .keys()
+        .filter(key => WEIGHT_KEY_PATTERN.test(key))
+        .value()[0];
+      if (textPropsKeys) {
+        const [textKey, textValue] = textPropsKeys.split('-');
+        weightObj = {
+          fontWeight: textValue
+        }
+      }
+      return weightObj;
+
+    }
+
+
+    extractBorderRadiusValue (props = this.props) {
       const borderRadiusPropsKeys = _.chain(props)
         .keys()
         .filter(key => BorderRadiuses.getKeysPattern().test(key))
@@ -177,7 +210,7 @@ export default function baseComponent(usePure) {
       return borderRadius;
     }
 
-    extractPaddingValues(props = this.props) {
+    extractPaddingValues (props = this.props) {
       const PADDING_VARIATIONS = {
         padding: 'padding',
         paddingL: 'paddingLeft',
@@ -208,7 +241,7 @@ export default function baseComponent(usePure) {
       return paddings;
     }
 
-    extractMarginValues(props = this.props) {
+    extractMarginValues (props = this.props) {
       const MARGIN_VARIATIONS = {
         margin: 'margin',
         marginL: 'marginLeft',
@@ -236,12 +269,11 @@ export default function baseComponent(usePure) {
           }
         }
       });
-
       return margins;
     }
 
-    extractAlignmentsValues(props = this.props) {
-      const {row, center} = props;
+    extractAlignmentsValues (props = this.props) {
+      const { row, center } = props;
       const alignments = {};
 
       const alignmentRules = {};
@@ -278,7 +310,7 @@ export default function baseComponent(usePure) {
       return alignments;
     }
 
-    extractFlexStyle(props = this.props) {
+    extractFlexStyle (props = this.props) {
       const STYLE_KEY_CONVERTERS = {
         flex: 'flex',
         flexG: 'flexGrow',
@@ -294,11 +326,11 @@ export default function baseComponent(usePure) {
         flexKey = STYLE_KEY_CONVERTERS[flexKey];
         flexValue = _.isEmpty(flexValue) ? 1 : Number(flexValue);
 
-        return {[flexKey]: flexValue};
+        return { [flexKey]: flexValue };
       }
     }
 
-    buildStyleOutOfModifiers(
+    buildStyleOutOfModifiers (
       options = {
         backgroundColor: true,
         borderRadius: true,
@@ -333,11 +365,11 @@ export default function baseComponent(usePure) {
       return style;
     }
 
-    extractTextProps(props) {
+    extractTextProps (props) {
       return _.pick(props, [..._.keys(Typography), ..._.keys(Colors), 'color']);
     }
 
-    extractModifierProps() {
+    extractModifierProps () {
       const patterns = [
         FLEX_KEY_PATTERN,
         PADDING_KEY_PATTERN,

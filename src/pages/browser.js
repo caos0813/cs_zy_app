@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { WebView, StyleSheet, StatusBar, DeviceEventEmitter } from 'react-native'
+import { WebView, StyleSheet, DeviceEventEmitter } from 'react-native'
 import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
-import { Progress, Mask } from '../components'
+import { Progress, Mask, NoNetwork } from '../components'
 import { width, BackPress, statusBarHeight, OpenUrl } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
@@ -27,7 +27,8 @@ import _ from 'lodash'
     this.state = {
       loading: false,
       maskShow: false,
-      canGoBack: false
+      canGoBack: false,
+      route: {}// webview route
     }
     this.backPress = new BackPress({ backPress: this.onBackPress })
     this.OpenUrl = new OpenUrl(props)
@@ -35,7 +36,15 @@ import _ from 'lodash'
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
   }
-  goBack = () => {
+  goBack = (enforcement) => {
+    const { route } = this.state
+    if (route.path === 'holland' && !enforcement) {
+      this.refs.webview.postMessage(JSON.stringify({
+        type: 'preventBack',
+        data: {}
+      }))
+      return
+    }
     if (this.state.canGoBack) {
       this.refs.webview.goBack()
     } else {
@@ -43,6 +52,14 @@ import _ from 'lodash'
     }
   }
   onBackPress = () => {
+    const { route } = this.state
+    if (route.path === 'holland') {
+      this.refs.webview.postMessage(JSON.stringify({
+        type: 'preventBack',
+        data: {}
+      }))
+      return true
+    }
     if (this.state.canGoBack) {
       this.refs.webview.goBack()
       return true
@@ -53,7 +70,7 @@ import _ from 'lodash'
   onNavigationStateChange = (e) => {
     const { canGoBack } = e
     console.log(canGoBack)
-    console.log('onNavigationStateChange')
+    console.log(this.state.route)
     this.setState({
       canGoBack: canGoBack
     })
@@ -75,6 +92,7 @@ import _ from 'lodash'
         this.setState({
           animationConfig: {
             animation: 'fadeOut',
+            duration: 1,
             onAnimationEnd: () => this.setState({ loading: false })
           }
         })
@@ -96,7 +114,7 @@ import _ from 'lodash'
   }
   onMessage = (e) => {
     const { userInfo, setUserInfo } = this.props.userStore
-    const { navigate } = this.props.navigation
+    const { navigate, replace } = this.props.navigation
     let data
     try {
       data = JSON.parse(e.nativeEvent.data)
@@ -154,7 +172,7 @@ import _ from 'lodash'
           Picker.show()
           break
         case 'goBack':
-          this.goBack()
+          this.goBack(true)
           break
         case 'updateUserInfo':
           // alert(JSON.stringify(data))
@@ -163,12 +181,22 @@ import _ from 'lodash'
           setUserInfo(newUserInfo)
           break
         case 'routeChange':
-          // const { path, query, auth } = data.data
+          const { path, query, auth } = data.data
+          this.setState({
+            route: {
+              path, query, auth
+            }
+          })
           // this.openUrl(path, query, auth)
           break
         case 'navigate':
-          const { path, query } = data.data
-          navigate(path, query)
+          const routes = data.data
+          navigate(routes.path, routes.query)
+          break
+        case 'replace':
+          /*  {type:'replace',data:{path:'Login'}} */
+          const routeData = data.data
+          replace(routeData.path, routeData.query)
           break
       }
     }
@@ -181,22 +209,26 @@ import _ from 'lodash'
     this.backPress.componentWillUnmount()
     DeviceEventEmitter.emit('updateUserInfo')
   }
+  refresh = () => {
+    const { state, replace } = this.props.navigation
+    replace(state)
+  }
   render () {
     const { getParam } = this.props.navigation
     const { loading, animationConfig, maskShow } = this.state
     const path = getParam('path')
     return (
       <View flex useSafeArea>
-        <StatusBar translucent={false} barStyle='dark-content' />
+        <NoNetwork refresh={this.refresh} />
         <Progress
           ref='progress'
           style={styles.progress}
           width={width}
         />
         {loading && <LoaderScreen
-          color={colors.positive}
+          color={colors.dark09}
           message='正在加载'
-          messageStyle={{ color: colors.positive }}
+          messageStyle={{ color: colors.dark09 }}
           overlay
           {...animationConfig}
         />}

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary_dark">#000000</color>
+    <color name="calm">#4BB8EE</color>
+    <color name="light">#fff</color>
+    <color name="status_bar_color">#fff</color>
 </resources>

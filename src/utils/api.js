@@ -22,7 +22,7 @@ export default {
   feedback: 'xuanke/userInformation/saveFeedback',
   /* 绑定卡 */
   bindingCard: '/login/weblogin/binding',
-  /* 开通体检卡 */
+  /* 开通体验卡 */
   tiralBinding: '/login/weblogin/tiralBinding'
 
 }
