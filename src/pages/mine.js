@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'
 import { ratio, dialog, OpenUrl, formatDate, imageFormat } from '../utils'
-import { NavigationActions, StackActions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
 import Config from 'react-native-config'
 
@@ -20,15 +20,11 @@ import Config from 'react-native-config'
   signOut = () => {
     const { setUserInfo } = this.props.userStore
     const { clear } = this.props.infoStore
-    const { dispatch } = this.props.navigation
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Home' })]
-    })
+    const { reset } = this.props.navigation
     dialog.confirm('确定退出登录吗?').then(() => {
       setUserInfo({})
       clear()
-      dispatch(resetAction)
+      reset([NavigationActions.navigate({ routeName: 'Home' })], 0)
     })
   }
   openUrl = (path, query, auth) => {
@@ -52,12 +48,12 @@ import Config from 'react-native-config'
                   <Text text-22>{userInfo.name}</Text>
                   {isVipValid === 2 && <Image assetName='vipIcon' style={styles.vipIcon} />}
                 </View>
-                {isVipValid === 0 && <Text text-13 dark06>您还未开通升学卡</Text>}
-                {isVipValid === 2 && <Text text-13 positive>升学卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
+                {isVipValid === 0 && <Text text-13 dark06>您还未开通志愿卡</Text>}
+                {isVipValid === 2 && <Text text-13 positive>志愿卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
                 {isVipValid === 1 && <Text text-13 positive>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
-            {isVipValid !== 2 && <Button bg-assertive label='开通升学卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
+            {isVipValid !== 2 && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
             <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />
           </View>

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, Avatar, TextInput, RadioButton, RadioGroup, Button, Image } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { ScrollView, StyleSheet } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import _ from 'lodash'
 import Picker from 'react-native-picker'
 import { colors } from '../theme'
@@ -142,7 +143,7 @@ import { Mask } from '../components'
     const { areaPickerId, schoolPickerId, userInfo, areaPickerValString } = this.props.infoStore
     const { name, image, id, gender, startYear, nickName, isStudent } = userInfo
     const { getUserInfo } = this.props.userStore
-    const { getParam, replace, goBack } = this.props.navigation
+    const { getParam, reset, goBack } = this.props.navigation
     if (!schoolPickerId || !name || !startYear || !areaPickerValString) {
       Toast('请先完善您的信息')
       return
@@ -182,7 +183,7 @@ import { Mask } from '../components'
       Toast('保存成功')
       getUserInfo()
       if (getParam('type') === 'complete') {
-        replace('Home')
+        reset([NavigationActions.navigate({ routeName: 'Home' })], 0)
       } else {
         goBack()
       }

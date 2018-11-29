@@ -75,7 +75,7 @@ import com.android.build.OutputFile
 project.ext.envConfigFiles = [
     debug: ".env.development",
     stagingrelease: ".env.staging",
-    release: ".env.production"
+    productionrelease: ".env.production"
 ]
 
 project.ext.react = [
@@ -140,7 +140,7 @@ android {
         }
     }
     buildTypes {
-       release {
+       productionRelease {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             buildConfigField "String", "CODEPUSH_KEY", '"DtFr1Uk8dYnWutlbf3mdkSlF2pa84ksvOXqog"'
@@ -174,6 +174,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-background-timer')
     compile project(':react-native-device-info')
     compile project(':react-native-code-push')
     compile project(':react-native-wechat')

@@ -46,7 +46,7 @@ const listItems = [{
             </View>
             <View center padding-25 row>
               <Image assetName='vip' />
-              <Text text-18 marginH-5>知涯升学专享功能</Text>
+              <Text text-18 marginH-5>知涯志愿专享功能</Text>
               <Image assetName='vip' />
             </View>
             <View row paddingH-20 style={styles.itemWrap}>
@@ -86,10 +86,10 @@ const listItems = [{
                 </Card.Item>
                 <Card.Item>
                   <View paddingH-15 paddingB-20>
-                    <Text text-12 gray marginT-4>适用考生：普通类文理科考生（上海、浙江即将上线）</Text>
+                    <Text text-12 gray marginT-4>适用考生：普通类文理科考生（新高考省份即将上线）</Text>
                     <Text text-12 gray marginT-4>适用批次：普通类非提前批 </Text>
-                    <Text text-12 gray marginT-4>适用范围：全国28个省市（西藏、云南除外）</Text>
-                    <Text text-12 gray marginT-4>使用日期：购买日起至3年后结束</Text>
+                    <Text text-12 gray marginT-4>适用范围：全国（内蒙古、青海、西藏、云南除外）</Text>
+                    <Text text-12 gray marginT-4>有 效   期：1年</Text>
                   </View>
                 </Card.Item>
               </Card>
@@ -97,7 +97,7 @@ const listItems = [{
 
           </ScrollView>
           <View paddingV-8 centerV paddingH-13 bg-light style={styles.footer} row spread>
-            {isVipValid === 2 ? <Text dark06 text-14>我的升学卡</Text> : <Text calm text-28>¥{payAmount}</Text>}
+            {isVipValid === 2 ? <Text dark06 text-14>我的志愿卡</Text> : <Text calm text-28>¥{payAmount}</Text>}
             {isVipValid === 2 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />}
           </View>
         </View>

@@ -3,6 +3,7 @@ package com.zhiyazhiyuan.zyzy;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.ocetnik.timer.BackgroundTimerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.microsoft.codepush.react.CodePush;
 import com.theweflex.react.WeChatPackage;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BackgroundTimerPackage(),
             new RNDeviceInfo(),
             new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG,"http://codepush.junyanginfo.com:3000/"),
             new WeChatPackage(),

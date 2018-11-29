@@ -51,7 +51,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
         copyUserInfo.level = 'EXPERIENCE'
         copyUserInfo.isValid = true
         setUserInfo(copyUserInfo)
-        Toast('恭喜您获得3天升学卡专属功能体验期，体验期后可在会员中心购买升学卡', () => {
+        Toast('恭喜您获得3天志愿卡专属功能体验期，体验期后可在会员中心购买志愿卡', () => {
           this.openUrl(`volunteer-index`)
         })
       }).catch(err => {
@@ -64,7 +64,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
       if (['ZHI_YUAN', 'FULL_FEATURED', 'EXPERIENCE'].indexOf(level) > -1 && isValid) {
         this.openUrl(`volunteer-index`)
       } else if (level === 'EXPERIENCE' && !isValid) {
-        dialog.confirm('您的体验期已到期，进入会员中心开通升学卡，即可继续享受升学卡专属功能').then(() => {
+        dialog.confirm('您的体验期已到期，进入会员中心开通志愿卡，即可继续享受志愿卡专属功能').then(() => {
           navigate('Pay')
         })
       } else {

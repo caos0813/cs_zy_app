@@ -3,7 +3,9 @@ import { View, Text, Button, TextInput, TouchableOpacity } from '../../react-nat
 import { inject, observer } from 'mobx-react/native'
 import { CodeInput } from '../components'
 import { api, axios, width, Toast } from '../utils'
-import { StyleSheet, Keyboard } from 'react-native'
+import { StyleSheet, Keyboard, AppState } from 'react-native'
+import { NavigationActions } from 'react-navigation'
+import BackgroundTimer from 'react-native-background-timer'
 import Modal from 'react-native-modalbox'
 import { BoxShadow } from 'react-native-shadow'
 import { colors } from '../theme'
@@ -14,13 +16,14 @@ let timer
     super(props)
     // this.backPress = new BackPress({ backPress: this.onBackPress })
   }
-  sendSms = () => {
+  sendSms = (flag) => {
     const { phoneNum, setValue, countDown } = this.props.loginStore
     if (!(/^1[34578]\d{9}$/.test(phoneNum))) {
       Toast('手机格式错误')
     }
     Keyboard.dismiss()
     this.clearTimer()
+    setValue('nextPressed', true)
     axios.get(`${api.sendSms}${phoneNum}`).then(data => {
       if (data.code === 'ok') {
         Toast('短信发送成功')
@@ -29,12 +32,21 @@ let timer
         timer = setInterval(() => {
           countDown()
         }, 1000)
+        if (flag) {
+          setValue('nextPressed', false)
+        }
       } else {
+        setValue('nextPressed', false)
         Toast(data.message)
       }
     }).catch(() => {
       Toast('请检查您的网络')
+      setValue('nextPressed', false)
     })
+  }
+  onOpened = () => {
+    const { setValue } = this.props.loginStore
+    setValue('nextPressed', false)
   }
   clearTimer = () => {
     timer && clearInterval(timer)
@@ -42,7 +54,7 @@ let timer
   login = () => {
     const { phoneNum, verificationCode } = this.props.loginStore
     const { getUserInfo, setUserInfo } = this.props.userStore
-    const { replace } = this.props.navigation
+    const { reset } = this.props.navigation
     /* const { routes } = this.props.routeStore
     const preRoute = routes[routes.length - 2] */
     // const { params } = this.props.navigation.state
@@ -68,12 +80,10 @@ let timer
         /* 如果已完善用户信息 */
         if (data.dataFlag) {
           getUserInfo()
-          replace('Home')
+          reset([NavigationActions.navigate({ routeName: 'Home' })], 0)
         } else {
           getUserInfo()
-          replace('Info', {
-            type: 'complete'
-          })
+          reset([NavigationActions.navigate({ routeName: 'Info', params: { type: 'complete' } })], 0)
         }
       } else {
         Toast(data.msg)
@@ -100,18 +110,18 @@ let timer
       }
     }
 
-    const { phoneValid, setValue, tick, phoneNum, verificationCode } = this.props.loginStore
+    const { phoneValid, setValue, tick, phoneNum, verificationCode, nextPressed } = this.props.loginStore
     const { push } = this.props.navigation
     return (
       <View flex useSafeArea paddingH-23 paddingT-20>
-        <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} >
+        <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} onOpened={this.onOpened}>
           <View paddingH-23 paddingT-20 >
             <Text text-20 marginH-12 dark>{tick > 0 ? '验证码已经发送成功' : '验证码已过期'}</Text>
             <View row spread centerV paddingT-75 marginH-12>
               <Text text-16 marginT-6 dark06>{phoneNum}</Text>
               {
                 tick > 0 ? <Button label={tick + 's'} size='small' text-16 marginT-10 borderRadius={10} bg-light dark06
-                /> : <Button label='重新获取' size='small' text-16 marginT-10 borderRadius={10} onPress={this.sendSms}
+                /> : <Button label='重新获取' size='small' text-16 marginT-10 borderRadius={10} disabled={nextPressed} onPress={() => this.sendSms(true)}
                 />
               }
             </View>
@@ -161,13 +171,26 @@ let timer
           </BoxShadow>
         </View>
         <View paddingT-100 paddingH-5>
-          <Button text-14 light label='下一步' bg-calm marginT-10 onPress={this.sendSms} disabled={phoneValid} />
+          <Button text-14 light label='下一步' bg-calm marginT-10 onPress={this.sendSms} disabled={phoneValid || nextPressed} />
         </View>
       </View >
     )
   }
+  _handleAppStateChange = (nextAppState) => {
+    console.log(nextAppState)
+    if (nextAppState === 'background') {
+      const { countDown } = this.props.loginStore
+      BackgroundTimer.runBackgroundTimer(() => {
+        timer && countDown()
+        // code that will be called every 3 seconds
+      },
+      1000)
+    } else {
+      BackgroundTimer.stopBackgroundTimer()
+    }
+  }
   componentDidMount () {
-    console.log('componentDidMount', this.props.routeStore.routes)
+    AppState.addEventListener('change', this._handleAppStateChange)
     // this.refs.modal.open()
   }
   componentWillUnmount () {
@@ -175,6 +198,7 @@ let timer
     setValue('verificationCode', '')
     this.refs.codeInput && this.refs.codeInput.clear()
     this.clearTimer()
+    AppState.removeEventListener('change', this._handleAppStateChange)
   }
 }
 const style = StyleSheet.create({

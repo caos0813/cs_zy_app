@@ -32,16 +32,22 @@ class App extends Component {
     )
   }
   update = () => {
-    codePush.sync({
-      updateDialog: {
-        appendReleaseDescription: true,
-        descriptionPrefix: '检查到更新',
-        title: '更新',
-        mandatoryUpdateMessage: '',
-        mandatoryContinueButtonLabel: '确定'
-      },
-      installMode: codePush.InstallMode.IMMEDIATE
-    })
+    if (Config.ENV === 'production') {
+      codePush.sync({
+        installMode: codePush.InstallMode.ON_NEXT_RESTART
+      })
+    } else {
+      codePush.sync({
+        updateDialog: {
+          appendReleaseDescription: true,
+          descriptionPrefix: '检查到更新',
+          title: '更新',
+          mandatoryUpdateMessage: '',
+          mandatoryContinueButtonLabel: '确定'
+        },
+        installMode: codePush.InstallMode.IMMEDIATE
+      })
+    }
   }
   async componentDidMount () {
     this.update()
@@ -58,19 +64,18 @@ class App extends Component {
       const userStorage = await storage.load({
         key: 'userInfo'
       })
-      const { school, token } = userStorage
+      const { school, token, province } = userStorage
       if (token) {
         setUserInfo(userStorage)
         getUserInfo()
       }
       if (school && school.id) {
-        let tag = Config.ENV === 'production' ? `pro_${data.province.id}` : `dev_${data.province.id}`
+        let tag = (Config.ENV === 'production' ? `pro_${province.id}` : `dev_${province.id}`)
         try {
           JPushModule.setTags([tag], (e) => {
             //alert(JSON.stringify(e))
           })
         } catch (err) {
-
         }
       }
     } catch (err) {

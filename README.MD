@@ -8,11 +8,11 @@
  ```
  ### 测试环境发布热更新
 ```
-code-push release-react zyzyapp-android android  --t 1.0.3 --d Staging --des "测试1.0.1版" --m true
+code-push release-react zyzyapp-android android  --t 1.1.1 --d Staging --des "提交正式环境" --m true
 ```
  ### 测试环境热更新包提升到正式环境
  ```
-  code-push promote zyzyapp-android android Staging Production
+code-push promote zyzyapp-android  Staging Production
  ```
  ### 查看热更新
  ```

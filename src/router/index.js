@@ -41,7 +41,7 @@ export default createStackNavigator({
   Pay: {
     screen: Pay,
     navigationOptions: () => ({
-      title: '我的升学卡'
+      title: '我的志愿卡'
     })
   },
   About: {
