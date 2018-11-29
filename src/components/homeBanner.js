@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Carousel, { Pagination } from 'react-native-snap-carousel'
-import { View, Image, TouchableOpacity } from '../../react-native-ui-lib'
+import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel'
+import { View, TouchableOpacity } from '../../react-native-ui-lib'
 import { imageResize, width } from '../utils'
 import { colors } from '../theme'
 export default class HomeBanner extends Component {
@@ -14,11 +14,17 @@ export default class HomeBanner extends Component {
     const { itemPress } = this.props
     itemPress && itemPress(item)
   }
-  renderCarouselChild = (obj, index) => {
-    const { item } = obj
+  renderCarouselChild = ({ item, index }, parallaxProps) => {
     return (
       <TouchableOpacity activeOpacity={0.7} onPress={() => this.bannerPress(item)} style={{ width: width - 20, paddingHorizontal: 2.5 }}>
-        <Image source={{ uri: imageResize(item.image, 500) }} resizeMode='cover' style={{ width: '100%', height: '100%', borderRadius: 8 }} />
+        <ParallaxImage
+          source={{ uri: item.image }}
+          containerStyle={{ width: '100%', height: '100%', borderRadius: 8 }}
+          // style={{ height: height, width: width }}
+          resizeMode='cover'
+          parallaxFactor={0}
+          {...parallaxProps}
+        />
       </TouchableOpacity>
     )
   }
@@ -55,13 +61,13 @@ export default class HomeBanner extends Component {
       <View>
         <Carousel
           data={data}
-          useScrollView
           inactiveSlideScale={1}
+          hasParallaxImages
           renderItem={this.renderCarouselChild}
           slideStyle={{ height: 150 }}
           sliderWidth={width}
           itemWidth={width - 20}
-          autoplay
+          removeClippedSubviews={false}
           onSnapToItem={(index) => this.setState({ activeIndex: index })}
         />
         {this.pagination()}

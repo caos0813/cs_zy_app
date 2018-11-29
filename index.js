@@ -34,6 +34,7 @@ class App extends Component {
   update = () => {
     if (Config.ENV === 'production') {
       codePush.sync({
+        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART,
         installMode: codePush.InstallMode.ON_NEXT_RESTART
       })
     } else {

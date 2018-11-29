@@ -1,7 +1,7 @@
 import showWithOptions from '../../react-native-toast'
 export default function (message, callBack) {
   showWithOptions({
-    message,
+    message: message || '未知错误',
     duration: 'short',
     position: 'bottom',
     addPixelsY: -40

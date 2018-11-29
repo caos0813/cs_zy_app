@@ -170,9 +170,8 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
     }
     return null
   }
-  renderContainer = () => {
-    const { bannerData } = this.props.homeStore
-    let banner = bannerData.map(item => {
+  renderContainer = (bannerData) => {
+    const banner = bannerData.map(item => {
       return item
     })
     return (
@@ -203,7 +202,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
             <Text text-14 dark06 marginT-2>测一测</Text>
           </TouchableOpacity>
         </View>
-        <ItemHead title='编辑推荐' />
+        <ItemHead title='升学指导' />
       </View>
     )
   }
@@ -244,7 +243,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
     )
   }
   render () {
-    const { showSplash } = this.props.homeStore
+    const { showSplash, bannerData } = this.props.homeStore
     const { animationConfig } = this.state
     return (
       <View flex useSafeArea>
@@ -253,7 +252,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
         {this.renderHeader()}
         <NoNetwork refresh={this.refresh} />
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
-          header={this.renderContainer}
+          header={() => this.renderContainer(bannerData)}
           onFetch={this.onFetch}
           item={this.renderItem}
           refreshable={false}
@@ -277,23 +276,21 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
       setValue('bannerData', data.content)
     }) */
   }
-  componentWillMount () {
+  componentDidMount () {
     const { setValue } = this.props.homeStore
+    axios.get(api.banner).then(data => {
+      setValue('bannerData', data.content)
+    })
     storage.load({
       key: 'showSplash'
     }).then(data => {
       setValue('showSplash', false)
     }).catch(() => {
       setValue('showSplash', true)
-    })
-  }
-  componentDidMount () {
-    setTimeout(() => {
-      SplashScreen.hide()
-    }, 1000)
-    const { setValue } = this.props.homeStore
-    axios.get(api.banner).then(data => {
-      setValue('bannerData', data.content)
+    }).finally(() => {
+      setTimeout(() => {
+        SplashScreen.hide()
+      }, 1000)
     })
     /* 监听点击推送时事件 */
     JPushModule.notifyJSDidLoad(e => {
