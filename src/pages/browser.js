@@ -7,7 +7,7 @@ import { Progress, Mask, NoNetwork } from '../components'
 import { width, BackPress, statusBarHeight, OpenUrl } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
-import Config from 'react-native-config'
+import Config from '../config'
 import _ from 'lodash'
 @inject('userStore')
 @observer class Browser extends Component {

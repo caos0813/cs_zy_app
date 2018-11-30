@@ -1,11 +1,11 @@
 import axios from 'axios'
 import storage from './storage'
-import Config from 'react-native-config'
+import config from '../config'
 import navigator from './navigator'
 import userStore from '../store/userStore'
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 15000
 axios.defaults.maxContentLength = 1048576
-axios.defaults.baseURL = Config.BASE_URL
+axios.defaults.baseURL = config.BASE_URL
 axios.defaults.headers['Accept'] = 'application/json, text/plain, */*'
 /* 添加拦截器 */
 /*

@@ -12,7 +12,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, imageResize, OpenUrl, width, dialog, Toast, storage, imageFormat, statusBarHeight } from '../utils'
+import { api, axios, imageResize, OpenUrl, width, dialog, Toast, storage, imageFormat, statusBarHeight, platform } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
 
@@ -293,9 +293,11 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
       }, 1000)
     })
     /* 监听点击推送时事件 */
-    JPushModule.notifyJSDidLoad(e => {
+    if (platform === 'android') {
+      JPushModule.notifyJSDidLoad(e => {
       // alert(JSON.stringify(e))
-    })
+      })
+    }
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
   }
