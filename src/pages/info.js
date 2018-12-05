@@ -198,12 +198,11 @@ import { Mask } from '../components'
       <View flex useSafeArea >
         <Mask ref='mask' />
         <ScrollView>
-          <View center paddingV-25>
+          <View center paddingV-25 >
             {userInfo.image &&
               <Avatar
                 imageSource={{ uri: userInfo.image }}
-                containerStyle={{ width: 80, height: 80 }}
-                imageStyle={{ width: 80, height: 80, borderRadius: 80 }}
+                size={80}
                 backgroundColor='transparent'
                 imageProps={{ resizeMode: 'cover' }} />
             }

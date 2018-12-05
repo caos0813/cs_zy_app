@@ -13,6 +13,6 @@ import navigator from './navigator'
 
 const platform = Platform.OS
 const ratio = PixelRatio.get()
-const statusBarHeight = StatusBar.currentHeight
+const statusBarHeight = StatusBar.currentHeight || 0
 let { width, height } = Dimensions.get('screen')
 export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat }

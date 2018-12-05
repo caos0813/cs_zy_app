@@ -9,7 +9,7 @@ export default class BackAvatar extends Component {
   }
   render () {
     return (
-      <Avatar imageSource={Assets.icons.backArrow} resizeMode='cover' backgroundColor='transparent' containerStyle={{ width: 40, height: 40 }} imageStyle={{ width: 24, height: 24, marginLeft: 15, marginTop: 8 }} onPress={this._onPress} />
+      <Avatar imageSource={Assets.icons.backArrow} resizeMode='cover' backgroundColor='transparent' containerStyle={{ width: 40, height: 40 }} imageStyle={{ left: 15, top: 8 }} size={24} onPress={this._onPress} />
     )
   }
 }

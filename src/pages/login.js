@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, Button, TextInput, TouchableOpacity } from '../../react-native-ui-lib/src'
+import { View, Text, Button, TouchableOpacity } from '../../react-native-ui-lib/src'
 import { inject, observer } from 'mobx-react/native'
-import { CodeInput } from '../components'
-import { api, axios, width, Toast } from '../utils'
+import { CodeInput, LoginInput } from '../components'
+import { api, axios, Toast, height } from '../utils'
 import { StyleSheet, Keyboard, AppState } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import BackgroundTimer from 'react-native-background-timer'
 import Modal from 'react-native-modalbox'
-import { BoxShadow } from 'react-native-shadow'
 import { colors } from '../theme'
 let timer
 @inject('loginStore', 'userStore', 'routeStore')
@@ -96,25 +95,16 @@ let timer
     /* setTimeout(() => {
       this.setState({ progress: this.state.progress + (0.4 * Math.random()) })
     }, 1000) */
-    const shadowOpt = {
-      width: width - 50,
-      height: 32,
-      color: '#000',
-      border: 30,
-      radius: 16,
-      opacity: 0.05,
-      x: 0,
-      y: 0,
-      style: {
-        height: 50
-      }
-    }
 
     const { phoneValid, setValue, tick, phoneNum, verificationCode, nextPressed } = this.props.loginStore
     const { push } = this.props.navigation
     return (
-      <View flex useSafeArea paddingH-23 paddingT-20>
-        <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal} onOpened={this.onOpened}>
+      <View useSafeArea marginH-23 >
+        <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal}
+          backdropOpacity={0}
+          keyboardTopOffset={0}
+          backdropColor={colors.black}
+          onOpened={this.onOpened}>
           <View paddingH-23 paddingT-20 >
             <Text text-20 marginH-12 dark>{tick > 0 ? '验证码已经发送成功' : '验证码已过期'}</Text>
             <View row spread centerV paddingT-75 marginH-12>
@@ -125,7 +115,7 @@ let timer
                 />
               }
             </View>
-            <View center marginT-20 >
+            <View center marginT-20 style={{ height: 60 }}>
               <CodeInput
                 ref='codeInput'
                 activeColor={colors.calm}
@@ -152,23 +142,10 @@ let timer
             </View>
           </View>
         </Modal>
-        <Text text-20 marginH-12 dark>欢迎使用知涯志愿</Text>
+        <Text text-20 marginH-12 marginT-20 dark>欢迎使用知涯志愿</Text>
         <Text marginT-75 marginH-12 text-16 dark06>请输入您的手机号码</Text>
         <View paddingT-23>
-          <BoxShadow setting={shadowOpt}>
-            <TextInput style={{ backgroundColor: colors.light, height: 32, borderRadius: 16, paddingHorizontal: 30, textAlign: 'center', marginBottom: 5 }}
-              text-14
-              placeholder='请输入手机号'
-              keyboardType='phone-pad'
-              // error={phoneErrorText}
-              dark10
-              onChangeText={val => setValue('phoneNum', val)}
-              returnKeyType='next'
-              onSubmitEditing={this.sendSms}
-              hideUnderline
-
-            />
-          </BoxShadow>
+          <LoginInput onChangeText={val => setValue('phoneNum', val)} onSubmitEditing={this.sendSms} />
         </View>
         <View paddingT-100 paddingH-5>
           <Button text-14 light label='下一步' bg-calm marginT-10 onPress={this.sendSms} disabled={phoneValid || nextPressed} />
@@ -205,9 +182,8 @@ const style = StyleSheet.create({
   modal: {
     top: 0,
     left: 0,
+    height: height,
     width: '100%',
-    height: '100%',
-    position: 'absolute',
     zIndex: 99
   },
   codeInputWrap: {

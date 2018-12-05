@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  Animated,
-  View
+  Animated
 } from 'react-native'
 import { width, height } from '../utils'
 export default class Progress extends Component {
@@ -43,11 +42,13 @@ export default class Progress extends Component {
     })
   }
   render () {
-    return (
-      <View>
-        {this.state.show ? <Animated.View style={[styles.wrap, { opacity: this.state.opacity }]}></Animated.View> : null}
-      </View>
-    )
+    if (this.state.show) {
+      return (
+        <Animated.View style={[styles.wrap, { opacity: this.state.opacity }]}></Animated.View>
+      )
+    } else {
+      return null
+    }
   }
 }
 const styles = StyleSheet.create({
@@ -58,6 +59,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
-    zIndex: 100
+    zIndex: 1001
   }
 })

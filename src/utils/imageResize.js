@@ -1,3 +1,5 @@
+import _ from 'lodash'
+import { Assets } from '../../react-native-ui-lib'
 function imageResize (url, w, h) {
   if (url) {
     return `${url}?x-oss-process=image/resize,w_${w}` + (h ? `,h_${h}` : '')
@@ -6,6 +8,9 @@ function imageResize (url, w, h) {
   }
 }
 function imageFormat (url, gender) {
+  if (!url && _.isEmpty(gender)) {
+    return Assets.icons.headIcon
+  }
   if (url) {
     return {
       uri: url

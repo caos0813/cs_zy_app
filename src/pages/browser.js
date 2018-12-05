@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { WebView, StyleSheet, DeviceEventEmitter } from 'react-native'
+import { WebView, StyleSheet, DeviceEventEmitter, StatusBar } from 'react-native'
 import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
@@ -13,7 +13,8 @@ import _ from 'lodash'
 @observer class Browser extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      header: null
+      header: null,
+      gesturesEnabled: false
       /* title: navigation.getParam('title', 'webview'),
       headerLeft: () => {
         return <Button text-14 positive label='返回' size='small' outline onPress={() => {
@@ -69,10 +70,12 @@ import _ from 'lodash'
   }
   onNavigationStateChange = (e) => {
     const { canGoBack } = e
-    console.log(canGoBack)
     console.log(this.state.route)
     this.setState({
       canGoBack: canGoBack
+    })
+    this.props.navigation.setParams({// 给导航中增加监听事件
+      webviewCanBack: canGoBack
     })
     /* global.webviewCanBack = canGoBack
     this.props.navigation.setParams({// 给导航中增加监听事件

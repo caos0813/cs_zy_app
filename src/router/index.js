@@ -11,8 +11,6 @@ import About from '../pages/about'
 import Pay from '../pages/pay'
 import { BackAvatar } from '../components'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
-import { Avatar, Assets } from 'react-native-ui-lib'
-
 export default createStackNavigator({
   Login: {
     screen: Login,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel'
 import { View, TouchableOpacity } from '../../react-native-ui-lib'
-import { imageResize, width } from '../utils'
+import { width } from '../utils'
 import { colors } from '../theme'
 export default class HomeBanner extends Component {
   constructor (props) {

@@ -286,6 +286,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
+    zIndex: 100,
     marginTop: 20
   },
   codeInput: {

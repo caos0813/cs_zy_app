@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets, TextInput, Image, TouchableOpacity, LoaderScreen } from '../../react-native-ui-lib'
+import { View, Text, Avatar, Image, TouchableOpacity, LoaderScreen } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import SplashScreen from 'react-native-splash-screen'
-import { BoxShadow } from 'react-native-shadow'
 import _ from 'lodash'
 import {
   StyleSheet,
@@ -14,7 +13,7 @@ import {
 } from 'react-native'
 import { api, axios, imageResize, OpenUrl, width, dialog, Toast, storage, imageFormat, statusBarHeight, platform } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
+import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../components'
 
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
@@ -116,37 +115,16 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
   }
   renderHeader = () => {
     const { userInfo } = this.props.userStore
-    const shadowOpt = {
-      width: width - 73,
-      height: 30,
-      color: '#000',
-      border: 15,
-      radius: 15,
-      opacity: 0.05,
-      x: 0,
-      y: 0,
-      style: {
-        marginLeft: 15
-      }
-    }
     return (
       <View centerV paddingH-15 style={[styles.header]} >
-        {!userInfo.token
-          ? <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={Assets.icons.headIcon} backgroundColor='transparent'
-            onPress={() => this.openNative('Login', {}, false)}
-            imageProps={{ tintColor: colors.grey }}
-          />
-          : <Avatar containerStyle={styles.avatar} imageStyle={{ width: 28, height: 28 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
-            backgroundColor={userInfo.image ? 'transparent' : colors.stable}
-            onPress={() => this.openNative('Mine', {}, true)}
-          />
-        }
-        <BoxShadow setting={shadowOpt}>
-          <TouchableOpacity style={[styles.searchInput]} activeOpacity={0.6} onPress={() => this.openUrl(`search`, {}, false)}>
-            <Image assetName='searchIcon' style={styles.searchIcon} tintColor={colors.dark} />
-            <TextInput hideUnderline a text-14 dark06 placeholder='搜索一下' containerStyle={{ paddingHorizontal: 48, height: 30 }} style={{ paddingTop: 2 }} editable={false} />
-          </TouchableOpacity>
-        </BoxShadow>
+        <Avatar containerStyle={styles.avatar}
+          size={28}
+          imageSource={imageFormat(userInfo.image, userInfo.gender)}
+          backgroundColor='transparent'
+          imageProps={!userInfo.token ? { tintColor: colors.grey } : {}}
+          onPress={() => this.openNative('Mine', {}, true)}
+        />
+        <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
       </View>
     )
   }
@@ -295,7 +273,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork } from '../components'
     /* 监听点击推送时事件 */
     if (platform === 'android') {
       JPushModule.notifyJSDidLoad(e => {
-      // alert(JSON.stringify(e))
+        // alert(JSON.stringify(e))
       })
     }
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
@@ -319,22 +297,6 @@ const styles = StyleSheet.create({
     height: 28,
     marginTop: 1,
     zIndex: 1
-  },
-  searchInput: {
-    borderRadius: 20,
-    backgroundColor: colors.light,
-    flex: 1,
-    zIndex: 1
-  },
-  searchInputBorder: {
-    elevation: 30
-  },
-  searchIcon: {
-    position: 'absolute',
-    width: 16,
-    height: 16,
-    top: 8,
-    left: 15
   },
   iconButton: {
     flex: 1,

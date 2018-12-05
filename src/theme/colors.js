@@ -3,6 +3,7 @@ const stable = '#f4f4f4'
 const gray = '#ADADAD'
 const grey = '#ddd'
 const dark = '#1D1E2C'
+const black = '#000'
 const positive = '#247197'
 const calm = '#4BB8EE'
 const royal = '#8da0c8'
@@ -14,6 +15,7 @@ const dark05 = '#555'
 const dark06 = '#69707F'
 const dark09 = '#999'
 export {
+  black,
   light,
   stable,
   gray,

@@ -8,4 +8,6 @@ import BackAvatar from './backAvatar'
 import HomeBanner from './homeBanner'
 import SplashSwiper from './splashSwiper'
 import NoNetwork from './noNetwork'
-export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork }
+import HomeSearch from './homeSearch'
+import LoginInput from './loginInput'
+export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput }
