@@ -8,7 +8,7 @@ function imageResize (url, w, h) {
   }
 }
 function imageFormat (url, gender) {
-  if (!url && _.isEmpty(gender)) {
+  if (!url && (!_.isUndefined(gender) || !_.isNull(gender))) {
     return Assets.icons.headIcon
   }
   if (url) {

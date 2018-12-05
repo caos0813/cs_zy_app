@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     ...Platform.select({
       ios: {
-        width: '100%',
+        width: width - 50,
         shadowColor: colors.black,
         shadowOpacity: 0.05,
         shadowRadius: 15,

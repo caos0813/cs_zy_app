@@ -99,7 +99,7 @@ let timer
     const { phoneValid, setValue, tick, phoneNum, verificationCode, nextPressed } = this.props.loginStore
     const { push } = this.props.navigation
     return (
-      <View useSafeArea marginH-23 >
+      <View flex useSafeArea>
         <Modal ref='modal' backdropPressToClose={false} swipeToClose={false} style={style.modal}
           backdropOpacity={0}
           keyboardTopOffset={0}
@@ -142,12 +142,12 @@ let timer
             </View>
           </View>
         </Modal>
-        <Text text-20 marginH-12 marginT-20 dark>欢迎使用知涯志愿</Text>
-        <Text marginT-75 marginH-12 text-16 dark06>请输入您的手机号码</Text>
-        <View paddingT-23>
+        <Text text-20 marginH-35 marginT-20 dark>欢迎使用知涯志愿</Text>
+        <Text marginT-75 marginH-35 text-16 dark06>请输入您的手机号码</Text>
+        <View paddingT-23 paddingH-23>
           <LoginInput onChangeText={val => setValue('phoneNum', val)} onSubmitEditing={this.sendSms} />
         </View>
-        <View paddingT-100 paddingH-5>
+        <View paddingT-100 paddingH-28>
           <Button text-14 light label='下一步' bg-calm marginT-10 onPress={this.sendSms} disabled={phoneValid || nextPressed} />
         </View>
       </View >
@@ -168,7 +168,6 @@ let timer
   }
   componentDidMount () {
     AppState.addEventListener('change', this._handleAppStateChange)
-    // this.refs.modal.open()
   }
   componentWillUnmount () {
     const { setValue } = this.props.loginStore

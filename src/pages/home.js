@@ -11,7 +11,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, imageResize, OpenUrl, width, dialog, Toast, storage, imageFormat, statusBarHeight, platform } from '../utils'
+import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, imageFormat, statusBarHeight, platform } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../components'
 
