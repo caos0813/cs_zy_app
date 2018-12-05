@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { View, Button, Image } from '../../react-native-ui-lib'
 import { width, height } from '../utils'
 import { colors } from '../theme'
@@ -45,7 +45,7 @@ export default class SplashSwiper extends Component {
         </Animatable.View>
         <ParallaxImage
           source={item.img}
-          containerStyle={{ height: height, width: '100%' }}
+          containerStyle={{ height: '100%', width: '100%' }}
           // style={{ height: height, width: width }}
           resizeMode='contain'
           parallaxFactor={0}
@@ -140,8 +140,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     top: 0,
     left: 0,
+    bottom: 0,
     width: '100%',
-    height: '100%',
     zIndex: 101
   }
 })
