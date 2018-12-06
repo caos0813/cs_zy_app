@@ -7,7 +7,7 @@ import _ from 'lodash'
 import Picker from 'react-native-picker'
 import { colors } from '../theme'
 import { ratio, axios, Toast, api, BackPress } from '../utils'
-import { Mask } from '../components'
+import { Mask } from '../../react-native-root-ui'
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -20,10 +20,10 @@ import { Mask } from '../components'
     this.backPress = new BackPress({ backPress: this.onBackPress })
   }
   onBackPress = () => {
-    const maskStatus = this.refs.mask.status()
-    if (maskStatus) {
+    const status = Mask.getStatus()
+    if (status) {
       Picker.hide()
-      this.refs.mask.hide()
+      Mask.hide()
       return true
     } else {
       return false
@@ -40,17 +40,17 @@ import { Mask } from '../components'
       pickerTitleText: '请选择',
       onPickerConfirm: data => {
         updateUserInfo('startYear', data[0])
-        this.refs.mask.hide()
+        Mask.hide()
       },
       onPickerCancel: data => {
-        this.refs.mask.hide()
+        Mask.hide()
       },
       onPickerSelect: data => {
 
       }
     })
     Picker.show()
-    this.refs.mask.show()
+    Mask.show()
   }
   showSchoolPicker = () => {
     const { schoolPickerVal, schoolData, schoolPickerData, setValue } = this.props.infoStore
@@ -66,21 +66,21 @@ import { Mask } from '../components'
       pickerTitleText: '请选择',
       pickerTextEllipsisLen: 24,
       onPickerConfirm: data => {
-        this.refs.mask.hide()
+        Mask.hide()
         setValue('schoolPickerVal', data[0])
         const pickerItem = _.find(schoolData, (item) => { return item.name === data[0] })
         setValue('schoolPickerId', pickerItem.id)
         // updateUserInfo('startYear', data.toString())
       },
       onPickerCancel: data => {
-        this.refs.mask.hide()
+        Mask.hide()
       },
       onPickerSelect: data => {
 
       }
     })
     Picker.show()
-    this.refs.mask.show()
+    Mask.show()
   }
   showAreaPicker = (val) => {
     const { getParam } = this.props.navigation
@@ -103,7 +103,7 @@ import { Mask } from '../components'
       pickerTitleText: '请选择',
       onPickerConfirm: data => {
         // alert(typeof data)
-        this.refs.mask.hide()
+        Mask.hide()
         setValue('areaPickerVal', data)
         /* 获取对应的id */
         let idArr = []
@@ -120,14 +120,14 @@ import { Mask } from '../components'
         setValue('schoolPickerId', '')
       },
       onPickerCancel: data => {
-        this.refs.mask.hide()
+        Mask.hide()
       },
       onPickerSelect: data => {
 
       }
     })
     Picker.show()
-    this.refs.mask.show()
+    Mask.show()
   }
   sexChange = (e) => {
     const { updateUserInfo } = this.props.infoStore
@@ -196,7 +196,6 @@ import { Mask } from '../components'
     // userInfo.gender = userInfo.gender.toString()
     return (
       <View flex useSafeArea >
-        <Mask ref='mask' />
         <ScrollView>
           <View center paddingV-25 >
             {userInfo.image &&
@@ -288,7 +287,6 @@ import { Mask } from '../components'
     }) */
   }
   componentWillUnmount () {
-    Picker.hide()
     this.backPress.componentWillUnmount()
   }
 }

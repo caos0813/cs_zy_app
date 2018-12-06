@@ -1,4 +1,4 @@
-import { Assets } from 'react-native-ui-lib'
+import { Assets } from '../../react-native-ui-lib'
 Assets.loadAssetsGroup('icons', {
   backArrow: require('../assets/icons/ic_back.png'),
   logo: require('../assets/logo.png'),
