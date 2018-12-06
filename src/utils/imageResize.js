@@ -8,19 +8,18 @@ function imageResize (url, w, h) {
   }
 }
 function imageFormat (url, gender) {
-  if (!url && (!_.isUndefined(gender) || !_.isNull(gender))) {
-    return Assets.icons.headIcon
-  }
   if (url) {
     return {
       uri: url
     }
-  } else {
+  } else if (!url && _.isBoolean(gender)) {
     if (gender) {
       return require('../assets/mine/boy.png')
     } else {
       return require('../assets/mine/girl.png')
     }
+  } else {
+    return Assets.icons.headIcon
   }
 }
 

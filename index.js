@@ -74,7 +74,6 @@ class App extends Component {
         let tag = (Config.ENV === 'production' ? `pro_${province.id}` : `dev_${province.id}`)
         try {
           JPushModule.setTags([tag], (e) => {
-            alert(tag)
             //alert(JSON.stringify(e))
           })
         } catch (err) {
