@@ -28,7 +28,6 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		22E8D85161A940CA9E6566B7 /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A65882DE2544F2EB6373D05 /* libRNDeviceInfo-tvOS.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D02E4C21E0B4AEC006451C7 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		2D02E4C31E0B4AEC006451C7 /* libRCTImage-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */; };
@@ -50,6 +49,7 @@
 		7FD4C903498145B4B4EBE2FD /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF277586C3114095AE19975F /* CFNetwork.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		89C5B2B26C774D29A2956401 /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C8449E967D245C18A4E5D96 /* libRCTJCoreModule.a */; };
+		8C1BC01421B8C03E008F8013 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		8C521F2021B117BA00A17927 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C96E43A21B0E4A90095E162 /* libReactNativeConfig.a */; };
 		8C96E45E21B0E81E0095E162 /* libRCTToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C96E45D21B0E50E0095E162 /* libRCTToast.a */; };
 		8C96E46021B0FD9A0095E162 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C96E45F21B0FD9A0095E162 /* libc++.tbd */; };
@@ -1670,7 +1670,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				8C1BC01421B8C03E008F8013 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
