@@ -15,6 +15,9 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+/* 启动页 */
+#import "RNSplashScreen.h"  // here
+
 
 @implementation AppDelegate
 /* 微信sdk新增 */
@@ -87,6 +90,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [RNSplashScreen show];  // 启动页
   return YES;
 }
 
