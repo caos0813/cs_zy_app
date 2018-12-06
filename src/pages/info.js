@@ -151,7 +151,6 @@ import { Mask } from '../../react-native-root-ui'
       let reg = /[^\u4e00-\u9fa5]/
       if (reg.test(name)) {
         Toast('姓名必需为中文')
-        return
       }
     }
     let params = {
