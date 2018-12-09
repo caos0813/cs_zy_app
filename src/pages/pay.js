@@ -35,7 +35,7 @@ const listItems = [{
 @inject('userStore', 'payStore')
 @observer class Pay extends Component {
   render () {
-    const { payType, setValue, payAmount } = this.props.payStore
+    const { payType, setValue, payAmount, wechatInstall } = this.props.payStore
     const { isVipValid } = this.props.userStore
     return (
       <View flex useSafeArea bg-stable >
@@ -112,7 +112,7 @@ const listItems = [{
             </View>
           }
           <RadioGroup value={payType} onValueChange={e => setValue('payType', e)}>
-            <View row centerV spread style={styles.payItem}>
+            <View row centerV spread style={[styles.payItem, !wechatInstall && { display: 'none' }]}>
               <View row centerV>
                 <Image assetName='wechat' />
                 <Text marginL-25>微信支付</Text>
@@ -204,6 +204,14 @@ const listItems = [{
       setValue('payAmount', data.payAmount)
     }).catch(e => {
       setValue('payAmount', 0.00)
+    })
+    WeChat.isWXAppInstalled().then(result => {
+      setValue('wechatInstall', result)
+      if (result) {
+        setValue('payType', 'wechat')
+      } else {
+        setValue('payType', 'vip')
+      }
     })
     // this.refs.modal.open()
   }

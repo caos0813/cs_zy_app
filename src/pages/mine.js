@@ -94,7 +94,7 @@ import Config from 'react-native-config'
             </ListItem>
           </View>
           <View paddingT-100 paddingH-50>
-            <Button label='退出' bg-calm text-18 onPress={this.signOut} />
+            <Button label='退出登录' bg-calm text-18 onPress={this.signOut} />
           </View>
         </ScrollView>
       </View>
