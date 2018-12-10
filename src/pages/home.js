@@ -120,13 +120,13 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
     const { userInfo } = this.props.userStore
     return (
       <View centerV paddingH-15 style={[styles.header]} >
-        <Avatar containerStyle={styles.avatar}
+        {/* <Avatar containerStyle={styles.avatar}
           size={28}
           imageSource={imageFormat(userInfo.image, userInfo.gender)}
           backgroundColor='transparent'
           imageProps={!userInfo.token ? { tintColor: colors.grey } : {}}
           onPress={() => this.openNative('Mine', {}, true)}
-        />
+        /> */}
         <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
       </View>
     )
@@ -160,7 +160,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
-        <View row marginV-10>
+        <View row marginV-10 style={styles.iconWrap}>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
             <Image assetName='icon01' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查大学</Text>
@@ -173,14 +173,24 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
             <Image assetName='icon03' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查职业</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
+            <Image assetName='icon05' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>测一测</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
             <Image assetName='icon04' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>填志愿</Text>
             {this.renderBadge()}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
-            <Image assetName='icon05' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>测一测</Text>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
+            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>志愿问答</Text>
+            {this.renderBadge()}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
+            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>高考咨询</Text>
+            {this.renderBadge()}
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={this.testPlay}>
@@ -315,6 +325,9 @@ const styles = StyleSheet.create({
     height: 28,
     marginTop: 1,
     zIndex: 1
+  },
+  iconWrap: {
+    flexWrap: 'wrap'
   },
   iconButton: {
     flex: 1,
