@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -50,6 +49,10 @@
 		E45E3C54D25E4CDC8547094F /* libRCTJPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9083658157214A468E51D4FA /* libRCTJPushModule.a */; };
 		EBD8DAEEC77C44978F21622B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF9B4768EDB4F2397ADCD62 /* Security.framework */; };
 		EE37520A972A43ED9D547C00 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C45B27ECD18A41E59BE3F5E8 /* libReactNativeConfig.a */; };
+		1E384EB2D17243B99114A3C9 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAEEF94C760D4913B26AFB54 /* libRCTVideo.a */; };
+		1DF5F4B2DA694C9B9F43715C /* libRCTJAnalyticsModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D4F7434719406DB7206A10 /* libRCTJAnalyticsModule.a */; };
+		93784A5B708C42DEA98731A4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488A9EDCADB24784A495979B /* CoreLocation.framework */; };
+		AAAE3BFC460B40ED81BB7518 /* libRCTJShareModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2911276A8C4E5AAC46F21C /* libRCTJShareModule.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -513,6 +516,13 @@
 		EEBC7D56BD4A4D7693342ACA /* CFNetwork.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		F18E1F369220497D93FF5401 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		FDCA51F5DE574475A8AF5F1B /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6C0D2AC67C56468F86CC772B /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; name = "RCTVideo.xcodeproj"; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		FAEEF94C760D4913B26AFB54 /* libRCTVideo.a */ = {isa = PBXFileReference; name = "libRCTVideo.a"; path = "libRCTVideo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		5B6C7EAB097F483F9CF3ACFF /* RCTJAnalyticsModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTJAnalyticsModule.xcodeproj"; path = "../node_modules/janalytics-react-native/ios/RCTJAnalyticsModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F9D4F7434719406DB7206A10 /* libRCTJAnalyticsModule.a */ = {isa = PBXFileReference; name = "libRCTJAnalyticsModule.a"; path = "libRCTJAnalyticsModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		488A9EDCADB24784A495979B /* CoreLocation.framework */ = {isa = PBXFileReference; name = "CoreLocation.framework"; path = "System/Library/Frameworks/CoreLocation.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		ADA994BC16044002BF2F707D /* RCTJShareModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTJShareModule.xcodeproj"; path = "../node_modules/jshare-react-native/ios/RCTJShareModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5D2911276A8C4E5AAC46F21C /* libRCTJShareModule.a */ = {isa = PBXFileReference; name = "libRCTJShareModule.a"; path = "libRCTJShareModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -559,6 +569,10 @@
 				01765CFB79F0404894987E99 /* libRNSVG.a in Frameworks */,
 				9D52963E663441798C98D504 /* libRCTWeChat.a in Frameworks */,
 				B92F86BEE2164D16A89FC4C6 /* RCTWeChatTests.xctest in Frameworks */,
+				1E384EB2D17243B99114A3C9 /* libRCTVideo.a in Frameworks */,
+				1DF5F4B2DA694C9B9F43715C /* libRCTJAnalyticsModule.a in Frameworks */,
+				93784A5B708C42DEA98731A4 /* CoreLocation.framework in Frameworks */,
+				AAAE3BFC460B40ED81BB7518 /* libRCTJShareModule.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -698,6 +712,7 @@
 				FDCA51F5DE574475A8AF5F1B /* UIKit.framework */,
 				46496E08C7424C1FB1EF515A /* libresolv.tbd */,
 				90A2505247AA4CE0A8CC9838 /* CoreGraphics.framework */,
+				488A9EDCADB24784A495979B /* CoreLocation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -748,6 +763,9 @@
 				DA2360B7B7C24832B2649182 /* SplashScreen.xcodeproj */,
 				71982CD07B0449F1B1F121EF /* RNSVG.xcodeproj */,
 				401B55DAD6604F9E825B192F /* RCTWeChat.xcodeproj */,
+				6C0D2AC67C56468F86CC772B /* RCTVideo.xcodeproj */,
+				5B6C7EAB097F483F9CF3ACFF /* RCTJAnalyticsModule.xcodeproj */,
+				ADA994BC16044002BF2F707D /* RCTJShareModule.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1556,6 +1574,9 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\jshare-react-native\ios\RCTJShareModule",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1572,6 +1593,12 @@
 				PROVISIONING_PROFILE = "f39f9252-511d-4193-85c5-c2e0f7ce5301";
 				PROVISIONING_PROFILE_SPECIFIER = zyzytest_dev;
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+				);
 			};
 			name = Debug;
 		};
@@ -1599,6 +1626,9 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\jshare-react-native\ios\RCTJShareModule",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1615,6 +1645,12 @@
 				PROVISIONING_PROFILE = "710cc71f-c05f-4fde-9489-3778f0a5f526";
 				PROVISIONING_PROFILE_SPECIFIER = zyzytest_pro;
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+				);
 			};
 			name = Release;
 		};
@@ -1791,6 +1827,9 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios/**",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\jshare-react-native\ios\RCTJShareModule",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1807,6 +1846,12 @@
 				PROVISIONING_PROFILE = "710cc71f-c05f-4fde-9489-3778f0a5f526";
 				PROVISIONING_PROFILE_SPECIFIER = zyzytest_pro;
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+				);
 			};
 			name = Staging;
 		};

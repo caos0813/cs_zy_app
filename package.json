@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "janalytics-react-native": "^1.2.0",
     "jcore-react-native": "^1.2.11",
     "jpush-react-native": "^2.2.13",
+    "jshare-react-native": "^1.4.0",
     "lodash": "^4.17.11",
     "mobx": "^4.5.0",
     "mobx-react": "^5.3.4",
@@ -40,6 +42,7 @@
     "react-native-svg": "8.0.0",
     "react-native-swiper": "^1.5.13",
     "react-native-ultimate-listview": "^3.3.0",
+    "react-native-video": "^4.1.0",
     "react-native-wechat": "^1.9.10",
     "react-navigation": "^2.12.1"
   },

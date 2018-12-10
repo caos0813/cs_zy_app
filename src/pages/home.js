@@ -5,6 +5,9 @@ import { inject, observer } from 'mobx-react/native'
 import JPushModule from 'jpush-react-native'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import SplashScreen from 'react-native-splash-screen'
+import { Player } from '../../react-native-root-ui'
+import JShareModule from 'jshare-react-native'
+import * as WeChat from 'react-native-wechat'
 import _ from 'lodash'
 import {
   StyleSheet,
@@ -180,9 +183,23 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
             <Text text-14 dark06 marginT-2>测一测</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={this.testPlay}>
+          <Text>播放音频</Text>
+        </TouchableOpacity>
         <ItemHead title='升学指导' />
       </View>
     )
+  }
+  testPlay = () => {
+    WeChat.shareToTimeline({
+      type: 'news',
+      thumbImage: 'http://cms-bucket.nosdn.127.net/2018/12/10/506dbfc357ea4b3abd5e4b4dd57b174e.jpeg?imageView&thumbnail=453y225&quality=85',
+      webpageUrl: 'http://www.baidu.com',
+      title: '分享标题',
+      description: '分享内容'
+    }).then(() => {
+      alert(1)
+    })
   }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
@@ -255,6 +272,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
     }) */
   }
   componentDidMount () {
+    Player.play('https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145')
     const { setValue } = this.props.homeStore
     axios.get(api.banner).then(data => {
       setValue('bannerData', data.content)
