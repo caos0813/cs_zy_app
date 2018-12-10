@@ -4,6 +4,7 @@ configure({
 })
 class Store {
   @observable payType = 'wechat'
+  @observable wechatInstall = false
   @observable payAmount = 0.00
   @observable cardNumber = ''
   @observable password = ''

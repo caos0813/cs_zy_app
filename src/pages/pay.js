@@ -35,7 +35,7 @@ const listItems = [{
 @inject('userStore', 'payStore')
 @observer class Pay extends Component {
   render () {
-    const { payType, setValue, payAmount } = this.props.payStore
+    const { payType, setValue, payAmount, wechatInstall } = this.props.payStore
     const { isVipValid } = this.props.userStore
     return (
       <View flex useSafeArea bg-stable >
@@ -98,7 +98,7 @@ const listItems = [{
           </ScrollView>
           <View paddingV-8 centerV paddingH-13 bg-light style={styles.footer} row spread>
             {isVipValid === 2 ? <Text dark06 text-14>我的志愿卡</Text> : <Text calm text-28>¥{payAmount}</Text>}
-            {isVipValid === 2 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />}
+            {isVipValid === 1 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />}
           </View>
         </View>
         <Modal ref='modal' style={styles.modal} backdropPressToClose={false}>
@@ -112,7 +112,7 @@ const listItems = [{
             </View>
           }
           <RadioGroup value={payType} onValueChange={e => setValue('payType', e)}>
-            <View row centerV spread style={styles.payItem}>
+            <View row centerV spread style={[styles.payItem, !wechatInstall && { display: 'none' }]}>
               <View row centerV>
                 <Image assetName='wechat' />
                 <Text marginL-25>微信支付</Text>
@@ -172,9 +172,9 @@ const listItems = [{
           } else {
             Toast(result.errStr)
           }
-        }).catch(() => {
+        }).catch((err) => {
           // Toast('用户取消')
-          // alert(JSON.stringify(err))
+          alert(JSON.stringify(err))
         })
       }).catch(() => {
         Toast('创建订单失败')
@@ -204,6 +204,14 @@ const listItems = [{
       setValue('payAmount', data.payAmount)
     }).catch(e => {
       setValue('payAmount', 0.00)
+    })
+    WeChat.isWXAppInstalled().then(result => {
+      setValue('wechatInstall', result)
+      if (result) {
+        setValue('payType', 'wechat')
+      } else {
+        setValue('payType', 'vip')
+      }
     })
     // this.refs.modal.open()
   }
