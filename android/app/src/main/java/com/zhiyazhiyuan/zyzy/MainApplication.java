@@ -3,6 +3,7 @@ package com.zhiyazhiyuan.zyzy;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import cn.jiguang.share.reactnative.JSharePackage;
 import cn.jiguang.share.android.api.JShareInterface;
 import cn.jpush.reactnativejanalytics.JAnalyticsPackage;
@@ -47,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerPackage(),
             new JAnalyticsPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
             new JSharePackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
             new ReactVideoPackage(),

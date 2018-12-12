@@ -1,6 +1,7 @@
 import React from 'react'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
 import { dark04, light } from '../theme/colors'
+import { platform, navigator, statusBarHeight } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -13,9 +14,11 @@ import PlanIndex from '../pages/PlanIndex'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
+const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
+
 const TabStack = createBottomTabNavigator(
   {
-    Home: {
+    Index: {
       screen: Home,
       navigationOptions: () => ({
         tabBarLabel: '⾸⻚',
@@ -25,6 +28,7 @@ const TabStack = createBottomTabNavigator(
     Plan: {
       screen: PlanIndex,
       navigationOptions: () => ({
+        header: '',
         title: '⽣涯规划'
       })
     },
@@ -94,10 +98,10 @@ const TabStack = createBottomTabNavigator(
     lazy: true,
     // 返回按钮是否会导致tab切换到初始tab⻚？ 如果是，则设置为initialRoute，否则为none。 缺省为initialRoute。
     backBehavior: 'none',
-    initialRouteName: 'Home'
+    initialRouteName: 'Index'
   }
 )
-export default createStackNavigator(
+const AppNavigation = createStackNavigator(
   {
     Login: {
       screen: Login,
@@ -105,8 +109,9 @@ export default createStackNavigator(
         title: '登录'
       })
     },
-    Main: {
+    Home: {
       screen: TabStack,
+      path: 'home',
       navigationOptions: () => ({
         header: null
       })
@@ -160,7 +165,7 @@ export default createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Main',
+    initialRouteName: 'Home',
     /* initialRouteParams: {
     type: 'complete'
     }, */
@@ -169,3 +174,7 @@ export default createStackNavigator(
     })
   }
 )
+const app = () => <AppNavigation uriPrefix={prefix} screenProps={{ statusBarHeight: statusBarHeight }} ref={navigatorRef => {
+  navigator.setTopLevelNavigator(navigatorRef)
+}} />
+export default app

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Button } from '../../react-native-ui-lib'
+import { Button } from '../../react-native-ui-lib'
 import RootSiblings from 'react-native-root-siblings'
 import Video from 'react-native-video'
+import * as Animatable from 'react-native-animatable'
 export default class Player extends Component {
   static player = null
   static close () {
@@ -28,7 +29,7 @@ export default class Player extends Component {
       ...obj
     }
     if (this.player instanceof RootSiblings) {
-      this.player.update(<View style={styles.wrap} row center>
+      this.player.update(<Animatable.View style={styles.wrap} row center animation='slideInUp' duration={300}>
         <Video
           ref={(ref) => { this.playerRef = ref }}
           source={{ uri: url }}
@@ -37,9 +38,9 @@ export default class Player extends Component {
         />
         <Button label='关闭' onPress={() => this.close()} />
         <Button label='暂停' onPress={() => this.pause()} />
-      </View>)
+      </Animatable.View>)
     } else {
-      this.player = new RootSiblings(<View style={styles.wrap} row center>
+      this.player = new RootSiblings(<Animatable.View style={styles.wrap} row center animation='slideInUp' duration={300}>
         <Video
           ref={(ref) => { this.playerRef = ref }}
           source={{ uri: url }}
@@ -48,7 +49,7 @@ export default class Player extends Component {
         />
         <Button label='关闭' onPress={() => this.close()} />
         <Button label='暂停' onPress={() => this.pause()} />
-      </View>)
+      </Animatable.View>)
     }
   }
   render () {

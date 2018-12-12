@@ -10,7 +10,7 @@ import codePush from 'react-native-code-push'
 require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
-import { statusBarHeight, storage, platform, navigator } from './src/utils'
+import {  storage, platform, navigator } from './src/utils'
 import store from './src/store'
 promise.polyfill()
 class App extends Component {
@@ -20,14 +20,12 @@ class App extends Component {
   render () {
     return (
       <Provider {...store}>
-        <Router screenProps={{ statusBarHeight: statusBarHeight }} onNavigationStateChange={(prev, current, action) => {
+        <Router  onNavigationStateChange={(prev, current, action) => {
           const { routes } = current
           console.log(routes)
           const { setRoutes } = store.routeStore
           setRoutes(routes)
-        }} ref={navigatorRef => {
-          navigator.setTopLevelNavigator(navigatorRef);
-        }} />
+        }}  />
       </Provider>
     )
   }

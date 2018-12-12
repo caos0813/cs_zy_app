@@ -12,6 +12,7 @@ class Store {
     startYear: ''
   }
   @observable areaData = []
+  @observable actionSheetStatus = false
   @observable areaPickerData = []
   @observable areaPickerVal = []
   @observable areaPickerId = []
