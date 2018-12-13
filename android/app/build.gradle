@@ -182,6 +182,7 @@ android {
 }
 
 dependencies {
+    compile project(':aliyun-oss-react-native')
     compile project(':react-native-image-crop-picker')
     compile project(':jshare-react-native')
     compile project(':janalytics-react-native')
