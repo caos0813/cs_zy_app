@@ -1,20 +1,17 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Image, TouchableOpacity, LoaderScreen } from '../../react-native-ui-lib'
+import { View, Text, Image, TouchableOpacity, LoaderScreen } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import SplashScreen from 'react-native-splash-screen'
-import { Player } from '../../react-native-root-ui'
-import JShareModule from 'jshare-react-native'
-import * as WeChat from 'react-native-wechat'
 import _ from 'lodash'
 import {
   StyleSheet,
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, imageFormat, statusBarHeight, platform } from '../utils'
+import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, statusBarHeight, platform } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../components'
 
@@ -117,16 +114,8 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
     })
   }
   renderHeader = () => {
-    const { userInfo } = this.props.userStore
     return (
       <View centerV paddingH-15 style={[styles.header]} >
-        {/* <Avatar containerStyle={styles.avatar}
-          size={28}
-          imageSource={imageFormat(userInfo.image, userInfo.gender)}
-          backgroundColor='transparent'
-          imageProps={!userInfo.token ? { tintColor: colors.grey } : {}}
-          onPress={() => this.openNative('Mine', {}, true)}
-        /> */}
         <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
       </View>
     )
@@ -193,23 +182,9 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
             {this.renderBadge()}
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={this.testPlay}>
-          <Text>播放音频</Text>
-        </TouchableOpacity>
         <ItemHead title='升学指导' />
       </View>
     )
-  }
-  testPlay = () => {
-    WeChat.shareToTimeline({
-      type: 'news',
-      thumbImage: 'http://cms-bucket.nosdn.127.net/2018/12/10/506dbfc357ea4b3abd5e4b4dd57b174e.jpeg?imageView&thumbnail=453y225&quality=85',
-      webpageUrl: 'http://www.baidu.com',
-      title: '分享标题',
-      description: '分享内容'
-    }).then(() => {
-      alert(1)
-    })
   }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
@@ -282,7 +257,6 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
     }) */
   }
   componentDidMount () {
-    Player.play('https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145')
     const { setValue } = this.props.homeStore
     axios.get(api.banner).then(data => {
       setValue('bannerData', data.content)

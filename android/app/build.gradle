@@ -117,10 +117,11 @@ android {
                 JPUSH_APPKEY: "97ab5a6f89c340b6f61c74c4",
                 APP_CHANNEL : project.env.get("APP_CHANNEL")
         ]
-
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        vectorDrawables.useSupportLibrary = true
     }
     sourceSets {  
         main {
@@ -181,6 +182,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-crop-picker')
     compile project(':jshare-react-native')
     compile project(':janalytics-react-native')
     compile project(':react-native-video')
