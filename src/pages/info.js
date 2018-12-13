@@ -9,6 +9,7 @@ import { colors } from '../theme'
 import { ratio, axios, Toast, api, BackPress } from '../utils'
 import { Mask } from '../../react-native-root-ui'
 import ImagePicker from 'react-native-image-crop-picker'
+import AliyunOSS from 'aliyun-oss-react-native'
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -207,7 +208,11 @@ import ImagePicker from 'react-native-image-crop-picker'
         hideBottomControls: true,
         cropping: true
       }).then(image => {
-        console.log(image)
+        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
       })
     } else if (index === 1) {
       ImagePicker.openCamera({
@@ -218,6 +223,11 @@ import ImagePicker from 'react-native-image-crop-picker'
         cropping: true
       }).then(image => {
         console.log(image)
+        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
       })
     }
   }
@@ -326,6 +336,17 @@ import ImagePicker from 'react-native-image-crop-picker'
     /* reaction(() => userStore.userInfo, (data) => {
       alert(JSON.stringify(data))
     }) */
+    const configuration = {
+      maxRetryCount: 3,
+      timeoutIntervalForRequest: 30,
+      timeoutIntervalForResource: 24 * 60 * 60
+    }
+    axios.get(api.getAssumeRole).then(data => {
+      const { securityToken, accessKeyId, accessKeySecret } = data.credentials
+      console.log(securityToken)
+      const endPoint = 'oss-cn-huhehaote.aliyuncs.com'
+      AliyunOSS.initWithSecurityToken(securityToken, accessKeyId, accessKeySecret, endPoint, configuration)
+    })
   }
   componentWillUnmount () {
     this.backPress.componentWillUnmount()

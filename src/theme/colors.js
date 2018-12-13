@@ -13,6 +13,7 @@ const balanced = '#06D6A0'
 const dark04 = '#444'
 const dark05 = '#555'
 const dark06 = '#69707F'
+const dark07 = '#7f7f7f'
 const dark09 = '#999'
 export {
   black,
@@ -30,5 +31,6 @@ export {
   dark05,
   dark06,
   dark09,
+  dark07,
   grey
 }

@@ -14,7 +14,7 @@ import {
 import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, statusBarHeight, platform } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../components'
-
+import { Player } from '../../react-native-root-ui'
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
   constructor (props) {
@@ -182,9 +182,30 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
             {this.renderBadge()}
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={() => this.testPlay(1)}>
+          <Text>学习教育</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.testPlay(2)}>
+          <Text>护理学</Text>
+        </TouchableOpacity>
         <ItemHead title='升学指导' />
       </View>
     )
+  }
+  testPlay=(index) => {
+    if (index === 1) {
+      Player.play({
+        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145',
+        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
+        title: '学前教育'
+      })
+    } else {
+      Player.play({
+        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152050',
+        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084352',
+        title: '护理学'
+      })
+    }
   }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */

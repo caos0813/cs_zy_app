@@ -13,6 +13,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "aliyun-oss-react-native": "^1.0.0-alpha.7",
     "axios": "^0.18.0",
     "es6-promise": "^4.2.5",
     "janalytics-react-native": "^1.2.0",

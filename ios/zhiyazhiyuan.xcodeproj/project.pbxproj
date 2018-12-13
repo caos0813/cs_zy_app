@@ -53,6 +53,7 @@
 		93784A5B708C42DEA98731A4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488A9EDCADB24784A495979B /* CoreLocation.framework */; };
 		AAAE3BFC460B40ED81BB7518 /* libRCTJShareModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2911276A8C4E5AAC46F21C /* libRCTJShareModule.a */; };
 		2362CF6C1C5243D09C52381A /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7CA073EAACD474A8354ED41 /* libimageCropPicker.a */; };
+		8D3C13281C4E4AE19C0FC8E0 /* libRNAliyunOSS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08C721AE8AC94D8C839B152D /* libRNAliyunOSS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -516,6 +517,8 @@
 		5D2911276A8C4E5AAC46F21C /* libRCTJShareModule.a */ = {isa = PBXFileReference; name = "libRCTJShareModule.a"; path = "libRCTJShareModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		58EB5DC0E84E4D4DA350BED7 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; name = "imageCropPicker.xcodeproj"; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		A7CA073EAACD474A8354ED41 /* libimageCropPicker.a */ = {isa = PBXFileReference; name = "libimageCropPicker.a"; path = "libimageCropPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		6F5B88E7E19B46CA9C30B40C /* RNAliyunOSS.xcodeproj */ = {isa = PBXFileReference; name = "RNAliyunOSS.xcodeproj"; path = "../node_modules/aliyun-oss-react-native/ios/RNAliyunOSS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		08C721AE8AC94D8C839B152D /* libRNAliyunOSS.a */ = {isa = PBXFileReference; name = "libRNAliyunOSS.a"; path = "libRNAliyunOSS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -566,6 +569,7 @@
 				93784A5B708C42DEA98731A4 /* CoreLocation.framework in Frameworks */,
 				AAAE3BFC460B40ED81BB7518 /* libRCTJShareModule.a in Frameworks */,
 				2362CF6C1C5243D09C52381A /* libimageCropPicker.a in Frameworks */,
+				8D3C13281C4E4AE19C0FC8E0 /* libRNAliyunOSS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,6 +763,7 @@
 				5B6C7EAB097F483F9CF3ACFF /* RCTJAnalyticsModule.xcodeproj */,
 				ADA994BC16044002BF2F707D /* RCTJShareModule.xcodeproj */,
 				58EB5DC0E84E4D4DA350BED7 /* imageCropPicker.xcodeproj */,
+				6F5B88E7E19B46CA9C30B40C /* RNAliyunOSS.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1552,6 +1557,7 @@
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\jshare-react-native\ios\RCTJShareModule",
 					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
+					"$(SRCROOT)\..\node_modules\aliyun-oss-react-native\ios/**",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1570,6 +1576,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
 				);
 			};
 			name = Debug;
@@ -1602,6 +1609,7 @@
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\jshare-react-native\ios\RCTJShareModule",
 					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
+					"$(SRCROOT)\..\node_modules\aliyun-oss-react-native\ios/**",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1620,6 +1628,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
 				);
 			};
 			name = Release;
@@ -1801,6 +1810,7 @@
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\jshare-react-native\ios\RCTJShareModule",
 					"$(SRCROOT)\..\node_modules\react-native-image-crop-picker\ios/**",
+					"$(SRCROOT)\..\node_modules\aliyun-oss-react-native\ios/**",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1819,6 +1829,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
 				);
 			};
 			name = Staging;
