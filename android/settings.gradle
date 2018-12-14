@@ -1,4 +1,6 @@
 rootProject.name = 'zhiyazhiyuan'
+include ':react-native-blur'
+project(':react-native-blur').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-blur/android')
 include ':aliyun-oss-react-native'
 project(':aliyun-oss-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/aliyun-oss-react-native/android')
 include ':react-native-image-crop-picker'

@@ -1,6 +1,7 @@
 const light = '#fff'
 const stable = '#f4f4f4'
 const gray = '#ADADAD'
+const lightGrey = '#F7F7FB'
 const grey = '#ddd'
 const dark = '#1D1E2C'
 const black = '#000'
@@ -22,6 +23,7 @@ export {
   light,
   stable,
   gray,
+  lightGrey,
   dark,
   positive,
   calm,

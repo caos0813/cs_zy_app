@@ -10,4 +10,5 @@ import SplashSwiper from './splashSwiper'
 import NoNetwork from './noNetwork'
 import HomeSearch from './homeSearch'
 import LoginInput from './loginInput'
-export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput }
+import Item from './item'
+export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item }
