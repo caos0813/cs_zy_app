@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, TextInput, RadioButton, RadioGroup, Button, Image } from '../../react-native-ui-lib'
+import { Text, View, Avatar, TextInput, RadioButton, RadioGroup, Button, Image, ActionSheet } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { ScrollView, StyleSheet } from 'react-native'
 import { NavigationActions } from 'react-navigation'
@@ -8,6 +8,8 @@ import Picker from 'react-native-picker'
 import { colors } from '../theme'
 import { ratio, axios, Toast, api, BackPress } from '../utils'
 import { Mask } from '../../react-native-root-ui'
+import ImagePicker from 'react-native-image-crop-picker'
+import AliyunOSS from 'aliyun-oss-react-native'
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -21,6 +23,11 @@ import { Mask } from '../../react-native-root-ui'
   }
   onBackPress = () => {
     const status = Mask.getStatus()
+    const { setValue, actionSheetStatus } = this.props.infoStore
+    if (actionSheetStatus) {
+      setValue('actionSheetStatus', false)
+      return true
+    }
     if (status) {
       Picker.hide()
       Mask.hide()
@@ -190,20 +197,53 @@ import { Mask } from '../../react-native-root-ui'
       Toast(err.message)
     })
   }
+  pickOption = (index) => {
+    const { setValue } = this.props.infoStore
+    setValue('actionSheetStatus', false)
+    if (index === 0) {
+      ImagePicker.openPicker({
+        width: 300,
+        height: 300,
+        cropperToolbarTitle: '裁剪头像',
+        hideBottomControls: true,
+        cropping: true
+      }).then(image => {
+        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      })
+    } else if (index === 1) {
+      ImagePicker.openCamera({
+        width: 300,
+        height: 300,
+        cropperToolbarTitle: '裁剪头像',
+        hideBottomControls: true,
+        cropping: true
+      }).then(image => {
+        console.log(image)
+        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      })
+    }
+  }
   render () {
-    let { userInfo, genderString, isStudentString, areaPickerValString, schoolPickerVal, updateUserInfo } = this.props.infoStore
+    let { userInfo, genderString, isStudentString, areaPickerValString, schoolPickerVal, updateUserInfo, actionSheetStatus, setValue } = this.props.infoStore
     // userInfo.gender = userInfo.gender.toString()
     return (
       <View flex useSafeArea >
         <ScrollView>
           <View center paddingV-25 >
-            {userInfo.image &&
-              <Avatar
-                imageSource={{ uri: userInfo.image }}
-                size={80}
-                backgroundColor='transparent'
-                imageProps={{ resizeMode: 'cover' }} />
-            }
+            <Avatar
+              onPress={() => setValue('actionSheetStatus', true)}
+              imageSource={{ uri: userInfo.image }}
+              size={80}
+              backgroundColor='transparent'
+              imageProps={{ resizeMode: 'cover' }} />
           </View>
           <View>
             <View row center style={styles.item}>
@@ -270,6 +310,18 @@ import { Mask } from '../../react-native-root-ui'
             </View>
           </View>
         </ScrollView>
+        <ActionSheet
+          visible={actionSheetStatus}
+          title='请选择'
+          options={
+            [
+              { label: '相册', onPress: () => this.pickOption(0) },
+              { label: '拍照', onPress: () => this.pickOption(1) },
+              { label: '取消', onPress: () => this.pickOption(2) }
+            ]
+          }
+          onDismiss={this.onBackPress}
+        />
       </View>
     )
   }
@@ -284,6 +336,17 @@ import { Mask } from '../../react-native-root-ui'
     /* reaction(() => userStore.userInfo, (data) => {
       alert(JSON.stringify(data))
     }) */
+    const configuration = {
+      maxRetryCount: 3,
+      timeoutIntervalForRequest: 30,
+      timeoutIntervalForResource: 24 * 60 * 60
+    }
+    axios.get(api.getAssumeRole).then(data => {
+      const { securityToken, accessKeyId, accessKeySecret } = data.credentials
+      console.log(securityToken)
+      const endPoint = 'oss-cn-huhehaote.aliyuncs.com'
+      AliyunOSS.initWithSecurityToken(securityToken, accessKeyId, accessKeySecret, endPoint, configuration)
+    })
   }
   componentWillUnmount () {
     this.backPress.componentWillUnmount()

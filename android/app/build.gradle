@@ -104,7 +104,9 @@ def enableProguardInReleaseBuilds = true
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    compileOptions {
+     targetCompatibility JavaVersion.VERSION_1_8
+   }
     defaultConfig {
         applicationId "com.zhiyazhiyuan.zyzy"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -115,9 +117,15 @@ android {
                 JPUSH_APPKEY: "97ab5a6f89c340b6f61c74c4",
                 APP_CHANNEL : project.env.get("APP_CHANNEL")
         ]
-
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+        vectorDrawables.useSupportLibrary = true
+    }
+    sourceSets {  
+        main {
+            assets.srcDirs = ['assets']
         }
     }
     /* 打包新增 */
@@ -174,6 +182,11 @@ android {
 }
 
 dependencies {
+    compile project(':aliyun-oss-react-native')
+    compile project(':react-native-image-crop-picker')
+    compile project(':jshare-react-native')
+    compile project(':janalytics-react-native')
+    compile project(':react-native-video')
     compile project(':react-native-background-timer')
     compile project(':react-native-device-info')
     compile project(':react-native-code-push')

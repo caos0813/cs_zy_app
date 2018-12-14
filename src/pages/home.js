@@ -1,20 +1,21 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Image, TouchableOpacity, LoaderScreen } from '../../react-native-ui-lib'
+import { View, Text, Image, TouchableOpacity, LoaderScreen, Card } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
-import { UltimateListView } from 'react-native-ultimate-listview'
+// import { UltimateListView } from 'react-native-ultimate-listview'
 import SplashScreen from 'react-native-splash-screen'
 import _ from 'lodash'
 import {
   StyleSheet,
   StatusBar,
-  Linking
+  Linking,
+  ScrollView
 } from 'react-native'
-import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, imageFormat, statusBarHeight, platform } from '../utils'
+import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, statusBarHeight, platform } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../components'
-
+import { Player } from '../../react-native-root-ui'
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
   constructor (props) {
@@ -114,16 +115,8 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
     })
   }
   renderHeader = () => {
-    const { userInfo } = this.props.userStore
     return (
       <View centerV paddingH-15 style={[styles.header]} >
-        <Avatar containerStyle={styles.avatar}
-          size={28}
-          imageSource={imageFormat(userInfo.image, userInfo.gender)}
-          backgroundColor='transparent'
-          imageProps={!userInfo.token ? { tintColor: colors.grey } : {}}
-          onPress={() => this.openNative('Mine', {}, true)}
-        />
         <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
       </View>
     )
@@ -157,7 +150,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
-        <View row marginV-10>
+        <View row marginV-5 style={styles.iconWrap}>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
             <Image assetName='icon01' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查大学</Text>
@@ -170,19 +163,41 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
             <Image assetName='icon03' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查职业</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
+            <Image assetName='icon05' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>测一测</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
             <Image assetName='icon04' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>填志愿</Text>
             {this.renderBadge()}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
-            <Image assetName='icon05' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>测一测</Text>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
+            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>志愿问答</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
+            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>高考咨询</Text>
           </TouchableOpacity>
         </View>
-        <ItemHead title='升学指导' />
       </View>
     )
+  }
+  testPlay=(index) => {
+    if (index === 1) {
+      Player.play({
+        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145',
+        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
+        title: '学前教育'
+      })
+    } else {
+      Player.play({
+        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152050',
+        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084352',
+        title: '护理学'
+      })
+    }
   }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
@@ -197,51 +212,61 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
       }
     }
   }
-  renderItem = (item, index, separator) => {
-    return (
-      <View paddingH-15 marginB-20 >
-        <TouchableOpacity activeOpacity={0.7} onPress={() => this.openUrl(`article`, { id: item.id }, false)}>
-          <Image source={{ uri: imageResize(item.image, 500) }} style={{ width: '100%', height: 115, borderRadius: 8 }} />
-          <View paddingV-10>
-            <Text text-18 dark>{item.name}</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      // <Card borderRadius={8} style={{ marginBottom: 10, marginLeft: 15, marginRight: 15 }} onPress={() => this.openUrl(`article`, { id: item.id }, false)}>
-      //   <Card.Image height={110} imageSource={{ uri: imageResize(item.image, 500) }} width='100%' />
-      //   <Card.Section body >
-      //     <Card.Section >
-      //       <Text text-18 dark>{item.name}</Text>
-      //     </Card.Section>
-      //     {/*  <Card.Section style={{ marginBottom: 0 }}>
-      //       <Text text-14 dark06 numberOfLines={1}>现在好像没有描述</Text>
-      //     </Card.Section> */}
-      //   </Card.Section>
-      // </Card>
-    )
-  }
   render () {
     const { showSplash, bannerData } = this.props.homeStore
     const { animationConfig } = this.state
+    const listItems = [{
+      title: '最科学的填报志愿方法',
+      text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
+      img: 'payitem01'
+    }, {
+      title: '最精准的数据支撑',
+      text: '院校、专业录取数据、招生计划与考试院同步更新。根据你的高考分数推荐最合适的大学及专业',
+      img: 'payitem02'
+    }, {
+      title: '最专业的生涯顾问服务',
+      text: '生涯规划专家、教育专家、高级教师实时指导，为学生提供精准定制服务，辅助生涯规划决策。根据你的高考分数推荐最合适的大学及专业',
+      img: 'payitem03'
+    }, {
+      title: '最智能的生涯测评',
+      text: '为你提供最全面、最客观的”专业“评价，让你更多元、更深入的了解专业。',
+      img: 'payitem04'
+    }, {
+      title: '最全面的大学、专业、职业库',
+      text: '生动、形象的介绍，让你更多元、更深入地了解大学、专业、职业。',
+      img: 'payitem05'
+    }, {
+      title: '最实用的生涯规划课程',
+      text: '帮助学生探索自我和外部变化的环境，找到人生努力的方向，最大化实现自我价值。',
+      img: 'payitem06'
+    }]
     return (
       <View flex useSafeArea>
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
         {this.renderHeader()}
         <NoNetwork refresh={this.refresh} />
-        <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
-          header={() => this.renderContainer(bannerData)}
-          onFetch={this.onFetch}
-          item={this.renderItem}
-          refreshable={false}
-          waitingSpinnerText='正在加载...'
-          spinnerColor={colors.calm}
-          allLoadedText='--我是有底线的--'
-          // onScroll={this.onScroll}
-          showsVerticalScrollIndicator={false}
-          paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
-          emptyView={() => <View flex center><Text dark06>暂时没有内容</Text></View>}
-        />
+        <ScrollView>
+          {this.renderContainer(bannerData)}
+          <ItemHead title='志愿技巧' />
+          <ScrollView horizontal style={{ paddingHorizontal: 15, width: 300 }}>
+            {listItems.map((item, index) => (
+              <TouchableOpacity style={{ marginRight: 20 }} key={index} activeOpacity={0.6}>
+                <View row>
+                  <View style={styles.scrollWap}>
+                    <Image style={styles.scrollImg} assetName={item.img} />
+                    <Text style={styles.scrollTime} text-12 light>3:32</Text>
+                  </View>
+                  <View style={styles.description} row>
+                    <Text text-16 dark marginB-5>{item.title}</Text>
+                    <Text numberOfLines={2} text-12 gray>{item.text}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <ItemHead title='省内高考政策' />
+        </ScrollView>
       </View >
     )
   }
@@ -288,7 +313,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.light,
     paddingTop: statusBarHeight + 5,
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
     paddingBottom: 5,
     zIndex: 2
   },
@@ -298,15 +323,45 @@ const styles = StyleSheet.create({
     marginTop: 1,
     zIndex: 1
   },
+  iconWrap: {
+    flexWrap: 'wrap'
+  },
   iconButton: {
-    flex: 1,
+    // flex: 1,
+    width: '25%',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 15
   },
   iconButtonImage: {
     /* width: 50,
     height: 50 */
+  },
+  scrollWap: {
+    position: 'relative',
+    width: 112,
+    height: 85,
+    marginRight: 15
+  },
+  scrollImg: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10
+  },
+  scrollTime: {
+    position: 'absolute',
+    right: 5,
+    bottom: 5,
+    textShadowColor: colors.black01,
+    textShadowRadius: 10,
+    textShadowOffset: { width: 2, hegith: 4 }
+  },
+  description: {
+    width: 157,
+    flexDirection: 'column',
+    justifyContent: 'space-around'
   }
 })
 export default Home

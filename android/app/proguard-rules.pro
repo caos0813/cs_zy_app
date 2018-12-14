@@ -20,3 +20,10 @@
 }
 # BuildConfig --- on final of file
 -keep class com.zhiyazhiyuan.zyzy.BuildConfig { *; }
+-dontwarn cn.jiguang.**
+-keep class cn.jiguang.** { *; }
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+-keep public class com.sina.** {
+    *;
+}

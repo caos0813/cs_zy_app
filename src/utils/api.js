@@ -23,6 +23,7 @@ export default {
   /* 绑定卡 */
   bindingCard: '/login/weblogin/binding',
   /* 开通体验卡 */
-  tiralBinding: '/login/weblogin/tiralBinding'
-
+  tiralBinding: '/login/weblogin/tiralBinding',
+  /* oss权限 */
+  getAssumeRole: 'user/ossUtil/getAssumeRole'
 }

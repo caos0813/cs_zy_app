@@ -3,6 +3,12 @@ package com.zhiyazhiyuan.zyzy;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.RNAliyunOssPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import cn.jiguang.share.reactnative.JSharePackage;
+import cn.jiguang.share.android.api.JShareInterface;
+import cn.jpush.reactnativejanalytics.JAnalyticsPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.microsoft.codepush.react.CodePush;
@@ -17,6 +23,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import cn.jpush.reactnativejpush.JPushPackage;
+
+/* 极光统计 */
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +49,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNAliyunOssPackage(),
+            new PickerPackage(),
+            new JAnalyticsPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
+            new JSharePackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
+            new ReactVideoPackage(),
             new BackgroundTimerPackage(),
             new RNDeviceInfo(),
             new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG,"http://codepush.junyanginfo.com:3000/"),
@@ -67,5 +82,8 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    /* 极光统计 */
+    JAnalyticsInterface.init(this);
+    JShareInterface.init(this); 
   }
 }

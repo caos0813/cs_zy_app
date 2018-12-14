@@ -28,5 +28,9 @@ Assets.loadAssetsGroup('icons', {
   payitem03: require('../assets/pay/VIP-04.png'),
   payitem04: require('../assets/pay/VIP-05.png'),
   payitem05: require('../assets/pay/VIP-06.png'),
-  payitem06: require('../assets/pay/VIP-07.png')
+  payitem06: require('../assets/pay/VIP-07.png'),
+  playerPlay: require('../assets/player/play.png'),
+  playerPause: require('../assets/player/pause.png'),
+  playerClose: require('../assets/player/close.png'),
+  playerArrowUp: require('../assets/player/arrow_up.png')
 })
