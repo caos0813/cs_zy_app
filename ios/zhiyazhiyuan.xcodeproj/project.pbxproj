@@ -1804,7 +1804,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiyazhiyuan.zyzytest;
 				PRODUCT_NAME = zhiyazhiyuan;
-				PROVISIONING_PROFILE = "710cc71f-c05f-4fde-9489-3778f0a5f526";
+				PROVISIONING_PROFILE = "80b750dc-390f-426f-8975-f3c7ff99d038";
 				PROVISIONING_PROFILE_SPECIFIER = zyzytest_pro;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
