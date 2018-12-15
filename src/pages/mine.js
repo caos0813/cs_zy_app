@@ -24,11 +24,14 @@ import Config from 'react-native-config'
     dialog.confirm('确定退出登录吗?').then(() => {
       setUserInfo({})
       clear()
-      reset([NavigationActions.navigate({ routeName: 'Home' })], 0)
+      reset([NavigationActions.navigate({ routeName: 'Mine' })], 0)
     })
   }
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
+  }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
   }
   render () {
     const { userInfo, isVipValid } = this.props.userStore
@@ -45,20 +48,23 @@ import Config from 'react-native-config'
               />
               <View paddingL-10 paddingR-24>
                 <View row>
-                  <Text text-22>{userInfo.name}</Text>
-                  {isVipValid === 2 && <Image assetName='vipIcon' style={styles.vipIcon} />}
+                  <Text text-22>{userInfo.token ? userInfo.name : '未登录'}</Text>
+                  {(isVipValid === 2) && <Image assetName='vipIcon' style={styles.vipIcon} />}
                 </View>
+                {!userInfo.token && <Text text-13 dark06>请先登录</Text>}
                 {isVipValid === 0 && <Text text-13 dark06>您还未开通志愿卡</Text>}
                 {isVipValid === 2 && <Text text-13 positive>志愿卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
                 {isVipValid === 1 && <Text text-13 positive>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
-            {isVipValid !== 2 && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
+            {(isVipValid !== 2 && userInfo.token) && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />
+            {!userInfo.token && <Button bg-assertive label='登陆' size='small' marginT-12 onPress={() => navigate('Login')} />
+            }
+            {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />}
           </View>
           <View row paddingH-11 marginV-20>
-            <Card containerStyle={styles.card} onPress={() => navigate('Info')} elevation={1}>
+            <Card containerStyle={styles.card} onPress={() => this.openNative('Info', {}, true)} elevation={1}>
               <Text text-18 dark>我的信息</Text>
             </Card>
             <Card containerStyle={styles.card} onPress={() => this.openUrl('favorite', {}, true)} elevation={1}>
@@ -66,7 +72,7 @@ import Config from 'react-native-config'
             </Card>
           </View>
           <View>
-            <ListItem style={styles.item} height={42} onPress={() => navigate('Pay')}>
+            <ListItem style={styles.item} height={42} onPress={() => this.openNative('Pay', {}, true)}>
               <ListItem.Part left>
                 <Text text-18 dark>会员中心</Text>
               </ListItem.Part>
@@ -74,7 +80,7 @@ import Config from 'react-native-config'
                 <Image assetName='arrowRight' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.item} height={42} onPress={() => navigate('Feedback')}>
+            <ListItem style={styles.item} height={42} onPress={() => this.openNative('Feedback', {}, true)}>
               <ListItem.Part left>
                 <Text text-18 dark>反馈</Text>
               </ListItem.Part>
@@ -93,9 +99,9 @@ import Config from 'react-native-config'
               </ListItem.Part>
             </ListItem>
           </View>
-          <View paddingT-100 paddingH-50>
+          {userInfo.token && <View paddingT-100 paddingH-50>
             <Button label='退出登录' bg-calm text-18 onPress={this.signOut} />
-          </View>
+          </View>}
         </ScrollView>
       </View>
     )

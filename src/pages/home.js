@@ -12,9 +12,9 @@ import {
   Linking,
   ScrollView
 } from 'react-native'
-import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, statusBarHeight, platform } from '../utils'
+import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, formatDate } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../components'
+import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, Item } from '../components'
 import { Player } from '../../react-native-root-ui'
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
@@ -99,20 +99,21 @@ import { Player } from '../../react-native-root-ui'
       this.openUrl(`holland-entry`, {}, true)
     }
   }
-  onFetch = async (page = 1, startFetch, abortFetch) => {
-    const pageSize = 5
-    axios.get(api.getArticleFile, {
-      params: {
-        page: page - 1,
-        size: pageSize
-      }
-    }).then(data => {
-      startFetch(data.content, pageSize)
-    }).catch(() => {
-      startFetch([], pageSize)
-      // alert(JSON.stringify(err))
-      abortFetch()
-    })
+  // 转换时间
+  transferTime = (date) => {
+    let timeDiffer = ((new Date().getTime() - date) / (3600 * 1000))
+    if (timeDiffer <= 1) {
+      date = '刚刚'
+    } else if (timeDiffer > 1 && timeDiffer <= 2) {
+      date = '1小时前'
+    } else if (timeDiffer > 2 && timeDiffer < 24) {
+      date = `${Math.round(timeDiffer)}小时前`
+    } else if (timeDiffer >= 24 && timeDiffer <= 48) {
+      date = '昨天'
+    } else if (timeDiffer > 48) {
+      date = formatDate(date, 'M月d日')
+    }
+    return date
   }
   renderHeader = () => {
     return (
@@ -146,7 +147,7 @@ import { Player } from '../../react-native-root-ui'
       return item
     })
     return (
-      <View>
+      <View style={{ backgroundColor: 'transparent' }}>
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
@@ -184,7 +185,7 @@ import { Player } from '../../react-native-root-ui'
       </View>
     )
   }
-  testPlay=(index) => {
+  testPlay = (index) => {
     if (index === 1) {
       Player.play({
         url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145',
@@ -218,55 +219,66 @@ import { Player } from '../../react-native-root-ui'
     const listItems = [{
       title: '最科学的填报志愿方法',
       text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
-      img: 'payitem01'
+      img: 'payitem01',
+      time: 1544758251211
     }, {
-      title: '最精准的数据支撑',
+      title: '最精准的数据支撑好滴hi好的撒会对的撒',
       text: '院校、专业录取数据、招生计划与考试院同步更新。根据你的高考分数推荐最合适的大学及专业',
-      img: 'payitem02'
+      img: 'payitem02',
+      time: 1547360000000
     }, {
       title: '最专业的生涯顾问服务',
       text: '生涯规划专家、教育专家、高级教师实时指导，为学生提供精准定制服务，辅助生涯规划决策。根据你的高考分数推荐最合适的大学及专业',
-      img: 'payitem03'
+      img: 'payitem03',
+      time: 1540060000000
     }, {
       title: '最智能的生涯测评',
       text: '为你提供最全面、最客观的”专业“评价，让你更多元、更深入的了解专业。',
-      img: 'payitem04'
-    }, {
-      title: '最全面的大学、专业、职业库',
-      text: '生动、形象的介绍，让你更多元、更深入地了解大学、专业、职业。',
-      img: 'payitem05'
-    }, {
-      title: '最实用的生涯规划课程',
-      text: '帮助学生探索自我和外部变化的环境，找到人生努力的方向，最大化实现自我价值。',
-      img: 'payitem06'
+      img: 'payitem04',
+      time: 1530060000000
     }]
+    listItems.map((item, index) => {
+      item.time = this.transferTime(item.time)
+      // alert(1544757590)
+    })
     return (
       <View flex useSafeArea>
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
-        {this.renderHeader()}
         <NoNetwork refresh={this.refresh} />
-        <ScrollView>
-          {this.renderContainer(bannerData)}
-          <ItemHead title='志愿技巧' />
-          <ScrollView horizontal style={{ paddingHorizontal: 15, width: 300 }}>
-            {listItems.map((item, index) => (
-              <TouchableOpacity style={{ marginRight: 20 }} key={index} activeOpacity={0.6}>
-                <View row>
-                  <View style={styles.scrollWap}>
-                    <Image style={styles.scrollImg} assetName={item.img} />
-                    <Text style={styles.scrollTime} text-12 light>3:32</Text>
-                  </View>
-                  <View style={styles.description} row>
-                    <Text text-16 dark marginB-5>{item.title}</Text>
-                    <Text numberOfLines={2} text-12 gray>{item.text}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <ItemHead title='省内高考政策' />
-        </ScrollView>
+        {!showSplash && this.renderHeader()}
+        {!showSplash &&
+          <ScrollView>
+            {this.renderContainer(bannerData)}
+            <ItemHead title='志愿技巧' seeAll='true' />
+            <Item lists={listItems} />
+            <ItemHead title='省内高考政策' seeAll='true' />
+            <View paddingH-15 style={{
+              borderBottomWidth: 1 / ratio,
+              borderColor: colors.gray
+            }} >
+              {
+                listItems.map((item, index) => (
+                  <TouchableOpacity style={styles.item} activeOpacity={0.6} key={index}>
+                    <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
+                      <Card.Item>
+                        <View paddingV-10>
+                          {/* <View row style={{ width: '100%', justifyContent: 'flex-start' }}> */}
+                          <Text text-16 dark >{item.text}</Text>
+                          {/* </View> */}
+                          <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
+                            <Text text-11 gray>{item.time}</Text>
+                          </View>
+                        </View>
+                      </Card.Item>
+                    </Card>
+                  </TouchableOpacity>
+                ))
+              }
+            </View>
+            <ItemHead title='政策解读' seeAll='true' />
+            <Item lists={listItems} />
+          </ScrollView>}
       </View >
     )
   }
@@ -307,7 +319,6 @@ import { Player } from '../../react-native-root-ui'
 }
 
 const styles = StyleSheet.create({
-
   header: {
     width: '100%',
     flexDirection: 'row',
@@ -338,30 +349,10 @@ const styles = StyleSheet.create({
     /* width: 50,
     height: 50 */
   },
-  scrollWap: {
-    position: 'relative',
-    width: 112,
-    height: 85,
-    marginRight: 15
-  },
-  scrollImg: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    borderRadius: 10
-  },
-  scrollTime: {
-    position: 'absolute',
-    right: 5,
-    bottom: 5,
-    textShadowColor: colors.black01,
-    textShadowRadius: 10,
-    textShadowOffset: { width: 2, hegith: 4 }
-  },
-  description: {
-    width: 157,
-    flexDirection: 'column',
-    justifyContent: 'space-around'
+  item: {
+    // paddingHorizontal: 10
+    borderTopWidth: 1 / ratio,
+    borderColor: colors.gray
   }
 })
 export default Home

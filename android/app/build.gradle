@@ -122,6 +122,9 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         vectorDrawables.useSupportLibrary = true
+        // react-native-blur
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
     }
     sourceSets {  
         main {
@@ -182,6 +185,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-blur')
     compile project(':aliyun-oss-react-native')
     compile project(':react-native-image-crop-picker')
     compile project(':jshare-react-native')

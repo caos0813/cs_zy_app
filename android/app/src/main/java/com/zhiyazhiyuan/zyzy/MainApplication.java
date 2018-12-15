@@ -3,6 +3,7 @@ package com.zhiyazhiyuan.zyzy;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.cmcewen.blurview.BlurViewPackage;
 import com.reactlibrary.RNAliyunOssPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import cn.jiguang.share.reactnative.JSharePackage;
@@ -49,6 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BlurViewPackage(),
             new RNAliyunOssPackage(),
             new PickerPackage(),
             new JAnalyticsPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
