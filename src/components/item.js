@@ -22,37 +22,44 @@ export default class Item extends Component {
     const { lists, containerStyle } = this.props
     return (
       <View paddingH-15 row style={[{ flexWrap: 'wrap' }, containerStyle]}>
-        {/* {lists.map((item, index) => ( */}
-        <TouchableOpacity style={[{ width: this.props.width, marginBottom: 15, marginRight: '4%' }]} activeOpacity={0.6}>
-          <View style={[styles.imgWap, { height: this.props.wapHeight }]}>
-            <Image ref={(img) => { this.backgroundImage = img }} style={styles.scrollImg} assetName='payitem02' onLoadEnd={this.imageLoaded} />
-            <Text style={styles.scrollTime} text-12 light>3:32</Text>
-            {/* <BlurView
-              style={styles.blur}
-              viewRef={this.state.viewRef}
-              blurType='dark'
-              blurAmount={1}
-            /> */}
-          </View>
-          <View style={styles.description}>
-            <Text numberOfLines={1} style={{ lineHeight: 22 }} text-16 dark marginB-5>aa</Text>
-            <Text style={{ lineHeight: 17 }} numberOfLines={2} text-12 gray>aa</Text>
-          </View>
-          {this.props.bottomBar && <View marginT-10 row style={{ justifyContent: 'space-between' }}>
-            <View row>
-              <View row marginR-10>
-                <Image assetName='vip' />
-                <Text style={{ marginRight: 5 }} gray>23</Text>
+        {lists.map((item, index) => (
+          <TouchableOpacity style={[{ width: this.props.width, marginBottom: 15, marginRight: '4%' }]} activeOpacity={0.6}>
+            <View style={[styles.imgWap, { height: this.props.wapHeight }]}>
+              <Image style={styles.scrollImg} assetName={item.img} />
+              <View style={{ position: 'relative', borderWidth: 2, borderTopColor: 'red' }}>
+                {/* <Image ref={(img) => { this.backgroundImage = img }} onLoadEnd={this.imageLoaded} style={styles.falseImg} assetName={item.img} /> */}
+                <Text style={styles.playButton} />
               </View>
-              <View row>
-                <Image assetName='vip' />
-                <Text style={{ marginRight: 5 }} gray>23</Text>
-              </View>
+              <Text style={styles.scrollTime} text-12 light>3:32</Text>
+              <BlurView
+                style={styles.blur}
+                viewRef={this.state.viewRef}
+                blurType='dark'
+                blurAmount={10}
+                overlayColor='transparent'
+                // downsampleFactor={20}
+                blurRadius={10}
+              />
             </View>
-            <Text gray>一天前</Text>
-          </View>}
-        </TouchableOpacity>
-        {/* ))} */}
+            <View style={styles.description}>
+              <Text numberOfLines={1} style={{ lineHeight: 22 }} text-16 dark marginB-5>{item.title}</Text>
+              <Text style={{ lineHeight: 17 }} numberOfLines={2} text-12 gray>{item.text}</Text>
+            </View>
+            {this.props.bottomBar && <View marginT-10 row style={{ justifyContent: 'space-between' }}>
+              <View row>
+                <View row marginR-10>
+                  <Image assetName='vip' />
+                  <Text style={{ marginLeft: 5 }} gray>23</Text>
+                </View>
+                <View row>
+                  <Image assetName='vip' />
+                  <Text style={{ marginLeft: 5 }} gray>23</Text>
+                </View>
+              </View>
+              <Text gray>一天前</Text>
+            </View>}
+          </TouchableOpacity>
+        ))}
       </View>
     )
   }
@@ -61,7 +68,9 @@ export default class Item extends Component {
 const styles = StyleSheet.create({
   imgWap: {
     position: 'relative',
-    width: '100%'
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   scrollImg: {
     position: 'absolute',
@@ -78,18 +87,31 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, hegith: 4 }
   },
   blur: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 36,
-    height: 36
+    width: 1,
+    height: 1,
+    borderRadius: 10
   },
   description: {
     width: '95%'
     // flexDirection: 'column',
     // justifyContent: 'space-around'
   },
-  r: {
-    marginRight: 10
+  falseImg: {
+    position: 'absolute',
+    width: 32,
+    height: 32
+    // borderRadius: 50
+  },
+  playButton: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    borderStyle: 'solid',
+    borderWidth: 10,
+    backgroundColor: 'transparent',
+    borderTopColor: 'transparent',
+    borderLeftColor: colors.light,
+    borderBottomColor: 'transparent',
+    borderRightColor: 'transparent'
   }
 })

@@ -10,6 +10,8 @@ Assets.loadAssetsGroup('icons', {
   icon03: require('../assets/home/icon03.png'),
   icon04: require('../assets/home/icon04.png'),
   icon05: require('../assets/home/icon05.png'),
+  icon06: require('../assets/home/icon06.png'),
+  icon07: require('../assets/home/icon07.png'),
   arrow: require('../assets/mine/arrow.png'),
   vipIcon: require('../assets/mine/vip-icon.png'),
   vipImg: require('../assets/mine/vip.png'),

@@ -174,13 +174,17 @@ import { Player } from '../../react-native-root-ui'
             {this.renderBadge()}
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
-            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Image assetName='icon06' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>志愿问答</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
-            <Image assetName='icon04' style={styles.iconButtonImage} />
+            <Image assetName='icon07' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>高考咨询</Text>
           </TouchableOpacity>
+          <View style={styles.iconButton}>
+            <Image assetName='icon07' style={styles.iconButtonImage} />
+            <Text text-14 dark06 marginT-2>升学课堂</Text>
+          </View>
         </View>
       </View>
     )
