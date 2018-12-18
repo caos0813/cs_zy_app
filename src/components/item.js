@@ -25,20 +25,21 @@ export default class Item extends Component {
         {lists.map((item, index) => (
           <TouchableOpacity style={[{ width: this.props.width, marginBottom: 15, marginRight: '4%' }]} activeOpacity={0.6}>
             <View style={[styles.imgWap, { height: this.props.wapHeight }]}>
-              <Image style={styles.scrollImg} assetName={item.img} />
-              <View style={{ position: 'relative', borderWidth: 2, borderTopColor: 'red' }}>
-                {/* <Image ref={(img) => { this.backgroundImage = img }} onLoadEnd={this.imageLoaded} style={styles.falseImg} assetName={item.img} /> */}
+              <Image style={styles.scrollImg} assetName={item.img} ref={(img) => { this.backgroundImage = img }} onLoadEnd={this.imageLoaded} />
+              {/* <View>
+                <Image ref={(img) => { this.backgroundImage = img }} onLoadEnd={this.imageLoaded} style={styles.falseImg} assetName={item.img} />
                 <Text style={styles.playButton} />
-              </View>
+              </View> */}
+              <Text style={styles.playButton} />
               <Text style={styles.scrollTime} text-12 light>3:32</Text>
               <BlurView
                 style={styles.blur}
                 viewRef={this.state.viewRef}
-                blurType='dark'
-                blurAmount={10}
+                blurType='light'
+                blurAmount={1}
                 overlayColor='transparent'
-                // downsampleFactor={20}
-                blurRadius={10}
+                downsampleFactor={1}
+                blurRadius={2}
               />
             </View>
             <View style={styles.description}>
@@ -87,27 +88,27 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, hegith: 4 }
   },
   blur: {
-    width: 1,
-    height: 1,
-    borderRadius: 10
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    left: 0,
+    bottom: 0
   },
   description: {
     width: '95%'
-    // flexDirection: 'column',
-    // justifyContent: 'space-around'
   },
-  falseImg: {
-    position: 'absolute',
-    width: 32,
-    height: 32
-    // borderRadius: 50
-  },
+  // falseImg: {
+  //   position: 'absolute',
+  //   width: 32,
+  //   height: 32
+  //   // borderRadius: 50
+  // },
   playButton: {
     position: 'absolute',
     width: 0,
     height: 0,
     borderStyle: 'solid',
-    borderWidth: 10,
+    borderWidth: 8,
     backgroundColor: 'transparent',
     borderTopColor: 'transparent',
     borderLeftColor: colors.light,

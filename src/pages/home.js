@@ -182,7 +182,7 @@ import { Player } from '../../react-native-root-ui'
             <Text text-14 dark06 marginT-2>高考咨询</Text>
           </TouchableOpacity>
           <View style={styles.iconButton}>
-            <Image assetName='icon07' style={styles.iconButtonImage} />
+            <Image assetName='icon08' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>升学课堂</Text>
           </View>
         </View>
