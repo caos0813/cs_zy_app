@@ -12,7 +12,7 @@ import {
   Linking,
   ScrollView
 } from 'react-native'
-import { api, axios, imageResize, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, formatDate } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, formatDate } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, Item } from '../components'
 import { Player } from '../../react-native-root-ui'

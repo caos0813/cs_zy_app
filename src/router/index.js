@@ -10,6 +10,7 @@ import Info from '../pages/info'
 import Feedback from '../pages/feedback'
 import About from '../pages/about'
 import Pay from '../pages/pay'
+import Play from '../pages/play'
 import PlanIndex from '../pages/PlanIndex'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
@@ -186,6 +187,9 @@ const AppNavigation = createStackNavigator(
     Info: {
       screen: Info
     },
+    Play: {
+      screen: Play
+    },
     Browser: {
       screen: Browser,
       navigationOptions: () => ({
@@ -214,7 +218,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Home',
+    initialRouteName: 'Play',
     /* initialRouteParams: {
     type: 'complete'
     }, */

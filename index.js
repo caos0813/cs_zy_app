@@ -7,6 +7,7 @@ import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
 import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
+import SplashScreen from 'react-native-splash-screen'
 require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
@@ -49,6 +50,7 @@ class App extends Component {
     }
   }
   async componentDidMount () {
+    SplashScreen.hide()
     this.update()
     /* 初始化极光 */
     if (platform === 'android') {
