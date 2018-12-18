@@ -96,16 +96,16 @@ const TabStack = createBottomTabNavigator(
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
-        // const { routeName } = navigation.state
-        // let iconName
-        // if (routeName === 'Home') {
-        // iconName = `ios-information-circle${focused ? '' : '-outline'}`
-        // } else if (routeName === 'Plan') {
-        // iconName = `ios-options${focused ? '' : '-outline'}`
-        // } else if (routeName === 'Mine') {
-        // iconName = `ios-options${focused ? '' : '-outline'}`
-        // }
-        return <Image assetName='headIcon' tintColor={tintColor} />
+        const { routeName } = navigation.state
+        let iconName
+        if (routeName === 'Index') {
+          iconName = 'home'
+        } else if (routeName === 'Plan') {
+          iconName = 'class'
+        } else if (routeName === 'Mine') {
+          iconName = 'mine'
+        }
+        return <Image assetName={iconName} tintColor={tintColor} />
       }
     }),
     tabBarOptions: {

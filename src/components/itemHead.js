@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
 import { StyleSheet } from 'react-native'
+import { colors } from '../theme/index'
 export default class itemHead extends Component {
   static defaultProps = {
     seeAll: false,
@@ -11,7 +12,7 @@ export default class itemHead extends Component {
     return (
       <View row padding-15 style={[styles.wrap, style]}>
         <View row style={{ alignItems: 'center' }}>
-          {this.props.leftIcon && <Image assetName='vip' style={{ marginRight: 10 }} />}
+          {this.props.leftIcon && <Image assetName='class' style={{ marginRight: 10 }} tintColor={colors.calm} />}
           <Text dark text-24 style={styles.text}>{title}</Text>
         </View>
         {this.props.seeAll && <TouchableOpacity activeOpacity={0.6}>

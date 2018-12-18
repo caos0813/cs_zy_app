@@ -143,6 +143,25 @@ import { Player } from '../../react-native-root-ui'
     return null
   }
   renderContainer = (bannerData) => {
+    const lists = [
+      {
+        title: '查大学'
+      }, {
+        title: '查专业'
+      }, {
+        title: '查职业'
+      }, {
+        title: '测一测'
+      }, {
+        title: '填志愿'
+      }, {
+        title: '志愿问答'
+      }, {
+        title: '高考咨询'
+      }, {
+        title: '升学课堂'
+      }
+    ]
     const banner = bannerData.map(item => {
       return item
     })
@@ -182,7 +201,7 @@ import { Player } from '../../react-native-root-ui'
             <Text text-14 dark06 marginT-2>高考咨询</Text>
           </TouchableOpacity>
           <View style={styles.iconButton}>
-            <Image assetName='icon07' style={styles.iconButtonImage} />
+            <Image assetName='icon08' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>升学课堂</Text>
           </View>
         </View>
