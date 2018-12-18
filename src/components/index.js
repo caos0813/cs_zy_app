@@ -11,4 +11,6 @@ import NoNetwork from './noNetwork'
 import HomeSearch from './homeSearch'
 import LoginInput from './loginInput'
 import Item from './item'
-export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item }
+import IconCeil from './iconCeil'
+import CardItem from './cardItem'
+export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item, IconCeil, CardItem }

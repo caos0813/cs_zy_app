@@ -12,6 +12,7 @@ import About from '../pages/about'
 import Pay from '../pages/pay'
 import Play from '../pages/play'
 import PlanIndex from '../pages/PlanIndex'
+import ByCollege from '../pages/byCollege'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
@@ -187,6 +188,12 @@ const AppNavigation = createStackNavigator(
     Info: {
       screen: Info
     },
+    ByCollege: {
+      screen: ByCollege,
+      navigationOptions: () => ({
+        title: '查大学'
+      })
+    },
     Play: {
       screen: Play
     },
@@ -218,7 +225,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Play',
+    initialRouteName: 'ByCollege',
     /* initialRouteParams: {
     type: 'complete'
     }, */

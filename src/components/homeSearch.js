@@ -13,7 +13,7 @@ export default class HomeSearch extends Component {
     const { onPress } = this.props
     if (platform === 'android') {
       const shadowOpt = {
-        width: width - 73,
+        width: width - 30,
         height: 30,
         color: colors.black,
         border: 15,
@@ -22,7 +22,7 @@ export default class HomeSearch extends Component {
         x: 0,
         y: 0,
         style: {
-          marginLeft: 15
+          // marginLeft: 15
         }
       }
       return (
@@ -35,7 +35,7 @@ export default class HomeSearch extends Component {
       )
     } else {
       return (
-        <View style={{ width: width - 73, marginLeft: 15 }}>
+        <View style={{ width: width - 30 }}>
           <TouchableOpacity style={[styles.searchInput]} activeOpacity={0.6} onPress={onPress}>
             <Image assetName='searchIcon' style={styles.searchIcon} tintColor={colors.dark} />
             <Text text-14 dark06>搜索一下</Text>

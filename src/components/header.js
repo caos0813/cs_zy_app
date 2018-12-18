@@ -1,43 +1,73 @@
 import React, { Component } from 'react'
-import { View, Text, Avatar, Assets } from '../../react-native-ui-lib'
+import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
 import { StyleSheet } from 'react-native'
 import { colors } from '../theme'
+import { statusBarHeight } from '../utils'
+import PropTypes from 'prop-types'
 export default class Header extends Component {
+  static propTypes={
+    showLeft: PropTypes.bool,
+    showRight: PropTypes.bool,
+    leftPress: PropTypes.func,
+    title: PropTypes.string,
+    titleContainer: PropTypes.element,
+    containerStyle: PropTypes.object
+  }
+  static defaultProps={
+    showLeft: true,
+    showRight: false
+  }
   render () {
+    const { leftPress, title, showLeft, titleContainer, containerStyle, showRight } = this.props
     return (
-      <View row centerV style={styles.header}>
-        <Avatar imageSource={Assets.icons.backArrow} backgroundColor='transparent' containerStyle={styles.avatarWrap} imageStyle={styles.avatarImage} />
-        <View style={styles.titleWrap}>
-          <Text text-18 dark>12</Text>
+      <View row centerV style={[styles.header, containerStyle]}>
+        <View style={styles.btnWrap}>
+          {showLeft &&
+          <TouchableOpacity activeOpacity={0.6} onPress={leftPress}>
+            <Image assetName='backArrow' style={styles.backImage} />
+          </TouchableOpacity>
+          }
+        </View>
+        <View style={[styles.titleWrap, styles.positionTop]}>
+          {titleContainer || <Text text-18 dark>{title}</Text>}
+        </View>
+        <View style={styles.btnWrap}>
+          {showRight &&
+          <TouchableOpacity activeOpacity={0.6} onPress={leftPress}>
+            <Image assetName='backArrow' style={styles.backImage} />
+          </TouchableOpacity>
+          }
         </View>
       </View>
     )
   }
 }
 const styles = StyleSheet.create({
-  avatarWrap: {
-    width: 40,
-    zIndex: 1,
-    height: 40
+  btnWrap: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  backImage: {
+    width: 24,
+    height: 24
   },
   titleWrap: {
-    position: 'absolute',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 0,
     top: 0,
     left: 0,
     width: '100%',
     height: '100%'
   },
-  avatarImage: {
-    width: 24,
-    marginTop: 8,
-    marginLeft: 8,
-    height: 24
-  },
   header: {
+    width: '100%',
     backgroundColor: colors.light,
-    height: 50
+    paddingTop: statusBarHeight,
+    height: 50 + statusBarHeight
+  },
+  positionTop: {
   }
 })
