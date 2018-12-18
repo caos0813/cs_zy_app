@@ -143,6 +143,25 @@ import { Player } from '../../react-native-root-ui'
     return null
   }
   renderContainer = (bannerData) => {
+    const lists = [
+      {
+        title: '查大学'
+      }, {
+        title: '查专业'
+      }, {
+        title: '查职业'
+      }, {
+        title: '测一测'
+      }, {
+        title: '填志愿'
+      }, {
+        title: '志愿问答'
+      }, {
+        title: '高考咨询'
+      }, {
+        title: '升学课堂'
+      }
+    ]
     const banner = bannerData.map(item => {
       return item
     })
