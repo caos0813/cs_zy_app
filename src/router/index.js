@@ -225,7 +225,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'ByCollege',
+    initialRouteName: 'Home',
     /* initialRouteParams: {
     type: 'complete'
     }, */
