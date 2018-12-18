@@ -316,7 +316,7 @@ import { Player } from '../../react-native-root-ui'
   }
   componentDidMount () {
     const { setValue } = this.props.homeStore
-    axios.get(api.banner).then(data => {
+    axios.get(api.queryHomePageBannerInfo).then(data => {
       setValue('bannerData', data.content)
     })
     storage.load({
