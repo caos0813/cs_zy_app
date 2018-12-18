@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib/src'
+import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
 import { StyleSheet } from 'react-native'
 import { colors } from '../theme/index'
 export default class itemHead extends Component {
@@ -10,7 +10,7 @@ export default class itemHead extends Component {
   render () {
     const { title, style } = this.props
     return (
-      <View row padding-15 marginT-15 style={[styles.wrap, style]}>
+      <View row padding-15 style={[styles.wrap, style]}>
         <View row style={{ alignItems: 'center' }}>
           {this.props.leftIcon && <Image assetName='class' style={{ marginRight: 10 }} tintColor={colors.calm} />}
           <Text dark text-24 style={styles.text}>{title}</Text>

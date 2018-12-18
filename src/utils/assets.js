@@ -36,7 +36,13 @@ Assets.loadAssetsGroup('icons', {
   payitem05: require('../assets/pay/VIP-06.png'),
   payitem06: require('../assets/pay/VIP-07.png'),
   playerPlay: require('../assets/player/play.png'),
+  playerPlayBig: require('../assets/player/play_big.png'),
   playerPause: require('../assets/player/pause.png'),
   playerClose: require('../assets/player/close.png'),
-  playerArrowUp: require('../assets/player/arrow_up.png')
+  playerArrowUp: require('../assets/player/arrow_up.png'),
+  playerArrowDown: require('../assets/player/arrow_down.png'),
+  comment: require('../assets/player/comment.png'),
+  detail: require('../assets/player/detail.png'),
+  attention: require('../assets/player/attention.png'),
+  share: require('../assets/player/share.png')
 })
