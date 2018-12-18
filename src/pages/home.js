@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, formatDate } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, Item } from '../components'
+import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, Item, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
@@ -143,27 +143,37 @@ import { Player } from '../../react-native-root-ui'
     return null
   }
   renderContainer = (bannerData) => {
-    const lists = [
+    const iconsList = [
       {
-        title: '查大学'
+        title: '查大学',
+        image: require('../assets/home/icon01.png')
       }, {
-        title: '查专业'
+        title: '查专业',
+        image: require('../assets/home/icon02.png')
       }, {
-        title: '查职业'
+        title: '查职业',
+        image: require('../assets/home/icon03.png')
       }, {
-        title: '测一测'
+        title: '测一测',
+        image: require('../assets/home/icon04.png')
       }, {
-        title: '填志愿'
+        title: '填志愿',
+        image: require('../assets/home/icon05.png')
       }, {
-        title: '志愿问答'
+        title: '志愿问答',
+        image: require('../assets/home/icon06.png')
       }, {
-        title: '高考咨询'
+        title: '高考咨询',
+        image: require('../assets/home/icon07.png')
       }, {
-        title: '升学课堂'
+        title: '升学课堂',
+        image: require('../assets/home/icon08.png')
       }
     ]
     const banner = bannerData.map(item => {
-      return item
+      let obj = item
+      obj.image = item.picture
+      return obj
     })
     return (
       <View style={{ backgroundColor: 'transparent' }}>
@@ -171,7 +181,12 @@ import { Player } from '../../react-native-root-ui'
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
         <View row marginV-5 style={styles.iconWrap}>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
+          {
+            iconsList.map((item, index) => (
+              <IconCeil imageSource={item.image} title={item.title} key={index} />
+            ))
+          }
+          {/* <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
             <Image assetName='icon01' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>查大学</Text>
           </TouchableOpacity>
@@ -203,7 +218,7 @@ import { Player } from '../../react-native-root-ui'
           <View style={styles.iconButton}>
             <Image assetName='icon08' style={styles.iconButtonImage} />
             <Text text-14 dark06 marginT-2>升学课堂</Text>
-          </View>
+          </View> */}
         </View>
       </View>
     )
@@ -316,8 +331,8 @@ import { Player } from '../../react-native-root-ui'
   }
   componentDidMount () {
     const { setValue } = this.props.homeStore
-    axios.get(api.queryHomePageBannerInfo).then(data => {
-      setValue('bannerData', data.content)
+    axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
+      setValue('bannerData', data.data.content)
     })
     storage.load({
       key: 'showSplash'

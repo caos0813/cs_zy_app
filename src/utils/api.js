@@ -17,7 +17,7 @@ export default {
   updateUserInfo: '/user/users/updateUserInfo',
   /* banner列表 */
   banner: '/zhiyuan/banner/getFour',
-  queryHomePageBannerInfo: 'bannerInfo/queryHomePageBannerInfo',
+  queryHomePageBannerInfo: '/bannerInfo/queryHomePageBannerInfo',
   wxPay: 'zhiyuan/wxPay/wxPrePay',
   getPayAmount: 'zhiyuan/wxPay/getPayAmount',
   feedback: 'xuanke/userInformation/saveFeedback',
