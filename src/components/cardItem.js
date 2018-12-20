@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { Image, TouchableOpacity, Text, View } from '../../react-native-ui-lib'
+import { Image, TouchableOpacity, View, Text } from '../../react-native-ui-lib'
 import PropTypes from 'prop-types'
 import { colors } from '../theme'
 import { BlurView } from 'react-native-blur'
@@ -8,19 +8,10 @@ export default class CardItem extends Component {
   static propTypes = {
     title: PropTypes.string,
     desc: PropTypes.string,
-    bottomBar: PropTypes.string,
-    releaseTime: PropTypes.string,
-    priseNumber: PropTypes.number,
-    commentNum: PropTypes.number,
-    fileType: PropTypes.number
-  }
-  static defaultProps = {
-    bottomBar: 'false',
-    priseNumber: 0,
-    commentNum: 0
+    imageStyle: PropTypes.object
   }
   render () {
-    const { imageSource, title, desc, releaseTime, bottomBar, priseNumber, commentNum, fileType } = this.props
+    const { imageSource, title, desc, children, imageStyle } = this.props
     return (
       // <TouchableOpacity activeOpacity={0.6} style={styles.wrap}>
       //   <Image source={imageSource} style={styles.image} />
@@ -28,37 +19,10 @@ export default class CardItem extends Component {
       //   <Text text-12 dark06 numberOfLines={2}>{desc}</Text>
       // </TouchableOpacity>
       <TouchableOpacity activeOpacity={0.6} style={styles.wrap}>
-        <View>
-          <Image style={styles.image} source={imageSource} />
-          {fileType !== 0 && <Text style={styles.playButton} />}
-          {/* <Text style={styles.scrollTime} text-12 light>3:32</Text> */}
-          {/* {this.state.viewRef &&
-            <BlurView
-              style={styles.blur}
-              viewRef={this.state.viewRef}
-              blurType='light'
-              blurAmount={1}
-              overlayColor='transparent'
-              downsampleFactor={1}
-              blurRadius={2}
-            />
-          } */}
-        </View>
+        <Image source={imageSource} style={[styles.image, imageStyle]} />
         <Text text-16 dark numberOfLines={1} marginV-5>{title}</Text>
         <Text text-12 dark06 numberOfLines={2}>{desc}</Text>
-        {bottomBar === 'true' && <View marginT-10 row style={{ justifyContent: 'space-between' }}>
-          <View row>
-            <View row marginR-10>
-              <Image assetName='vip' />
-              <Text style={{ marginLeft: 5 }} gray>{priseNumber}</Text>
-            </View>
-            <View row>
-              <Image assetName='vip' />
-              <Text style={{ marginLeft: 5 }} gray>{commentNum}</Text>
-            </View>
-          </View>
-          <Text gray>{releaseTime}</Text>
-        </View>}
+        {children && <View>{children}</View>}
       </TouchableOpacity>
     )
   }

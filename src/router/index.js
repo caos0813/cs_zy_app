@@ -13,6 +13,8 @@ import Pay from '../pages/pay'
 import Play from '../pages/play'
 import PlanIndex from '../pages/PlanIndex'
 import ByCollege from '../pages/byCollege'
+import CommonList from '../pages/commonList'
+import NewsDetail from '../pages/newsDetail'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
@@ -200,6 +202,15 @@ const AppNavigation = createStackNavigator(
         title: '查大学'
       })
     },
+    CommonList: {
+      screen: CommonList
+    },
+    NewsDetail: {
+      screen: NewsDetail,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
     Play: {
       screen: Play
     },
@@ -231,7 +242,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Home',
+    initialRouteName: 'NewsDetail',
     /* initialRouteParams: {
     type: 'complete'
     }, */
