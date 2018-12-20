@@ -23,7 +23,7 @@ export default class Item extends Component {
     return (
       <View paddingH-15 row style={[{ flexWrap: 'wrap' }, containerStyle]}>
         {lists.map((item, index) => (
-          <TouchableOpacity style={[{ width: this.props.width, marginBottom: 15, marginRight: '4%' }]} activeOpacity={0.6}>
+          <TouchableOpacity style={[{ width: this.props.width, marginBottom: 15, marginRight: '4%' }]} activeOpacity={0.6} key={index}>
             <View style={[styles.imgWap, { height: this.props.wapHeight }]}>
               <Image style={styles.scrollImg} assetName={item.img} ref={(img) => { this.backgroundImage = img }} onLoadEnd={this.imageLoaded} />
               {/* <View>
@@ -32,6 +32,7 @@ export default class Item extends Component {
               </View> */}
               <Text style={styles.playButton} />
               <Text style={styles.scrollTime} text-12 light>3:32</Text>
+              {this.state.viewRef &&
               <BlurView
                 style={styles.blur}
                 viewRef={this.state.viewRef}
@@ -41,6 +42,7 @@ export default class Item extends Component {
                 downsampleFactor={1}
                 blurRadius={2}
               />
+              }
             </View>
             <View style={styles.description}>
               <Text numberOfLines={1} style={{ lineHeight: 22 }} text-16 dark marginB-5>{item.title}</Text>
