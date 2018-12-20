@@ -28,6 +28,18 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       articles: []
     }
   }
+  static navigationOptions = ({ navigation, screenProps }) => {
+    // 启动页加载完以后再显示底部的tabNav
+    let tabBarVisible
+    if (screenProps.showSplash) {
+      tabBarVisible = true
+    } else {
+      tabBarVisible = false
+    }
+    return {
+      tabBarVisible
+    }
+  }
   bannerPress = (item) => {
     if (item.link) {
       Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
@@ -135,7 +147,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     const pageSize = 5
     const { setValue } = this.props.homeStore
     const { userInfo } = this.props.userStore
-    alert(JSON.stringify(userInfo))
+    // alert(JSON.stringify(userInfo))
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,

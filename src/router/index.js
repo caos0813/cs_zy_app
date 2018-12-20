@@ -20,6 +20,60 @@ import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 
+const PlanStack = createStackNavigator(
+  {
+    PlanIndex: {
+      screen: PlanIndex,
+      navigationOptions: ({ navigation, screenProps }) => ({
+        title: '生涯规划',
+        headerStyle: {
+          height: 44 + screenProps.statusBarHeight,
+          paddingTop: screenProps.statusBarHeight,
+          elevation: 0,
+          borderBottomWidth: 0
+        },
+        headerTitleStyle: {
+          fontSize: 18,
+          fontWeight: 'normal',
+          color: dark04
+        }
+      })
+    }
+  },
+  {
+    headerLayoutPreset: 'center',
+    cardStyle: {
+      backgroundColor: light
+    }
+  }
+)
+const MineStack = createStackNavigator(
+  {
+    Mine: {
+      screen: Mine,
+      navigationOptions: ({ navigation, screenProps }) => ({
+        title: '我的',
+        headerStyle: {
+          height: 44 + screenProps.statusBarHeight,
+          paddingTop: screenProps.statusBarHeight,
+          elevation: 0,
+          borderBottomWidth: 0
+        },
+        headerTitleStyle: {
+          fontSize: 18,
+          fontWeight: 'normal',
+          color: dark04
+        }
+      })
+    }
+  },
+  {
+    headerLayoutPreset: 'center',
+    cardStyle: {
+      backgroundColor: light
+    }
+  }
+)
 const TabStack = createBottomTabNavigator(
   {
     Index: {
@@ -29,73 +83,13 @@ const TabStack = createBottomTabNavigator(
       })
     },
     Plan: {
-      // screen: PlanIndex,
-      screen: createStackNavigator(
-        {
-          PlanIndex: {
-            screen: PlanIndex,
-            navigationOptions: ({ navigation, screenProps }) => ({
-              title: '生涯规划',
-              headerStyle: {
-                height: 44 + screenProps.statusBarHeight,
-                paddingTop: screenProps.statusBarHeight,
-                elevation: 0,
-                borderBottomWidth: 0
-              },
-              headerTitleStyle: {
-                fontSize: 18,
-                fontWeight: 'normal',
-                color: dark04
-              }
-            })
-          }
-          // Login: {
-          //   screen: Login,
-          //   navigationOptions: () => ({
-          //     title: '登录'
-          //   })
-          // }
-        },
-        {
-          headerLayoutPreset: 'center',
-          cardStyle: {
-            backgroundColor: light
-          }
-        }
-      ),
+      screen: PlanStack,
       navigationOptions: () => ({
         tabBarLabel: '⽣涯规划'
       })
     },
     Mine: {
-      // screen: Mine,
-      screen: createStackNavigator(
-        {
-          Mine: {
-            screen: Mine,
-            navigationOptions: ({ navigation, screenProps }) => ({
-              title: '我的',
-              headerStyle: {
-                height: 44 + screenProps.statusBarHeight,
-                paddingTop: screenProps.statusBarHeight,
-                elevation: 0,
-                borderBottomWidth: 0
-              },
-              headerTitleStyle: {
-                fontSize: 18,
-                fontWeight: 'normal',
-                color: dark04
-              }
-            })
-          }
-        },
-        {
-          headerLayoutPreset: 'center',
-          cardStyle: {
-            backgroundColor: light
-          }
-        }
-      ),
+      screen: MineStack,
       navigationOptions: () => ({
         tabBarLabel: '我的'
       })
