@@ -2,9 +2,13 @@ import React, { Component } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import { View, Text } from '../../react-native-ui-lib'
 import { HomeSearch, ItemHead, IconCeil, CardItem } from '../components'
+import { api, axios } from '../utils'
 export default class ByCollege extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      topicData: []
+    }
   }
   render () {
     const iconsList = [{
@@ -24,27 +28,6 @@ export default class ByCollege extends Component {
       image: require('../assets/icons/211.png'),
       text: '211'
     }]
-    const listItems = [{
-      title: '最科学的填报志愿方法',
-      text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1544758251211
-    }, {
-      title: '最精准的数据支撑好滴hi好的撒会对的撒',
-      text: '院校、专业录取数据、招生计划与考试院同步更新。根据你的高考分数推荐最合适的大学及专业',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1547360000000
-    }, {
-      title: '最专业的生涯顾问服务',
-      text: '生涯规划专家、教育专家、高级教师实时指导，为学生提供精准定制服务，辅助生涯规划决策。根据你的高考分数推荐最合适的大学及专业',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1540060000000
-    }, {
-      title: '最智能的生涯测评',
-      text: '为你提供最全面、最客观的”专业“评价，让你更多元、更深入的了解专业。',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1530060000000
-    }]
     return (
       <View flex useSafeArea>
         <View centerH paddingV-10>
@@ -58,25 +41,35 @@ export default class ByCollege extends Component {
               ))
             }
           </View>
-          <View paddingT-10>
-            <ItemHead title='大学解读' seeAll='true' />
-          </View>
-          <View row style={styles.list}>
-            {
-              listItems.map((item, index) => (
-                <View style={styles.item} key={index} >
-                  <CardItem
-                    imageSource={{ uri: item.img }}
-                    title={item.title}
-                    desc={item.text}
-                  />
+          {/* {
+            this.state.topicData.map((item, index) => (
+              <View key={index}>
+                <View paddingT-10>
+                  <ItemHead title={item.title} seeAll='true' />
                 </View>
-              ))
-            }
-          </View>
+                <View row style={styles.topics}>
+                  {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
+                    item.articleInfoBean.content.map((el, i) => (
+                      <View style={styles.topic} key={i}>
+                        <CardItem title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                      </View>
+                    ))
+                  }
+                </View >
+              </View>
+            ))
+          } */}
+          ))
         </ScrollView>
       </View>
     )
+  }
+  componentDidMount () {
+    axios.get(api.queryModuleArticleInfo, { params: { moduleId: 1 } }).then(data => {
+      // this.setState({
+      //   topicData: data
+      // })
+    })
   }
 }
 const styles = StyleSheet.create({

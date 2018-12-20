@@ -3,12 +3,10 @@ configure({
   enforceActions: 'always'
 })
 class Store {
-  @observable showSplash = false
   @observable bannerData=[]
   @observable firstArticle={}
-  @observable firstTopic=[]
   @observable topics=[]
-  @observable specials=[]
+  @observable firstTopic=[]
   @action.bound
   setValue (key, val) {
     this[key] = val

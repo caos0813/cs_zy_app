@@ -9,13 +9,14 @@ import _ from 'lodash'
 import {
   StyleSheet,
   StatusBar,
-  Linking,
-  ScrollView
+  Linking
 } from 'react-native'
 import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, formatDate } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, Item, IconCeil } from '../components'
+import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
+import { UltimateListView } from 'react-native-ultimate-listview'
+// import { stringify } from 'querystring'
 @inject('homeStore', 'userStore')
 @observer class Home extends Component {
   constructor (props) {
@@ -23,7 +24,8 @@ import { Player } from '../../react-native-root-ui'
     this.OpenUrl = new OpenUrl(props)
     this.state = {
       bannerActiveIndex: 0,
-      animationConfig: {}
+      animationConfig: {},
+      articles: []
     }
   }
   bannerPress = (item) => {
@@ -115,6 +117,50 @@ import { Player } from '../../react-native-root-ui'
     }
     return date
   }
+  goHref (item) {
+    if (item.href) {
+      if (item.isBrowser) {
+        this.openUrl(item.href, {}, true)
+      } else {
+        this.openNative(item.href, {}, true)
+      }
+    }
+    if (item.title === '测一测') {
+      this.entryHolland()
+    } else if (item.title === '填志愿') {
+      this.entryZhiyuan()
+    }
+  }
+  onFetch = async (page = 1, startFetch, abortFetch) => {
+    const pageSize = 5
+    const { setValue } = this.props.homeStore
+    const { userInfo } = this.props.userStore
+    alert(JSON.stringify(userInfo))
+    axios.get(api.queryModuleArticleInfo, {
+      params: {
+        moduleId: 4,
+        provinceId: 430000,
+        page: page - 1,
+        size: pageSize
+      }
+    }).then(data => {
+      const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data.data
+      if (page === 1) {
+        setValue('firstArticle', articleInfoLabelList.content[0])
+        let firstTopic = []
+        firstTopic.push(topicsAndArticlesList.shift())
+        setValue('firstTopic', firstTopic)
+        setValue('topics', topicsAndArticlesList)
+        setValue('specials', provincePolicyList)
+      }
+      articleInfoLabelList.content.shift()
+      startFetch(articleInfoLabelList.content, pageSize)
+      // alert(JSON.stringify(articleInfoLabelList[0]))
+    }).catch(() => {
+      startFetch([], pageSize)
+      abortFetch()
+    })
+  }
   renderHeader = () => {
     return (
       <View centerV paddingH-15 style={[styles.header]} >
@@ -122,43 +168,30 @@ import { Player } from '../../react-native-root-ui'
       </View>
     )
   }
-  renderBadge = () => {
-    const { userInfo } = this.props.userStore
-    const { level, isValid, token } = userInfo
-    if (token) {
-      if (!level || (level === 'EXPERIENCE' && isValid)) {
-        return (
-          <View bg-assertive paddingH-6 paddingV-2 borderRadius={8} style={{ position: 'absolute', top: -5, right: -5 }}>
-            <Text light text-12>免费体验</Text>
-          </View>
-        )
-      } else if ((level === 'ZHI_YUAN' || level === 'FULL_FEATURED') && isValid) {
-        return (
-          <View bg-assertive paddingH-6 paddingV-2 borderRadius={10} style={{ position: 'absolute', top: -5, right: -5 }}>
-            <Text light text-12>VIP</Text>
-          </View>
-        )
-      }
-    }
-    return null
-  }
   renderContainer = (bannerData) => {
     const iconsList = [
       {
         title: '查大学',
-        image: require('../assets/home/icon01.png')
+        image: require('../assets/home/icon01.png'),
+        href: 'ByCollege'
       }, {
         title: '查专业',
-        image: require('../assets/home/icon02.png')
+        image: require('../assets/home/icon02.png'),
+        href: 'major-index',
+        isBrowser: true
       }, {
         title: '查职业',
-        image: require('../assets/home/icon03.png')
+        image: require('../assets/home/icon03.png'),
+        href: 'profession-list',
+        isBrowser: true
       }, {
         title: '测一测',
-        image: require('../assets/home/icon04.png')
+        image: require('../assets/home/icon05.png'),
+        isSpecial: true
       }, {
         title: '填志愿',
-        image: require('../assets/home/icon05.png')
+        image: require('../assets/home/icon04.png'),
+        isSpecial: true
       }, {
         title: '志愿问答',
         image: require('../assets/home/icon06.png')
@@ -175,6 +208,7 @@ import { Player } from '../../react-native-root-ui'
       obj.image = item.picture
       return obj
     })
+    const { firstArticle, firstTopic, specials, topics } = this.props.homeStore
     return (
       <View style={{ backgroundColor: 'transparent' }}>
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
@@ -183,44 +217,84 @@ import { Player } from '../../react-native-root-ui'
         <View row marginV-5 style={styles.iconWrap}>
           {
             iconsList.map((item, index) => (
-              <IconCeil imageSource={item.image} title={item.title} key={index} />
+              <IconCeil onPress={() => this.goHref(item)} iconButton={styles.iconButton} imageSource={item.image} title={item.title} key={index} opacity={index === (iconsList.length - 1) ? 1 : 0.6} isBadge={item.title === '填志愿' ? 'true' : 'false'} />
             ))
           }
-          {/* <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`school-list`, {}, true)}>
-            <Image assetName='icon01' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>查大学</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`major-index`, {}, true)}>
-            <Image assetName='icon02' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>查专业</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={() => this.openUrl(`profession-list`, {}, true)}>
-            <Image assetName='icon03' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>查职业</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryHolland}>
-            <Image assetName='icon05' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>测一测</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
-            <Image assetName='icon04' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>填志愿</Text>
-            {this.renderBadge()}
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
-            <Image assetName='icon06' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>志愿问答</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} activeOpacity={0.6} onPress={this.entryZhiyuan}>
-            <Image assetName='icon07' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>高考咨询</Text>
-          </TouchableOpacity>
-          <View style={styles.iconButton}>
-            <Image assetName='icon08' style={styles.iconButtonImage} />
-            <Text text-14 dark06 marginT-2>升学课堂</Text>
-          </View> */}
         </View>
+        {/* 文章1 */}
+        {firstArticle && <View style={styles.article}>
+          <ItemHead title={firstArticle.labelName} leftIcon='true' />
+          <CardItem title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} bottomBar='true' releaseTime={this.transferTime(firstArticle.releaseTime)} priseNumber={firstArticle.priseNumber} commentNum={firstArticle.commentNumner} fileType={firstArticle.fileType} />
+        </View>}
+        {/* 专题1 */}
+        {this.renderTopics(firstTopic)}
+        {/* 所有特殊专题 */}
+        <View paddingT-10>
+          <ItemHead title='省内高考政策' />
+        </View>
+        {this.renderSpecial(specials)}
+        {/* 剩余专题 */}
+        {this.renderTopics(topics)}
       </View>
+    )
+  }
+  renderItem = (item, index, separator) => {
+    return (
+      <View style={styles.article} key={index}>
+        <ItemHead title={item.labelName} leftIcon='true' />
+        <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
+      </View>
+    )
+  }
+  // 文章
+  renderArticle = (articleData) => {
+    return (
+      articleData.map((item, index) => (
+        <View style={styles.article} key={index}>
+          <ItemHead title={item.labelName} leftIcon='true' />
+          <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
+        </View>
+      ))
+    )
+  }
+  // 专题
+  renderTopics = (topicData) => {
+    return (
+      topicData.map((item, index) => (
+        <View key={index}>
+          <View paddingT-10>
+            <ItemHead title={item.title} seeAll='true' />
+          </View>
+          <View row style={styles.topics}>
+            {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
+              item.articleInfoBean.content.map((el, i) => (
+                <View style={styles.topic} key={i}>
+                  <CardItem title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                </View>
+              ))
+            }
+          </View >
+        </View>
+      ))
+    )
+  }
+  // 特殊专题
+  renderSpecial = (specials) => {
+    return (
+      specials.map((item, index) => (
+        <TouchableOpacity style={styles.item} activeOpacity={0.6} key={index}>
+          <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
+            <Card.Item>
+              <View paddingV-10>
+                <Text text-16 dark >{item.title}</Text>
+                <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
+                  <Text text-11 gray>{this.transferTime(item.createTime)}</Text>
+                </View>
+              </View>
+            </Card.Item>
+          </Card>
+        </TouchableOpacity>
+      ))
     )
   }
   testPlay = (index) => {
@@ -254,31 +328,6 @@ import { Player } from '../../react-native-root-ui'
   render () {
     const { showSplash, bannerData } = this.props.homeStore
     const { animationConfig } = this.state
-    const listItems = [{
-      title: '最科学的填报志愿方法',
-      text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
-      img: 'payitem01',
-      time: 1544758251211
-    }, {
-      title: '最精准的数据支撑好滴hi好的撒会对的撒',
-      text: '院校、专业录取数据、招生计划与考试院同步更新。根据你的高考分数推荐最合适的大学及专业',
-      img: 'payitem02',
-      time: 1547360000000
-    }, {
-      title: '最专业的生涯顾问服务',
-      text: '生涯规划专家、教育专家、高级教师实时指导，为学生提供精准定制服务，辅助生涯规划决策。根据你的高考分数推荐最合适的大学及专业',
-      img: 'payitem03',
-      time: 1540060000000
-    }, {
-      title: '最智能的生涯测评',
-      text: '为你提供最全面、最客观的”专业“评价，让你更多元、更深入的了解专业。',
-      img: 'payitem04',
-      time: 1530060000000
-    }]
-    listItems.map((item, index) => {
-      item.time = this.transferTime(item.time)
-      // alert(1544757590)
-    })
     return (
       <View flex useSafeArea>
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
@@ -286,37 +335,19 @@ import { Player } from '../../react-native-root-ui'
         <NoNetwork refresh={this.refresh} />
         {!showSplash && this.renderHeader()}
         {!showSplash &&
-          <ScrollView>
-            {this.renderContainer(bannerData)}
-            <ItemHead title='志愿技巧' seeAll='true' />
-            <Item lists={listItems} />
-            <ItemHead title='省内高考政策' seeAll='true' />
-            <View paddingH-15 style={{
-              borderBottomWidth: 1 / ratio,
-              borderColor: colors.gray
-            }} >
-              {
-                listItems.map((item, index) => (
-                  <TouchableOpacity style={styles.item} activeOpacity={0.6} key={index}>
-                    <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
-                      <Card.Item>
-                        <View paddingV-10>
-                          {/* <View row style={{ width: '100%', justifyContent: 'flex-start' }}> */}
-                          <Text text-16 dark >{item.text}</Text>
-                          {/* </View> */}
-                          <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
-                            <Text text-11 gray>{item.time}</Text>
-                          </View>
-                        </View>
-                      </Card.Item>
-                    </Card>
-                  </TouchableOpacity>
-                ))
-              }
-            </View>
-            <ItemHead title='政策解读' seeAll='true' />
-            <Item lists={listItems} />
-          </ScrollView>}
+          <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+            header={() => this.renderContainer(bannerData)}
+            onFetch={this.onFetch}
+            item={this.renderItem}
+            refreshable={false}
+            waitingSpinnerText='正在加载...'
+            spinnerColor={colors.calm}
+            allLoadedText='--我是有底线的--'
+            // onScroll={this.onScroll}
+            showsVerticalScrollIndicator={false}
+            paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+          />
+        }
       </View >
     )
   }
@@ -383,14 +414,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 15
   },
-  iconButtonImage: {
-    /* width: 50,
-    height: 50 */
-  },
   item: {
-    // paddingHorizontal: 10
+    marginHorizontal: 10,
     borderTopWidth: 1 / ratio,
     borderColor: colors.gray
+  },
+  article: {
+    paddingHorizontal: 12
+  },
+  topics: {
+    flexWrap: 'wrap',
+    paddingHorizontal: 3
+  },
+  topic: {
+    paddingHorizontal: 12,
+    paddingBottom: 15,
+    width: '50%'
   }
 })
 export default Home

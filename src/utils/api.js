@@ -15,9 +15,6 @@ export default {
   /* 查询学校 */
   schoolList: '/user/schools/search/findByDistrict_Id',
   updateUserInfo: '/user/users/updateUserInfo',
-  /* banner列表 */
-  banner: '/zhiyuan/banner/getFour',
-  queryHomePageBannerInfo: '/bannerInfo/queryHomePageBannerInfo',
   wxPay: 'zhiyuan/wxPay/wxPrePay',
   getPayAmount: 'zhiyuan/wxPay/getPayAmount',
   feedback: 'xuanke/userInformation/saveFeedback',
@@ -26,5 +23,10 @@ export default {
   /* 开通体验卡 */
   tiralBinding: '/login/weblogin/tiralBinding',
   /* oss权限 */
-  getAssumeRole: 'user/ossUtil/getAssumeRole'
+  getAssumeRole: 'user/ossUtil/getAssumeRole',
+  /* banner列表 */
+  // banner: '/zhiyuan/banner/getFour',
+  queryHomePageBannerInfo: '/content/bannerInfo/queryHomePageBannerInfo',
+  /* 查询各个模块下的专题-文章 */
+  queryModuleArticleInfo: '/content/articleInfo/queryModuleArticleInfo'
 }
