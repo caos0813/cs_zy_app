@@ -6,7 +6,7 @@ import { NavigationActions } from 'react-navigation'
 import _ from 'lodash'
 import Picker from 'react-native-picker'
 import { colors } from '../theme'
-import { ratio, axios, Toast, api, BackPress } from '../utils'
+import { ratio, axios, Toast, api, BackPress, imageFormat } from '../utils'
 import { Mask } from '../../react-native-root-ui'
 import ImagePicker from 'react-native-image-crop-picker'
 import AliyunOSS from 'aliyun-oss-react-native'
@@ -240,7 +240,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
           <View center paddingV-25 >
             <Avatar
               onPress={() => setValue('actionSheetStatus', true)}
-              imageSource={{ uri: userInfo.image }}
+              imageSource={imageFormat(userInfo.image, userInfo.gender)}
               size={80}
               backgroundColor='transparent'
               imageProps={{ resizeMode: 'cover' }} />

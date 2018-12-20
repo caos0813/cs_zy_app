@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { WebView, StyleSheet, DeviceEventEmitter } from 'react-native'
+import { StyleSheet, DeviceEventEmitter } from 'react-native'
+import { WebView } from 'react-native-webview'
 import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'

@@ -1,29 +1,15 @@
 import React, { Component } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
-import { View, Text } from '../../react-native-ui-lib'
-import { HomeSearch, ItemHead, IconCeil, CardItem } from '../components'
+import { View, Text, Image } from '../../react-native-ui-lib'
+import { CardItem } from '../components'
+import { colors } from '../theme'
 export default class Page extends Component {
-  constructor (props) {
-    super(props)
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam('title', '大学解读')
+    }
   }
   render () {
-    const iconsList = [{
-      image: require('../assets/icons/guo.png'),
-      text: '全国'
-    },
-    {
-      image: require('../assets/icons/sheng.png'),
-      text: '本省'
-    }, {
-      image: require('../assets/icons/shuang.png'),
-      text: '双一流'
-    }, {
-      image: require('../assets/icons/985.png'),
-      text: '985'
-    }, {
-      image: require('../assets/icons/211.png'),
-      text: '211'
-    }]
     const listItems = [{
       title: '最科学的填报志愿方法',
       text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
@@ -47,29 +33,31 @@ export default class Page extends Component {
     }]
     return (
       <View flex useSafeArea>
-        <View centerH paddingV-10>
-          <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
-        </View>
         <ScrollView style={styles.scroll}>
-          <View style={styles.iconsWrap} marginV-20>
-            {
-              iconsList.map((item, index) => (
-                <IconCeil imageSource={item.image} title={item.text} key={index} />
-              ))
-            }
-          </View>
-          <View paddingT-10>
-            <ItemHead title='大学解读' seeAll='true' />
-          </View>
           <View row style={styles.list}>
             {
               listItems.map((item, index) => (
                 <View style={styles.item} key={index} >
                   <CardItem
                     imageSource={{ uri: item.img }}
+                    imageStyle={{ height: 115 }}
                     title={item.title}
                     desc={item.text}
-                  />
+                  >
+                    <View style={styles.cardFooter} paddingT-5>
+                      <View row>
+                        <View row centerV paddingR-10>
+                          <Image assetName='attention' style={styles.cardItemImage} />
+                          <Text dark06 text-11>12</Text>
+                        </View>
+                        <View row centerV>
+                          <Image assetName='comment' style={styles.cardItemImage} />
+                          <Text dark06 text-11>10</Text>
+                        </View>
+                      </View>
+                      <Text dark06 text-11>一天前</Text>
+                    </View>
+                  </CardItem>
                 </View>
               ))
             }
@@ -80,17 +68,24 @@ export default class Page extends Component {
   }
 }
 const styles = StyleSheet.create({
-  iconsWrap: {
-    flexDirection: 'row',
-    justifyContent: 'space-around'
+  scroll: {
+    flex: 1
   },
   list: {
-    flexWrap: 'wrap',
-    paddingHorizontal: 3
+    flexDirection: 'column',
+    padding: 15
   },
   item: {
-    paddingHorizontal: 12,
-    paddingBottom: 15,
-    width: '50%'
+    paddingBottom: 15
+  },
+  cardItemImage: {
+    width: 12,
+    height: 10,
+    marginRight: 2,
+    tintColor: colors.dark06
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 })

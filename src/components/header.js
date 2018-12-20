@@ -11,20 +11,23 @@ export default class Header extends Component {
     leftPress: PropTypes.func,
     title: PropTypes.string,
     titleContainer: PropTypes.element,
-    containerStyle: PropTypes.object
+    containerStyle: PropTypes.object,
+    tintColor: PropTypes.string,
+    btnStyle: PropTypes.object
   }
   static defaultProps={
     showLeft: true,
-    showRight: false
+    showRight: false,
+    tintColor: '#666'
   }
   render () {
-    const { leftPress, title, showLeft, titleContainer, containerStyle, showRight } = this.props
+    const { leftPress, title, showLeft, titleContainer, containerStyle, showRight, tintColor, btnStyle } = this.props
     return (
       <View row centerV style={[styles.header, containerStyle]}>
-        <View style={styles.btnWrap}>
+        <View style={[styles.btnWrap, btnStyle]}>
           {showLeft &&
           <TouchableOpacity activeOpacity={0.6} onPress={leftPress}>
-            <Image assetName='backArrow' style={styles.backImage} />
+            <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />
           </TouchableOpacity>
           }
         </View>
@@ -34,7 +37,7 @@ export default class Header extends Component {
         <View style={styles.btnWrap}>
           {showRight &&
           <TouchableOpacity activeOpacity={0.6} onPress={leftPress}>
-            <Image assetName='backArrow' style={styles.backImage} />
+            <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />
           </TouchableOpacity>
           }
         </View>
@@ -44,14 +47,16 @@ export default class Header extends Component {
 }
 const styles = StyleSheet.create({
   btnWrap: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center'
   },
   backImage: {
-    width: 24,
-    height: 24
+    width: 20,
+    height: 20
   },
   titleWrap: {
     flex: 1,
