@@ -33,7 +33,32 @@ export default class ByCollege extends Component {
         <View centerH paddingV-10>
           <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
         </View>
-        <ScrollView style={styles.scroll}>
+        <View style={styles.iconsWrap} marginV-20>
+          {
+            iconsList.map((item, index) => (
+              <IconCeil imageSource={item.image} title={item.text} key={index} />
+            ))
+          }
+        </View>
+        {
+          this.state.topicData.map((item, index) => (
+            <View key={index}>
+              <View paddingT-10>
+                <ItemHead title={item.title} seeAll='true' />
+              </View>
+              <View row style={styles.topics}>
+                {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
+                  item.articleInfoBean.content.map((el, i) => (
+                    <View style={styles.topic} key={i}>
+                      <CardItem title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                    </View>
+                  ))
+                }
+              </View >
+            </View>
+          ))
+        }
+        {/* <ScrollView style={styles.scroll}>
           <View style={styles.iconsWrap} marginV-20>
             {
               iconsList.map((item, index) => (
@@ -41,7 +66,7 @@ export default class ByCollege extends Component {
               ))
             }
           </View>
-          {/* {
+          {
             this.state.topicData.map((item, index) => (
               <View key={index}>
                 <View paddingT-10>
@@ -58,17 +83,19 @@ export default class ByCollege extends Component {
                 </View >
               </View>
             ))
-          } */}
+          }
           ))
-        </ScrollView>
+        </ScrollView> */}
       </View>
     )
   }
   componentDidMount () {
     axios.get(api.queryModuleArticleInfo, { params: { moduleId: 1 } }).then(data => {
-      // this.setState({
-      //   topicData: data
-      // })
+      this.setState({
+        topicData: data.data.topicsAndArticlesList
+      })
+    }).catch(() => {
+      alert(2)
     })
   }
 }
@@ -77,13 +104,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
-  list: {
+  topics: {
     flexWrap: 'wrap',
     paddingHorizontal: 3
   },
-  item: {
+  topic: {
     paddingHorizontal: 12,
     paddingBottom: 15,
-    width: '50%'
+    width: '100%'
   }
 })

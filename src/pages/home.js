@@ -153,7 +153,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
         setValue('topics', topicsAndArticlesList)
         setValue('specials', provincePolicyList)
       }
-      articleInfoLabelList.content.shift()
+      // articleInfoLabelList.content.shift()
       startFetch(articleInfoLabelList.content, pageSize)
       // alert(JSON.stringify(articleInfoLabelList[0]))
     }).catch(() => {
@@ -239,12 +239,16 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     )
   }
   renderItem = (item, index, separator) => {
-    return (
-      <View style={styles.article} key={index}>
-        <ItemHead title={item.labelName} leftIcon='true' />
-        <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
-      </View>
-    )
+    if (index === 0) {
+      return null
+    } else {
+      return (
+        <View style={styles.article} key={index}>
+          <ItemHead title={item.labelName} leftIcon='true' />
+          <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
+        </View>
+      )
+    }
   }
   // 文章
   renderArticle = (articleData) => {
