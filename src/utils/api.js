@@ -25,8 +25,9 @@ export default {
   /* oss权限 */
   getAssumeRole: 'user/ossUtil/getAssumeRole',
   /* banner列表 */
-  // banner: '/zhiyuan/banner/getFour',
   queryHomePageBannerInfo: '/content/bannerInfo/queryHomePageBannerInfo',
   /* 查询各个模块下的专题-文章 */
-  queryModuleArticleInfo: '/content/articleInfo/queryModuleArticleInfo'
+  queryModuleArticleInfo: '/content/articleInfo/queryModuleArticleInfo',
+  /* 专题-查看更多 */
+  queryViewMore: '/content/articleInfo/queryViewMore'
 }

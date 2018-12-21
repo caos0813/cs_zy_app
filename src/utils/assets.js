@@ -44,5 +44,6 @@ Assets.loadAssetsGroup('icons', {
   comment: require('../assets/player/comment.png'),
   detail: require('../assets/player/detail.png'),
   attention: require('../assets/player/attention.png'),
-  share: require('../assets/player/share.png')
+  share: require('../assets/player/share.png'),
+  play: require('../assets/icons/play.png')
 })

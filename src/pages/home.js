@@ -32,20 +32,21 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     // 启动页加载完以后再显示底部的tabNav
     let tabBarVisible
     if (screenProps.showSplash) {
-      tabBarVisible = true
-    } else {
       tabBarVisible = false
+    } else {
+      tabBarVisible = true
     }
     return {
       tabBarVisible
     }
   }
   bannerPress = (item) => {
-    if (item.link) {
-      Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
-    } else {
-      this.openUrl(`article`, { id: item.id, type: 'banner' })
-    }
+    this.openNative('NewsDetail', { articleId: item.id })
+    // if (item.link) {
+    //   Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
+    // } else {
+    //   this.openUrl(`article`, { id: item.id, type: 'banner' })
+    // }
   }
 
   entryZhiyuan = () => {
@@ -156,18 +157,33 @@ import { UltimateListView } from 'react-native-ultimate-listview'
         size: pageSize
       }
     }).then(data => {
-      const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data.data
+      const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
       if (page === 1) {
-        setValue('firstArticle', articleInfoLabelList.content[0])
-        let firstTopic = []
-        firstTopic.push(topicsAndArticlesList.shift())
-        setValue('firstTopic', firstTopic)
-        setValue('topics', topicsAndArticlesList)
-        setValue('specials', provincePolicyList)
+        if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+          setValue('firstArticle', articleInfoLabelList.content[0])
+        } else {
+          setValue('firstArticle', [])
+        }
+        if (topicsAndArticlesList.length > 0) {
+          let firstTopic = []
+          firstTopic.push(topicsAndArticlesList.shift())
+          setValue('firstTopic', firstTopic)
+          setValue('topics', topicsAndArticlesList)
+        } else {
+          setValue('firstTopic', [])
+          setValue('topics', [])
+        }
+        if (provincePolicyList.length > 0) {
+          setValue('specials', provincePolicyList)
+        } else {
+          setValue('specials', [])
+        }
       }
-      // articleInfoLabelList.content.shift()
-      startFetch(articleInfoLabelList.content, pageSize)
-      // alert(JSON.stringify(articleInfoLabelList[0]))
+      if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+        startFetch(articleInfoLabelList.content, pageSize)
+      } else {
+        startFetch([], pageSize)
+      }
     }).catch(() => {
       startFetch([], pageSize)
       abortFetch()
@@ -234,16 +250,33 @@ import { UltimateListView } from 'react-native-ultimate-listview'
           }
         </View>
         {/* 文章1 */}
-        {firstArticle && <View style={styles.article}>
+        {firstArticle.length > 0 && <View style={styles.article}>
           <ItemHead title={firstArticle.labelName} leftIcon='true' />
-          <CardItem title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} bottomBar='true' releaseTime={this.transferTime(firstArticle.releaseTime)} priseNumber={firstArticle.priseNumber} commentNum={firstArticle.commentNumner} fileType={firstArticle.fileType} />
+          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: firstArticle.id }) }} title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} fileType={firstArticle.fileType} imageStyle={{ height: 115 }}>
+            <View style={styles.cardFooter} paddingT-5>
+              <View row>
+                <View row centerV paddingR-10>
+                  <Image assetName='attention' style={styles.cardItemImage} />
+                  <Text dark06 text-11>{firstArticle.priseNumber}</Text>
+                </View>
+                <View row centerV>
+                  <Image assetName='comment' style={styles.cardItemImage} />
+                  <Text dark06 text-11>{firstArticle.commentNumner}</Text>
+                </View>
+              </View>
+              <Text dark06 text-11>{this.transferTime(firstArticle.releaseTime)}</Text>
+            </View>
+          </CardItem>
         </View>}
         {/* 专题1 */}
         {this.renderTopics(firstTopic)}
         {/* 所有特殊专题 */}
-        <View paddingT-10>
-          <ItemHead title='省内高考政策' />
-        </View>
+        {
+          specials.length > 0 &&
+          <View paddingT-10>
+            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
+          </View>
+        }
         {this.renderSpecial(specials)}
         {/* 剩余专题 */}
         {this.renderTopics(topics)}
@@ -257,21 +290,24 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       return (
         <View style={styles.article} key={index}>
           <ItemHead title={item.labelName} leftIcon='true' />
-          <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
+          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
+            <View style={styles.cardFooter} paddingT-5>
+              <View row>
+                <View row centerV paddingR-10>
+                  <Image assetName='attention' style={styles.cardItemImage} />
+                  <Text dark06 text-11>{item.priseNumber}</Text>
+                </View>
+                <View row centerV>
+                  <Image assetName='comment' style={styles.cardItemImage} />
+                  <Text dark06 text-11>{item.commentNumner}</Text>
+                </View>
+              </View>
+              <Text dark06 text-11>{this.transferTime(item.releaseTime)}</Text>
+            </View>
+          </CardItem>
         </View>
       )
     }
-  }
-  // 文章
-  renderArticle = (articleData) => {
-    return (
-      articleData.map((item, index) => (
-        <View style={styles.article} key={index}>
-          <ItemHead title={item.labelName} leftIcon='true' />
-          <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
-        </View>
-      ))
-    )
   }
   // 专题
   renderTopics = (topicData) => {
@@ -279,13 +315,13 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead title={item.title} seeAll='true' />
+            <ItemHead onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
           </View>
-          <View row style={styles.topics}>
+          <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={styles.topic} key={i}>
-                  <CardItem title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
                 </View>
               ))
             }
@@ -298,7 +334,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
   renderSpecial = (specials) => {
     return (
       specials.map((item, index) => (
-        <TouchableOpacity style={styles.item} activeOpacity={0.6} key={index}>
+        <TouchableOpacity onPress={() => Linking.openURL(item.link).catch(err => console.error('An error occurred', err))} style={styles.item} activeOpacity={0.6} key={index}>
           <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
             <Card.Item>
               <View paddingV-10>
@@ -379,7 +415,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
   componentDidMount () {
     const { setValue } = this.props.homeStore
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
-      setValue('bannerData', data.data.content)
+      setValue('bannerData', data.content)
     })
     storage.load({
       key: 'showSplash'
@@ -446,6 +482,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingBottom: 15,
     width: '50%'
+  },
+  fullWidth: {
+    width: '100%'
+  },
+  cardItemImage: {
+    width: 12,
+    height: 10,
+    marginRight: 2,
+    tintColor: colors.dark06
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 })
 export default Home

@@ -4,22 +4,31 @@ import { Image, TouchableOpacity, View, Text } from '../../react-native-ui-lib'
 import PropTypes from 'prop-types'
 import { colors } from '../theme'
 import { BlurView } from 'react-native-blur'
+import { imageResize } from '../utils'
 export default class CardItem extends Component {
   static propTypes = {
     title: PropTypes.string,
     desc: PropTypes.string,
-    imageStyle: PropTypes.object
+    imageStyle: PropTypes.object,
+    onPress: PropTypes.func
   }
   render () {
-    const { imageSource, title, desc, children, imageStyle } = this.props
+    const { imageSource, title, desc, children, imageStyle, fileType, onPress } = this.props
     return (
-      // <TouchableOpacity activeOpacity={0.6} style={styles.wrap}>
-      //   <Image source={imageSource} style={styles.image} />
-      //   <Text text-16 dark numberOfLines={1} marginV-5>{title}</Text>
-      //   <Text text-12 dark06 numberOfLines={2}>{desc}</Text>
-      // </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.6} style={styles.wrap}>
-        <Image source={imageSource} style={[styles.image, imageStyle]} />
+      <TouchableOpacity onPress={onPress} activeOpacity={0.6} style={styles.wrap}>
+        <View style={[styles.imgWap, imageStyle]}>
+          <Image source={imageSource} style={[styles.image]} />
+          {fileType !== 0 && <Image assetName='play' style={styles.playButton} tinkColor={colors.light} />}
+          {/* <BlurView
+            style={styles.blur}
+            viewRef={this.state.viewRef}
+            blurType='light'
+            blurAmount={1}
+            overlayColor='transparent'
+            downsampleFactor={1}
+            blurRadius={2}
+          /> */}
+        </View>
         <Text text-16 dark numberOfLines={1} marginV-5>{title}</Text>
         <Text text-12 dark06 numberOfLines={2}>{desc}</Text>
         {children && <View>{children}</View>}
@@ -28,11 +37,6 @@ export default class CardItem extends Component {
   }
 }
 const styles = StyleSheet.create({
-  image: {
-    width: '100%',
-    height: 85,
-    borderRadius: 8
-  },
   wrap: {
     // alignItems: 'center'
   },
@@ -63,18 +67,17 @@ const styles = StyleSheet.create({
   //   height: 32
   //   // borderRadius: 50
   // },
-  playButton: {
+  imgWap: {
+    width: '100%',
+    height: 85,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  image: {
     position: 'absolute',
-    width: 0,
-    height: 0,
-    top: '50%',
-    left: '50%',
-    borderStyle: 'solid',
-    borderWidth: 8,
-    backgroundColor: 'transparent',
-    borderTopColor: 'transparent',
-    borderLeftColor: colors.light,
-    borderBottomColor: 'transparent',
-    borderRightColor: 'transparent'
+    width: '100%',
+    height: '100%',
+    borderRadius: 8
   }
 })

@@ -24,7 +24,7 @@ import Config from 'react-native-config'
     dialog.confirm('确定退出登录吗?').then(() => {
       setUserInfo({})
       clear()
-      reset([NavigationActions.navigate({ routeName: 'Mine' })], 0)
+      // reset([NavigationActions.navigate({ routeName: 'Index' })], 0)
     })
   }
   openUrl = (path, query, auth) => {
