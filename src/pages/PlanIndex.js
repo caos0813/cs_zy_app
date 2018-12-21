@@ -88,7 +88,7 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
         setValue('firstTopic', firstTopic)
         setValue('topics', topicsAndArticlesList)
       }
-      articleInfoLabelList.content.shift()
+      // articleInfoLabelList.content.shift()
       startFetch(articleInfoLabelList.content, pageSize)
     }).catch(() => {
       startFetch([], pageSize)
@@ -96,12 +96,16 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
     })
   }
   renderItem = (item, index, separator) => {
-    return (
-      <View style={styles.article} key={index}>
-        <ItemHead title={item.labelName} leftIcon='true' />
-        <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
-      </View>
-    )
+    if (index === 0) {
+      return null
+    } else {
+      return (
+        <View style={styles.article} key={index} >
+          <ItemHead title={item.labelName} leftIcon='true' />
+          <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
+        </View>
+      )
+    }
   }
   // 专题
   renderTopics = (topicData) => {
