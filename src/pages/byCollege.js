@@ -1,68 +1,62 @@
 import React, { Component } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
-import { View, Text } from '../../react-native-ui-lib'
+import { View } from '../../react-native-ui-lib'
 import { HomeSearch, ItemHead, IconCeil, CardItem } from '../components'
-import { api, axios } from '../utils'
-export default class ByCollege extends Component {
+import { api, axios, OpenUrl } from '../utils'
+import { observer, inject } from 'mobx-react/native'
+@inject('userStore')
+@observer class ByCollege extends Component {
   constructor (props) {
     super(props)
+    this.OpenUrl = new OpenUrl(props)
     this.state = {
       topicData: []
     }
   }
+  openUrl = (path, query, auth) => {
+    this.OpenUrl.openBrowser(path, query, auth)
+  }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
+  }
   render () {
     const iconsList = [{
       image: require('../assets/icons/guo.png'),
-      text: '全国'
+      text: '全国',
+      type: '',
+      id: ''
     },
     {
       image: require('../assets/icons/sheng.png'),
-      text: '本省'
+      text: '本省',
+      type: 'provinces',
+      id: ''
     }, {
       image: require('../assets/icons/shuang.png'),
-      text: '双一流'
+      text: '双一流',
+      type: 'collegeLevels',
+      id: '1001'
     }, {
       image: require('../assets/icons/985.png'),
-      text: '985'
+      text: '985',
+      type: 'collegeLevels',
+      id: '1002'
     }, {
       image: require('../assets/icons/211.png'),
-      text: '211'
+      text: '211',
+      type: 'collegeLevels',
+      id: '1003'
     }]
     return (
       <View flex useSafeArea>
         <View centerH paddingV-10>
           <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
         </View>
-        <View style={styles.iconsWrap} marginV-20>
-          {
-            iconsList.map((item, index) => (
-              <IconCeil imageSource={item.image} title={item.text} key={index} />
-            ))
-          }
-        </View>
-        {
-          this.state.topicData.map((item, index) => (
-            <View key={index}>
-              <View paddingT-10>
-                <ItemHead title={item.title} seeAll='true' />
-              </View>
-              <View row style={styles.topics}>
-                {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
-                  item.articleInfoBean.content.map((el, i) => (
-                    <View style={styles.topic} key={i}>
-                      <CardItem title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
-                    </View>
-                  ))
-                }
-              </View >
-            </View>
-          ))
-        }
-        {/* <ScrollView style={styles.scroll}>
+        <ScrollView>
           <View style={styles.iconsWrap} marginV-20>
             {
               iconsList.map((item, index) => (
-                <IconCeil imageSource={item.image} title={item.text} key={index} />
+                <IconCeil onPress={() => { this.openUrl('school-list', { type: item.type }, false) }} imageSource={item.image} title={item.text} key={index} />
               ))
             }
           </View>
@@ -70,13 +64,13 @@ export default class ByCollege extends Component {
             this.state.topicData.map((item, index) => (
               <View key={index}>
                 <View paddingT-10>
-                  <ItemHead title={item.title} seeAll='true' />
+                  <ItemHead onPress={() => this.openNative('CommonList', { specialTopicInfoId: item.id, type: 1, title: item.title })} title={item.title} seeAll='true' />
                 </View>
                 <View row style={styles.topics}>
                   {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
                     item.articleInfoBean.content.map((el, i) => (
                       <View style={styles.topic} key={i}>
-                        <CardItem title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                        <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
                       </View>
                     ))
                   }
@@ -84,15 +78,14 @@ export default class ByCollege extends Component {
               </View>
             ))
           }
-          ))
-        </ScrollView> */}
+        </ScrollView>
       </View>
     )
   }
   componentDidMount () {
     axios.get(api.queryModuleArticleInfo, { params: { moduleId: 1 } }).then(data => {
       this.setState({
-        topicData: data.data.topicsAndArticlesList
+        topicData: data.topicsAndArticlesList
       })
     }).catch(() => {
       alert(2)
@@ -114,3 +107,4 @@ const styles = StyleSheet.create({
     width: '100%'
   }
 })
+export default ByCollege

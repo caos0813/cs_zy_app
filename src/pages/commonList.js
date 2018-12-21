@@ -1,68 +1,98 @@
 import React, { Component } from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
-import { View, Text, Image } from '../../react-native-ui-lib'
-import { CardItem } from '../components'
+import { StyleSheet, Linking } from 'react-native'
+import { View, Text, Image, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
+import { CardItem, ItemHead } from '../components'
 import { colors } from '../theme'
+import { axios, api, formatDate, ratio } from '../utils'
+import { UltimateListView } from 'react-native-ultimate-listview'
 export default class Page extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      articleData: []
+    }
+  }
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('title', '大学解读')
     }
   }
+  // 转换时间
+  transferTime = (date) => {
+    let timeDiffer = ((new Date().getTime() - date) / (3600 * 1000))
+    if (timeDiffer <= 1) {
+      date = '刚刚'
+    } else if (timeDiffer > 1 && timeDiffer <= 2) {
+      date = '1小时前'
+    } else if (timeDiffer > 2 && timeDiffer < 24) {
+      date = `${Math.round(timeDiffer)}小时前`
+    } else if (timeDiffer >= 24 && timeDiffer <= 48) {
+      date = '昨天'
+    } else if (timeDiffer > 48) {
+      date = formatDate(date, 'M月d日')
+    }
+    return date
+  }
+  onFetch = async (page = 1, startFetch, abortFetch) => {
+    const { params } = this.props.navigation.state
+    const pageSize = 10
+    axios.get(api.queryViewMore, {
+      params: {
+        specialTopicInfoId: params.specialTopicInfoId,
+        page: page - 1,
+        size: pageSize,
+        type: params.type,
+        provinceId: 430000
+      }
+    }).then(data => {
+      startFetch(data.content, pageSize)
+    }).catch(() => {
+      startFetch([], pageSize)
+      abortFetch()
+    })
+  }
+  renderItem = (item, index) => {
+    const { params } = this.props.navigation.state
+    if (params.type === 1) {
+      return (
+        <View style={styles.article} key={index} >
+          <View paddingT-10>
+            <ItemHead title={item.specialTopicInfoTitle} leftIcon='true' />
+          </View>
+          <CardItem imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
+        </View>
+      )
+    } else {
+      return (
+        <TouchableOpacity onPress={() => Linking.openURL(item.link).catch(err => console.error('An error occurred', err))} style={styles.item} activeOpacity={0.6} key={index}>
+          <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
+            <Card.Item>
+              <View paddingV-10>
+                <Text text-16 dark >{item.title}</Text>
+                <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
+                  <Text text-11 gray>{this.transferTime(item.createTime)}</Text>
+                </View>
+              </View>
+            </Card.Item>
+          </Card>
+        </TouchableOpacity>
+      )
+    }
+  }
   render () {
-    const listItems = [{
-      title: '最科学的填报志愿方法',
-      text: '50位专家共同参与设计的科学填报法，为你定制最佳的志愿方案。根据你的高考分数推荐最合适的大学及专业',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1544758251211
-    }, {
-      title: '最精准的数据支撑好滴hi好的撒会对的撒',
-      text: '院校、专业录取数据、招生计划与考试院同步更新。根据你的高考分数推荐最合适的大学及专业',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1547360000000
-    }, {
-      title: '最专业的生涯顾问服务',
-      text: '生涯规划专家、教育专家、高级教师实时指导，为学生提供精准定制服务，辅助生涯规划决策。根据你的高考分数推荐最合适的大学及专业',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1540060000000
-    }, {
-      title: '最智能的生涯测评',
-      text: '为你提供最全面、最客观的”专业“评价，让你更多元、更深入的了解专业。',
-      img: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-      time: 1530060000000
-    }]
     return (
       <View flex useSafeArea>
-        <ScrollView style={styles.scroll}>
-          <View row style={styles.list}>
-            {
-              listItems.map((item, index) => (
-                <View style={styles.item} key={index} >
-                  <CardItem
-                    imageSource={{ uri: item.img }}
-                    imageStyle={{ height: 115 }}
-                    title={item.title}
-                    desc={item.text}
-                  >
-                    <View style={styles.cardFooter} paddingT-5>
-                      <View row>
-                        <View row centerV paddingR-10>
-                          <Image assetName='attention' style={styles.cardItemImage} />
-                          <Text dark06 text-11>12</Text>
-                        </View>
-                        <View row centerV>
-                          <Image assetName='comment' style={styles.cardItemImage} />
-                          <Text dark06 text-11>10</Text>
-                        </View>
-                      </View>
-                      <Text dark06 text-11>一天前</Text>
-                    </View>
-                  </CardItem>
-                </View>
-              ))
-            }
-          </View>
-        </ScrollView>
+        <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+          onFetch={this.onFetch}
+          item={this.renderItem}
+          refreshable={false}
+          waitingSpinnerText='正在加载...'
+          spinnerColor={colors.calm}
+          allLoadedText='--我是有底线的--'
+          showsVerticalScrollIndicator={false}
+          paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+          emptyView={() => <View flex center><Text dark06>暂时没有内容</Text></View>}
+        />
       </View>
     )
   }
@@ -76,7 +106,9 @@ const styles = StyleSheet.create({
     padding: 15
   },
   item: {
-    paddingBottom: 15
+    marginHorizontal: 10,
+    borderTopWidth: 1 / ratio,
+    borderColor: colors.gray
   },
   cardItemImage: {
     width: 12,
@@ -87,5 +119,8 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  article: {
+    paddingHorizontal: 12
   }
 })

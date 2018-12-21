@@ -123,7 +123,7 @@ import { Header, ItemHead } from '../components'
     const { setValue } = this.props.newsDetailStore
     axios.get(api.queryArticleInfoDetails, {
       params: {
-        articleInfoId: getParam('id')
+        articleInfoId: getParam('articleId')
       }
     }).then(data => {
       if (data.isMore) {

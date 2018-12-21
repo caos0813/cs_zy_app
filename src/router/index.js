@@ -184,9 +184,9 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Home',
+    initialRouteName: 'NewsDetail',
     initialRouteParams: {
-      id: '311'
+      articleId: '311'
     },
     transitionConfig: () => ({
       screenInterpolator: StackViewStyleInterpolator.forHorizontal
