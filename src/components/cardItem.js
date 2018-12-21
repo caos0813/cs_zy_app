@@ -8,17 +8,18 @@ export default class CardItem extends Component {
   static propTypes = {
     title: PropTypes.string,
     desc: PropTypes.string,
-    imageStyle: PropTypes.object
+    imageStyle: PropTypes.object,
+    onPress: PropTypes.func
   }
   render () {
-    const { imageSource, title, desc, children, imageStyle } = this.props
+    const { imageSource, title, desc, children, imageStyle, onPress } = this.props
     return (
       // <TouchableOpacity activeOpacity={0.6} style={styles.wrap}>
       //   <Image source={imageSource} style={styles.image} />
       //   <Text text-16 dark numberOfLines={1} marginV-5>{title}</Text>
       //   <Text text-12 dark06 numberOfLines={2}>{desc}</Text>
       // </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.6} style={styles.wrap}>
+      <TouchableOpacity activeOpacity={0.6} style={styles.wrap} onPress={onPress}>
         <Image source={imageSource} style={[styles.image, imageStyle]} />
         <Text text-16 dark numberOfLines={1} marginV-5>{title}</Text>
         <Text text-12 dark06 numberOfLines={2}>{desc}</Text>

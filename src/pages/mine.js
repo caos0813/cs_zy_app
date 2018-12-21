@@ -7,6 +7,7 @@ import { ratio, dialog, OpenUrl, formatDate, imageFormat } from '../utils'
 import { NavigationActions } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
 import Config from 'react-native-config'
+import { Header } from '../components'
 
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
@@ -24,7 +25,7 @@ import Config from 'react-native-config'
     dialog.confirm('确定退出登录吗?').then(() => {
       setUserInfo({})
       clear()
-      reset([NavigationActions.navigate({ routeName: 'Mine' })], 0)
+      reset([NavigationActions.navigate({ routeName: 'Home' })], 0)
     })
   }
   openUrl = (path, query, auth) => {
@@ -39,6 +40,7 @@ import Config from 'react-native-config'
     const { version } = this.props
     return (
       <View flex useSafeArea>
+        <Header showLeft={false} title='我的' />
         <ScrollView>
           <View row top paddingH-25 paddingV-15 style={styles.infoWrap}>
             <View row>

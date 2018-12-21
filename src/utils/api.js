@@ -28,5 +28,9 @@ export default {
   // banner: '/zhiyuan/banner/getFour',
   queryHomePageBannerInfo: '/content/bannerInfo/queryHomePageBannerInfo',
   /* 查询各个模块下的专题-文章 */
-  queryModuleArticleInfo: '/content/articleInfo/queryModuleArticleInfo'
+  queryModuleArticleInfo: '/content/articleInfo/queryModuleArticleInfo',
+  /* 文章详情 */
+  queryArticleInfoDetails: '/content/articleInfo/queryArticleInfoDetails',
+  /* 文章下更多 */
+  queryArticleInfoViewMore: '/content/articleInfo/queryArticleInfoViewMore'
 }

@@ -1,10 +1,11 @@
 import _ from 'lodash'
 export default class OpenUrl {
   constructor (props) {
+    console.log(props)
     this.props = props
   }
   openBrowser (path, query, needAuth) {
-    console.log(111111111111)
+    console.log(this.props)
     const { navigation, userStore } = this.props
     const { userInfo } = userStore
     let queryString = path

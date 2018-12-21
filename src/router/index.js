@@ -30,75 +30,11 @@ const TabStack = createBottomTabNavigator(
     },
     Plan: {
       // screen: PlanIndex,
-      screen: createStackNavigator(
-        {
-          PlanIndex: {
-            screen: PlanIndex,
-            navigationOptions: ({ navigation, screenProps }) => ({
-              title: '生涯规划',
-              headerStyle: {
-                height: 44 + screenProps.statusBarHeight,
-                paddingTop: screenProps.statusBarHeight,
-                elevation: 0,
-                borderBottomWidth: 0
-              },
-              headerTitleStyle: {
-                fontSize: 18,
-                fontWeight: 'normal',
-                color: dark04
-              }
-            })
-          }
-          // Login: {
-          //   screen: Login,
-          //   navigationOptions: () => ({
-          //     title: '登录'
-          //   })
-          // }
-        },
-        {
-          headerLayoutPreset: 'center',
-          cardStyle: {
-            backgroundColor: light
-          }
-        }
-      ),
-      navigationOptions: () => ({
-        tabBarLabel: '⽣涯规划'
-      })
+      screen: PlanIndex
     },
     Mine: {
       // screen: Mine,
-      screen: createStackNavigator(
-        {
-          Mine: {
-            screen: Mine,
-            navigationOptions: ({ navigation, screenProps }) => ({
-              title: '我的',
-              headerStyle: {
-                height: 44 + screenProps.statusBarHeight,
-                paddingTop: screenProps.statusBarHeight,
-                elevation: 0,
-                borderBottomWidth: 0
-              },
-              headerTitleStyle: {
-                fontSize: 18,
-                fontWeight: 'normal',
-                color: dark04
-              }
-            })
-          }
-        },
-        {
-          headerLayoutPreset: 'center',
-          cardStyle: {
-            backgroundColor: light
-          }
-        }
-      ),
-      navigationOptions: () => ({
-        tabBarLabel: '我的'
-      })
+      screen: Mine
     }
   },
   {
@@ -242,10 +178,10 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'NewsDetail',
-    /* initialRouteParams: {
-    type: 'complete'
-    }, */
+    initialRouteName: 'Home',
+    initialRouteParams: {
+      id: '311'
+    },
     transitionConfig: () => ({
       screenInterpolator: StackViewStyleInterpolator.forHorizontal
     })

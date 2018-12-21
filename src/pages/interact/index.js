@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { View } from '../../../react-native-ui-lib'
 import { colors } from '../../theme'
 import { width, ratio } from '../../utils'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
@@ -20,8 +19,8 @@ export default class Page extends Component {
       <TabView
         navigationState={this.state}
         renderScene={SceneMap({
-          first: () => (<Comment />),
-          second: () => (<Praise />)
+          first: () => (<Comment style={{ flex: 1 }} />),
+          second: () => (<Praise style={{ flex: 1 }} />)
         })}
         onIndexChange={index => this.setState({ index })}
         renderTabBar={(props) => (

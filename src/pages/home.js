@@ -135,7 +135,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     const pageSize = 5
     const { setValue } = this.props.homeStore
     const { userInfo } = this.props.userStore
-    alert(JSON.stringify(userInfo))
+    // alert(JSON.stringify(userInfo))
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,
@@ -224,7 +224,16 @@ import { UltimateListView } from 'react-native-ultimate-listview'
         {/* 文章1 */}
         {firstArticle && <View style={styles.article}>
           <ItemHead title={firstArticle.labelName} leftIcon='true' />
-          <CardItem title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} bottomBar='true' releaseTime={this.transferTime(firstArticle.releaseTime)} priseNumber={firstArticle.priseNumber} commentNum={firstArticle.commentNumner} fileType={firstArticle.fileType} />
+          <CardItem
+            onPress={() => this.openNative('NewsDetail', { id: firstArticle.id })}
+            title={firstArticle.title}
+            imageSource={{ uri: firstArticle.picture }}
+            desc={firstArticle.introduction}
+            bottomBar='true'
+            releaseTime={this.transferTime(firstArticle.releaseTime)}
+            priseNumber={firstArticle.priseNumber}
+            commentNum={firstArticle.commentNumner}
+            fileType={firstArticle.fileType} />
         </View>}
         {/* 专题1 */}
         {this.renderTopics(firstTopic)}
@@ -252,7 +261,17 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       articleData.map((item, index) => (
         <View style={styles.article} key={index}>
           <ItemHead title={item.labelName} leftIcon='true' />
-          <CardItem title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} bottomBar='true' releaseTime={this.transferTime(item.releaseTime)} priseNumber={item.priseNumber} commentNum={item.commentNumner} fileType={item.fileType} />
+          <CardItem
+            title={item.title}
+            imageSource={{ uri: item.picture }}
+            desc={item.introduction}
+            bottomBar='true'
+            releaseTime={this.transferTime(item.releaseTime)}
+            priseNumber={item.priseNumber}
+            commentNum={item.commentNumner}
+            fileType={item.fileType}
+            onPress={() => this.openNative('NewsDetail', { id: item.id })}
+          />
         </View>
       ))
     )

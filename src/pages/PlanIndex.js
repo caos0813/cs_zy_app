@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Linking, StyleSheet } from 'react-native'
 import { View, Text, LoaderScreen, TouchableOpacity, Image } from '../../react-native-ui-lib'
 import { observer, inject } from 'mobx-react/native'
-import { HomeBanner, ItemHead, Item, CardItem } from '../components'
+import { HomeBanner, ItemHead, Item, CardItem, Header } from '../components'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { colors } from '../theme'
 import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
@@ -130,6 +130,7 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
     return (
       <View flex>
         {/* <NoNetwork refresh={this.refresh} /> */}
+        <Header showLeft={false} title='生涯规划' />
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           header={() => this.renderContainer(bannerData)}
           onFetch={this.onFetch}
