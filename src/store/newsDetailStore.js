@@ -3,6 +3,9 @@ configure({
   enforceActions: 'always'
 })
 class Store {
+  @observable duration='--:--'
+  @observable position='--:--'
+  @observable paused=true
   @observable data = {
   }
   @observable html = null

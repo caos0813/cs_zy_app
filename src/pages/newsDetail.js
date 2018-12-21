@@ -4,14 +4,14 @@ import { WebView } from 'react-native-webview'
 import { inject, observer } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
-import { ratio, height, statusBarHeight, axios, api, transferTime, OpenUrl } from '../utils'
+import { ratio, height, statusBarHeight, axios, api, transferTime, navigator } from '../utils'
 import Video from 'react-native-video'
 import { Header, ItemHead } from '../components'
+import { Player } from '../../react-native-root-ui'
 @inject('newsDetailStore')
 @observer class Page extends Component {
   constructor (props) {
     super(props)
-    this.OpenUrl = new OpenUrl(props)
   }
   onNavigationStateChange = (e) => {
     const { title } = e
@@ -20,11 +20,30 @@ import { Header, ItemHead } from '../components'
       setValue('webviewHeight', parseInt(title))
     }
   }
-  openPush = (path, query, auth) => {
-    this.OpenUrl.openPush(path, query, auth)
+  play=() => {
+    const { setValue, paused } = this.props.newsDetailStore
+    setValue('paused', !paused)
+  }
+  onProgress = (e) => {
+    const { setValue } = this.props.newsDetailStore
+    const { currentTime } = e
+    let m = Math.floor(currentTime / 60).toString()
+    let s = Math.floor(currentTime % 60).toString()
+    m = (m.length === 1) ? `0${m}` : m
+    s = (s.length === 1) ? `0${s}` : s
+    setValue('position', `${m}:${s}`)
+  }
+  audioLoad = (e) => {
+    const { setValue } = this.props.newsDetailStore
+    const { duration } = e
+    let m = Math.floor(duration / 60).toString()
+    let s = Math.floor(duration % 60).toString()
+    m = (m.length === 1) ? `0${m}` : m
+    s = (s.length === 1) ? `0${s}` : s
+    setValue('duration', `${m}:${s}`)
   }
   render () {
-    const { data, html, webviewHeight, moreData } = this.props.newsDetailStore
+    const { data, html, webviewHeight, moreData, duration, position, paused } = this.props.newsDetailStore
     return (
       <View flex useSafeArea>
         <Header
@@ -36,11 +55,10 @@ import { Header, ItemHead } from '../components'
           <View>
             {data.fileType === 2 && <Video
               style={styles.video}
-              paused
               source={{ uri: data.videoFile }}
             />
             }
-            {data.fileType === 1 &&
+            {data.fileType !== 2 && data.picture &&
               <Image
                 style={styles.coverImage}
                 source={{ uri: data.picture }} />
@@ -52,16 +70,22 @@ import { Header, ItemHead } from '../components'
           </View>
           {data.fileType === 1 &&
             <View paddingH-25>
-              <TouchableOpacity style={styles.item} >
+              <TouchableOpacity style={styles.item} onPress={this.play}>
+                <Video
+                  paused={paused}
+                  source={{ uri: data.videoFile }}
+                  onLoad={this.audioLoad}
+                  onProgress={this.onProgress}
+                />
                 <Image
                   borderRadius={8}
                   source={{ uri: data.picture }}
                   style={{ width: 48, height: 48 }} />
                 <View paddingL-7 flex>
                   <Text text-16 dark>{data.title}</Text>
-                  <Text text-12 dark06>3:23&nbsp;&nbsp;&nbsp;&nbsp;3MB</Text>
+                  <Text text-12 dark06>{position}/{duration}</Text>
                 </View>
-                <Image assetName='playerPlay' tintColor={colors.dark} />
+                <Image assetName={paused ? 'playerPlay' : 'playerPause'} tintColor={colors.dark} />
               </TouchableOpacity>
             </View>
           }
@@ -78,7 +102,7 @@ import { Header, ItemHead } from '../components'
               <ItemHead title='更多课程' seeAll='true' />
               <View paddingH-25>
                 {moreData.map((item) => (
-                  <TouchableOpacity style={styles.item} key={item.id} onPress={() => openPush('NewsDetail', { id: item.id })}>
+                  <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.navigate('NewsDetail', { articleId: item.id })}>
                     <Image source={{ uri: item.picture }} style={{ width: 48, height: 48 }} borderRadius={8} />
                     <View paddingL-7>
                       <Text text-16 dark>{item.title}</Text>
