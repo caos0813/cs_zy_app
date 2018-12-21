@@ -185,8 +185,7 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
     )
   }
   openNotificationListener = (e) => {
-    /* alert(JSON.stringify(e)) */
-    const extras = JSON.parse(e.extras)
+    const extras = _.isObject(e.extras) ? e.extras : JSON.parse(e.extras)
     if (extras.type === 'article') {
       this.openUrl(`article`, { id: extras.id })
     } else if (extras.type === 'banner') {
@@ -195,6 +194,8 @@ import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch } from '../co
       } else {
         this.openUrl(`article`, { id: extras.id, type: 'banner' })
       }
+    } else {
+      return false
     }
   }
   renderItem = (item, index, separator) => {

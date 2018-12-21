@@ -112,6 +112,11 @@ android {
         versionCode project.env.get("APP_VERSION_CODE").toInteger()
         versionName project.env.get("APP_VERSION_NAME")
         manifestPlaceholders = [
+                JPUSH_APPKEY: "AppKey97ab5a6f89c340b6f61c74c4",
+                APP_CHANNEL : "default"
+        ]
+
+        manifestPlaceholders = [
                 JPUSH_APPKEY: "97ab5a6f89c340b6f61c74c4",
                 APP_CHANNEL : project.env.get("APP_CHANNEL")
         ]
@@ -174,6 +179,8 @@ android {
 }
 
 dependencies {
+    implementation project(':jcore-react-native')
+    implementation project(':jpush-react-native')
     compile project(':react-native-background-timer')
     compile project(':react-native-device-info')
     compile project(':react-native-code-push')

@@ -237,6 +237,7 @@ import _ from 'lodash'
         />}
         {maskShow && <Mask />}
         <WebView ref='webview'
+          bounces={false}
           style={{ backgroundColor: colors.stable }}
           source={{ uri: `${Config.WEB_URL}${path}` }}
           onLoadStart={this.onLoadStart}

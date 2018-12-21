@@ -67,8 +67,9 @@ import { Mask } from '../../react-native-root-ui'
       pickerTextEllipsisLen: 24,
       onPickerConfirm: data => {
         Mask.hide()
-        setValue('schoolPickerVal', data[0])
-        const pickerItem = _.find(schoolData, (item) => { return item.name === data[0] })
+        let pickerValue = data[0] || schoolPickerData[0]
+        setValue('schoolPickerVal', pickerValue)
+        const pickerItem = _.find(schoolData, (item) => { return item.name === pickerValue })
         setValue('schoolPickerId', pickerItem.id)
         // updateUserInfo('startYear', data.toString())
       },
