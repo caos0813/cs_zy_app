@@ -29,14 +29,12 @@ const TabStack = createBottomTabNavigator(
       })
     },
     Plan: {
-      // screen: PlanIndex,
       screen: PlanIndex,
       navigationOptions: () => ({
         tabBarLabel: '生涯规划'
       })
     },
     Mine: {
-      // screen: Mine,
       screen: Mine,
       navigationOptions: () => ({
         tabBarLabel: '我的'
