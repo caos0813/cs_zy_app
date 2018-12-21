@@ -14,6 +14,14 @@ function navigate (routeName, params) {
     })
   )
 }
+function push (routeName, params) {
+  _navigator.dispatch(
+    StackActions.push({
+      routeName,
+      params
+    })
+  )
+}
 function replace (routeName, params) {
   _navigator.dispatch(
     StackActions.replace({
@@ -35,5 +43,6 @@ export default {
   navigate,
   replace,
   reset,
-  setTopLevelNavigator
+  setTopLevelNavigator,
+  push
 }
