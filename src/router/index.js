@@ -15,6 +15,7 @@ import PlanIndex from '../pages/PlanIndex'
 import ByCollege from '../pages/byCollege'
 import CommonList from '../pages/commonList'
 import NewsDetail from '../pages/newsDetail'
+import Test from '../pages/test'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
@@ -154,6 +155,9 @@ const AppNavigation = createStackNavigator(
     Play: {
       screen: Play
     },
+    Test: {
+      screen: Test
+    },
     Browser: {
       screen: Browser,
       navigationOptions: () => ({
@@ -182,9 +186,9 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'NewsDetail',
+    initialRouteName: 'Test',
     initialRouteParams: {
-      articleId: '311'
+      title: '列表一'
     },
     transitionConfig: () => ({
       screenInterpolator: StackViewStyleInterpolator.forHorizontal

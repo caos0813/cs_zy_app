@@ -1,46 +1,44 @@
 import React, { Component } from 'react'
-import { View, Text } from '../../react-native-ui-lib/src'
-import ParallaxScroll from '@monterosa/react-native-parallax-scroll'
-
-export default class test extends Component {
+import { View, Text, TouchableOpacity } from '../../react-native-ui-lib'
+import { configure, observable, action } from 'mobx'
+import { observer } from 'mobx-react/native'
+import { navigator } from '../utils'
+configure({
+  enforceActions: 'always'
+})
+@observer class Test extends Component {
+  @observable title=''
+  @action.bound
+  setValue (key, val) {
+    this[key] = val
+  }
   render () {
+    const listData = [{
+      title: '列表一'
+    }, {
+      title: '列表二'
+    }, {
+      title: '列表三'
+    }, {
+      title: '列表四'
+    }]
     return (
-      <ParallaxScroll
-        renderHeader={({ animatedValue }) => <View animatedValue={animatedValue} ><Text>header</Text></View>}
-        headerHeight={50}
-        isHeaderFixed={false}
-        parallaxHeight={250}
-        renderParallaxBackground={({ animatedValue }) => <View animatedValue={animatedValue} ><Text>renderParallaxBackground</Text></View>}
-        renderParallaxForeground={({ animatedValue }) => <View animatedValue={animatedValue} ><Text>renderParallaxForeground</Text></View>}
-        parallaxBackgroundScrollSpeed={5}
-        parallaxForegroundScrollSpeed={2.5}
-      >
-        <View style={{ height: 500 }}>
-          <Text>测试</Text>
-        </View>
+      <View padding-20>
         <View>
-          <Text>测试</Text>
+          <Text>mobx--{this.title}</Text>
         </View>
-        <View>
-          <Text>测试</Text>
-        </View>
-        <View>
-          <Text>测试</Text>
-        </View>
-        <View>
-          <Text>测试</Text>
-        </View>
-        <View>
-          <Text>测试</Text>
-        </View>
-        <View>
-          <Text>测试</Text>
-        </View>
-        <View>
-          <Text>测试</Text>
-        </View>
+        {listData.map((item, index) => (
+          <TouchableOpacity key={index} onPress={() => navigator.push('Test', { title: item.title })}>
+            <Text>{item.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-      </ParallaxScroll>
     )
   }
+  componentDidMount () {
+    const { getParam } = this.props.navigation
+    this.setValue('title', getParam('title'))
+  }
 }
+export default Test
