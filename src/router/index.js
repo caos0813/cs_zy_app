@@ -184,7 +184,7 @@ const AppNavigation = createStackNavigator(
     },
     initialRouteName: 'NewsDetail',
     initialRouteParams: {
-      articleId: '311'
+      articleId: '389'
     },
     transitionConfig: () => ({
       screenInterpolator: StackViewStyleInterpolator.forHorizontal

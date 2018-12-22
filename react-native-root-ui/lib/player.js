@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, DeviceEventEmitter } from 'react-native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
 import RootSiblings from 'react-native-root-siblings'
 import Video from 'react-native-video'
@@ -14,8 +14,8 @@ class PlayerContainer extends Component {
     pause: PropTypes.func
   }
   state = {
-    duration: '--:--',
-    position: '--:--',
+    duration: '00:00',
+    position: '00:00',
     audioEnd: false
   }
   audioLoad = (e) => {
@@ -32,6 +32,9 @@ class PlayerContainer extends Component {
   onEnd = () => {
     this.setState({
       audioEnd: true
+    })
+    DeviceEventEmitter.emit('playerEvent', {
+      status: 'end'
     })
   }
   onProgress = (e) => {
@@ -92,12 +95,23 @@ export default class Player extends Component {
     } else {
       console.warn(`player.hide expected a \`RootSiblings\` instance as argument.\nBut got \`${typeof player}\` instead.`)
     }
+    DeviceEventEmitter.emit('playerEvent', {
+      status: 'close'
+    })
   }
   static pause () {
     const { config, videoConfig } = this.playerContainer.props
     const { state } = this.playerContainer
     videoConfig.paused = !videoConfig.paused
     this.play(config, videoConfig, state.audioEnd)
+  }
+  static getPlayerConfig () {
+    if (this.player instanceof RootSiblings) {
+      const { config } = this.playerContainer.props
+      return config
+    } else {
+      return {}
+    }
   }
   static play (config = {}, videoConfig = {}, audioEnd = false) {
     videoConfig.playInBackground = true
@@ -113,6 +127,9 @@ export default class Player extends Component {
     } else {
       this.player = new RootSiblings(<PlayerContainer ref={(ref) => { this.playerContainer = ref }} config={config} videoConfig={videoConfig} pause={() => this.pause()} close={() => this.close()} />)
     }
+    DeviceEventEmitter.emit('playerEvent', {
+      status: videoConfig.paused ? 'paused' : 'play'
+    })
   }
   render () {
     return null

@@ -22,6 +22,11 @@ function push (routeName, params) {
     })
   )
 }
+function goBack (routeName, params) {
+  _navigator.dispatch(
+    NavigationActions.back()
+  )
+}
 function replace (routeName, params) {
   _navigator.dispatch(
     StackActions.replace({
@@ -44,5 +49,6 @@ export default {
   replace,
   reset,
   setTopLevelNavigator,
-  push
+  push,
+  goBack
 }

@@ -5,7 +5,6 @@ import infoStore from './infoStore'
 import payStore from './payStore'
 import routeStore from './routeStore'
 import planStore from './planStore'
-import newsDetailStore from './newsDetailStore'
 export default {
   loginStore,
   userStore,
@@ -13,6 +12,5 @@ export default {
   infoStore,
   payStore,
   routeStore,
-  planStore,
-  newsDetailStore
+  planStore
 }

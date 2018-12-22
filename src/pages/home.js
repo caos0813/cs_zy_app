@@ -321,7 +321,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
                 </View>
               ))
             }
