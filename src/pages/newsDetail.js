@@ -1,31 +1,65 @@
 import React, { Component } from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { WebView } from 'react-native-webview'
-import { inject, observer } from 'mobx-react/native'
+import { configure, observable, action } from 'mobx'
+import { observer } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { ratio, height, statusBarHeight, axios, api, transferTime, navigator } from '../utils'
 import Video from 'react-native-video'
-import { Header, ItemHead } from '../components'
+import { Header, ItemHead, PlayBtn } from '../components'
 import { Player } from '../../react-native-root-ui'
-@inject('newsDetailStore')
+configure({
+  enforceActions: 'always'
+})
 @observer class Page extends Component {
+  @observable duration='00:00'
+  @observable position='00:00'
+  @observable paused=true
+  @observable data = {
+  }
+  @observable html = null
+  @observable webviewHeight=0
+  @observable moreData=[]
+  @action.bound
+  setValue (key, val) {
+    this[key] = val
+  }
   constructor (props) {
     super(props)
   }
   onNavigationStateChange = (e) => {
     const { title } = e
-    const { setValue } = this.props.newsDetailStore
+    const { setValue } = this
     if (title) {
       setValue('webviewHeight', parseInt(title))
     }
   }
   play=() => {
-    const { setValue, paused } = this.props.newsDetailStore
+    const { setValue, paused } = this
     setValue('paused', !paused)
+    if (this.data.fileType === 1) {
+      const { url } = Player.getPlayerConfig()
+      if (Player.player && this.data.videoFile === url) {
+        Player.pause()
+      } else {
+        Player.play({
+          image: this.data.picture,
+          url: this.data.videoFile,
+          title: this.data.title
+        })
+      }
+    } else if (Player.player) {
+      alert(1)
+      Player.close()
+    }
+  }
+  onEnd=(e) => {
+    this.setValue('paused', true)
+    this.player.seek(0)
   }
   onProgress = (e) => {
-    const { setValue } = this.props.newsDetailStore
+    const { setValue } = this
     const { currentTime } = e
     let m = Math.floor(currentTime / 60).toString()
     let s = Math.floor(currentTime % 60).toString()
@@ -34,7 +68,7 @@ import { Player } from '../../react-native-root-ui'
     setValue('position', `${m}:${s}`)
   }
   audioLoad = (e) => {
-    const { setValue } = this.props.newsDetailStore
+    const { setValue } = this
     const { duration } = e
     let m = Math.floor(duration / 60).toString()
     let s = Math.floor(duration % 60).toString()
@@ -43,7 +77,7 @@ import { Player } from '../../react-native-root-ui'
     setValue('duration', `${m}:${s}`)
   }
   render () {
-    const { data, html, webviewHeight, moreData, duration, position, paused } = this.props.newsDetailStore
+    const { data, html, webviewHeight, moreData, duration, position, paused } = this
     return (
       <View flex useSafeArea>
         <Header
@@ -53,10 +87,32 @@ import { Player } from '../../react-native-root-ui'
           tintColor={colors.light} />
         <ScrollView style={styles.scroll}>
           <View>
-            {data.fileType === 2 && <Video
-              style={styles.video}
-              source={{ uri: data.videoFile }}
-            />
+            {data.fileType === 2 && <View>
+              <Video
+                style={styles.video}
+                paused={paused}
+                source={{ uri: data.videoFile }}
+                onLoad={this.audioLoad}
+                onProgress={this.onProgress}
+                onEnd={this.onEnd}
+                ref={(ref) => { this.player = ref }}
+              />
+              {!paused
+                ? <View row centerV paddingH-10 paddingV-2 bg-dark06 style={styles.playControls}>
+                  <PlayBtn
+                    size={20}
+                    paused={paused}
+                    onPress={this.play}
+                  />
+                  <Text text-12 marginL-5 stable>{position}/{duration}</Text>
+                </View>
+                : <PlayBtn
+                  paused={paused}
+                  style={styles.videoPaused}
+                  onPress={this.play}
+                />
+              }
+            </View>
             }
             {data.fileType !== 2 && data.picture &&
               <Image
@@ -76,6 +132,9 @@ import { Player } from '../../react-native-root-ui'
                   source={{ uri: data.videoFile }}
                   onLoad={this.audioLoad}
                   onProgress={this.onProgress}
+                  onEnd={this.onEnd}
+                  volume={0}
+                  ref={(ref) => { this.player = ref }}
                 />
                 <Image
                   borderRadius={8}
@@ -83,7 +142,7 @@ import { Player } from '../../react-native-root-ui'
                   style={{ width: 48, height: 48 }} />
                 <View paddingL-7 flex>
                   <Text text-16 dark>{data.title}</Text>
-                  <Text text-12 dark06>{position}/{duration}</Text>
+                  <Text text-12 dark06>{duration}</Text>
                 </View>
                 <Image assetName={paused ? 'playerPlay' : 'playerPause'} tintColor={colors.dark} />
               </TouchableOpacity>
@@ -102,7 +161,7 @@ import { Player } from '../../react-native-root-ui'
               <ItemHead title='更多课程' seeAll='true' />
               <View paddingH-25>
                 {moreData.map((item) => (
-                  <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.navigate('NewsDetail', { articleId: item.id })}>
+                  <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>
                     <Image source={{ uri: item.picture }} style={{ width: 48, height: 48 }} borderRadius={8} />
                     <View paddingL-7>
                       <Text text-16 dark>{item.title}</Text>
@@ -130,7 +189,7 @@ import { Player } from '../../react-native-root-ui'
     )
   }
   getMore = (specialTopicInfoId, id) => {
-    const { setValue } = this.props.newsDetailStore
+    const { setValue } = this
     axios.get(api.queryArticleInfoViewMore, {
       params: {
         specialTopicInfoId: specialTopicInfoId,
@@ -142,9 +201,26 @@ import { Player } from '../../react-native-root-ui'
       setValue('moreData', data.content)
     })
   }
+  componentWillUnmount () {
+    this.didBlurEvent.remove()
+  }
   componentDidMount () {
+    DeviceEventEmitter.addListener('playerEvent', e => {
+      if (e.status === 'play') {
+        this.setValue('paused', false)
+      } else {
+        this.setValue('paused', true)
+      }
+    })
+    const { addListener } = this.props.navigation
+    this.didBlurEvent = addListener(
+      'didBlur',
+      payload => {
+        this.setValue('paused', true)
+      }
+    )
     const { getParam } = this.props.navigation
-    const { setValue } = this.props.newsDetailStore
+    const { setValue } = this
     axios.get(api.queryArticleInfoDetails, {
       params: {
         articleInfoId: getParam('articleId')
@@ -194,6 +270,25 @@ import { Player } from '../../react-native-root-ui'
   }
 }
 const styles = StyleSheet.create({
+  playControls: {
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,.5)',
+    left: 0,
+    bottom: 0
+  },
+  videoPaused: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    marginTop: -18,
+    marginLeft: -18
+  },
+  videoPlay: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%'
+  },
   item: {
     paddingHorizontal: 15,
     paddingVertical: 10,
@@ -214,7 +309,8 @@ const styles = StyleSheet.create({
     zIndex: 99
   },
   scroll: {
-    flex: 1
+    flex: 1,
+    zIndex: 1
   },
   footer: {
     borderTopColor: colors.grey,
@@ -234,7 +330,8 @@ const styles = StyleSheet.create({
     height: 250
   },
   webview: {
-    width: '100%'
+    width: '100%',
+    backgroundColor: 'transparent'
   },
   header: {
     position: 'absolute',

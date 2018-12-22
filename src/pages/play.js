@@ -82,10 +82,6 @@ class Play extends Component {
     )
   }
   componentDidMount () {
-    DeviceEventEmitter.addListener('BlurEvent', (e) => {
-      console.log(e)
-      // handle event.
-    })
   }
 }
 export default Play

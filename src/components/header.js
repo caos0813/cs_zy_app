@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
 import { StyleSheet } from 'react-native'
 import { colors } from '../theme'
-import { statusBarHeight } from '../utils'
+import { statusBarHeight, navigator } from '../utils'
 import PropTypes from 'prop-types'
 export default class Header extends Component {
   static propTypes={
     showLeft: PropTypes.bool,
     showRight: PropTypes.bool,
-    leftPress: PropTypes.func,
     title: PropTypes.string,
     titleContainer: PropTypes.element,
     containerStyle: PropTypes.object,
@@ -26,7 +25,7 @@ export default class Header extends Component {
       <View row centerV style={[styles.header, containerStyle]}>
         <View style={[styles.btnWrap, btnStyle]}>
           {showLeft &&
-          <TouchableOpacity activeOpacity={0.6} onPress={leftPress}>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => navigator.goBack()}>
             <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />
           </TouchableOpacity>
           }
@@ -47,16 +46,17 @@ export default class Header extends Component {
 }
 const styles = StyleSheet.create({
   btnWrap: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: 40,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center'
   },
   backImage: {
-    width: 20,
-    height: 20
+    marginLeft: -1.5,
+    width: 16,
+    height: 16
   },
   titleWrap: {
     flex: 1,

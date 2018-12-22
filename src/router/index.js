@@ -188,7 +188,7 @@ const AppNavigation = createStackNavigator(
     },
     initialRouteName: 'Test',
     initialRouteParams: {
-      title: '列表一'
+      articleId: '389'
     },
     transitionConfig: () => ({
       screenInterpolator: StackViewStyleInterpolator.forHorizontal
