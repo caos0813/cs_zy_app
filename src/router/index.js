@@ -1,5 +1,6 @@
 import React from 'react'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
+import store from '../store'
 import { dark04, light, calm, gray } from '../theme/colors'
 import { platform, navigator, statusBarHeight } from '../utils'
 import Login from '../pages/login'
@@ -186,7 +187,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Test',
+    initialRouteName: 'Home',
     initialRouteParams: {
       articleId: '389'
     },
@@ -195,7 +196,15 @@ const AppNavigation = createStackNavigator(
     })
   }
 )
-const app = () => <AppNavigation uriPrefix={prefix} screenProps={{ statusBarHeight: statusBarHeight }} ref={navigatorRef => {
-  navigator.setTopLevelNavigator(navigatorRef)
-}} />
+const app = () => <AppNavigation
+  onNavigationStateChange={(from, to) => {
+    const { routes } = to
+    const { setRoutes } = store.routeStore
+    setRoutes(routes)
+  }}
+  uriPrefix={prefix}
+  screenProps={{ statusBarHeight: statusBarHeight }}
+  ref={navigatorRef => {
+    navigator.setTopLevelNavigator(navigatorRef)
+  }} />
 export default app

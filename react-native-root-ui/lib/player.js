@@ -8,6 +8,15 @@ import * as Animatable from 'react-native-animatable'
 import { colors } from '../../src/theme'
 class PlayerContainer extends Component {
   static propTypes = {
+    /* {
+      config={
+        id,
+        title,
+        url,
+        image,
+        currentTime
+      }
+    } */
     config: PropTypes.object,
     videoConfig: PropTypes.object,
     close: PropTypes.func,
@@ -26,6 +35,7 @@ class PlayerContainer extends Component {
     s = (s.length === 1) ? `0${s}` : s
     this.setState({
       duration: `${m}:${s}`,
+      currentTime: 0,
       audioEnd: false
     })
   }
@@ -33,8 +43,10 @@ class PlayerContainer extends Component {
     this.setState({
       audioEnd: true
     })
+    const { config } = this.props
     DeviceEventEmitter.emit('playerEvent', {
-      status: 'end'
+      ...config,
+      paused: true
     })
   }
   onProgress = (e) => {
@@ -44,7 +56,15 @@ class PlayerContainer extends Component {
     m = (m.length === 1) ? `0${m}` : m
     s = (s.length === 1) ? `0${s}` : s
     this.setState({
-      position: `${m}:${s}`
+      position: `${m}:${s}`,
+      currentTime
+    })
+    const { config, videoConfig } = this.props
+    console.log('onProgress')
+    DeviceEventEmitter.emit('playerEvent', {
+      ...config,
+      paused: !!videoConfig.paused,
+      currentTime
     })
   }
   updatePlayer = () => {
@@ -66,10 +86,11 @@ class PlayerContainer extends Component {
               onLoad={this.audioLoad}
               onEnd={this.onEnd}
               onProgress={this.onProgress}
+              progressUpdateInterval={1000}
             />
-            {(videoConfig.paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close}><Image assetName='playerClose' /></TouchableOpacity>}
+            {(videoConfig.paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close} style={{ marginRight: 9 }}><Image assetName='playerClose' /></TouchableOpacity>}
           </View>
-          <View flex row centerV paddingH-9>
+          <View flex row centerV paddingR-9>
             <Image source={{ uri: config.image }} style={styles.image} />
             <View flex paddingL-5>
               <Text text-14 light numberOfLines={1}>{config.title}</Text>
@@ -86,17 +107,33 @@ class PlayerContainer extends Component {
       </Animatable.View>
     )
   }
+  componentDidUpdate () {
+    // console.log('player componentDidUpdate')
+  }
+  componentWillReceiveProps () {
+    // console.log('player componentWillReceiveProps')
+  }
+  componentDidMount () {
+    // console.log('player componentDidMount')
+    const { currentTime } = this.props.config
+    this.playerRef.seek(currentTime)
+  }
 }
 export default class Player extends Component {
   static player = null
+  static config={}
   static close () {
     if (this.player instanceof RootSiblings) {
       this.player.destroy()
+      this.config = {}
+      this.player = null
     } else {
       console.warn(`player.hide expected a \`RootSiblings\` instance as argument.\nBut got \`${typeof player}\` instead.`)
     }
+    console.log('close')
     DeviceEventEmitter.emit('playerEvent', {
-      status: 'close'
+      paused: true,
+      ...this.config
     })
   }
   static pause () {
@@ -106,29 +143,42 @@ export default class Player extends Component {
     this.play(config, videoConfig, state.audioEnd)
   }
   static getPlayerConfig () {
-    if (this.player instanceof RootSiblings) {
-      const { config } = this.playerContainer.props
-      return config
-    } else {
-      return {}
+    let config = this.config
+    if (this.playerContainer) {
+      const { state } = this.playerContainer
+      config.currentTime = state.currentTime
     }
+    return config
   }
   static play (config = {}, videoConfig = {}, audioEnd = false) {
     videoConfig.playInBackground = true
     if (this.player instanceof RootSiblings) {
       if (audioEnd && this.playerContainer) {
+        const { playerRef } = this.playerContainer
         /* 播放完成重置播放状态 */
         videoConfig.paused = false
-        const { playerRef } = this.playerContainer
         this.playerContainer.updatePlayer()
         playerRef.seek(0)
       }
-      this.player.update(<PlayerContainer ref={(ref) => { this.playerContainer = ref }} config={config} videoConfig={videoConfig} pause={() => this.pause()} close={() => this.close()} />)
+      this.player.update(
+        <PlayerContainer
+          ref={(ref) => { this.playerContainer = ref }}
+          config={config}
+          videoConfig={videoConfig}
+          pause={() => this.pause()}
+          close={() => this.close()} />)
     } else {
-      this.player = new RootSiblings(<PlayerContainer ref={(ref) => { this.playerContainer = ref }} config={config} videoConfig={videoConfig} pause={() => this.pause()} close={() => this.close()} />)
+      this.player = new RootSiblings(<PlayerContainer
+        ref={(ref) => { this.playerContainer = ref }}
+        config={config}
+        videoConfig={videoConfig}
+        pause={() => this.pause()}
+        close={() => this.close()} />)
     }
+    this.config = config
     DeviceEventEmitter.emit('playerEvent', {
-      status: videoConfig.paused ? 'paused' : 'play'
+      ...this.config,
+      paused: videoConfig.paused
     })
   }
   render () {
