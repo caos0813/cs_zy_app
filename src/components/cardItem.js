@@ -12,6 +12,9 @@ export default class CardItem extends Component {
     imageStyle: PropTypes.object,
     onPress: PropTypes.func
   }
+  static defaultProps = {
+    fileType: 0
+  }
   render () {
     const { imageSource, title, desc, children, imageStyle, fileType, onPress } = this.props
     return (

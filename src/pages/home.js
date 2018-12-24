@@ -274,7 +274,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
         {
           specials.length > 0 &&
           <View paddingT-10>
-            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
+            <ItemHead title='省内高考政策' smallText='true' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
           </View>
         }
         {this.renderSpecial(specials)}
@@ -315,7 +315,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
+            <ItemHead onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} smallText='true' seeAll='true' />
           </View>
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&

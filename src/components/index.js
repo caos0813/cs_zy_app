@@ -14,4 +14,5 @@ import Item from './item'
 import IconCeil from './iconCeil'
 import CardItem from './cardItem'
 import PlayBtn from './playBtn'
-export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item, IconCeil, CardItem, PlayBtn }
+import ButtonCeil from './buttonCeil'
+export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item, IconCeil, CardItem, PlayBtn, ButtonCeil }

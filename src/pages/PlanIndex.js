@@ -152,7 +152,7 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead title={item.title} seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
+            <ItemHead title={item.title} smallText='true' seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           </View>
           <View row style={styles.topics}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
