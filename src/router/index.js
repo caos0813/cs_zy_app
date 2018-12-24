@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
 import store from '../store'
 import { dark04, light, calm, gray } from '../theme/colors'
-import { platform, navigator, statusBarHeight } from '../utils'
+import { platform, navigator, statusBarHeight, ratio } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -81,7 +81,7 @@ const TabStack = createBottomTabNavigator(
         backgroundColor: light,
         paddingBottom: 0,
         paddingTop: 6,
-        borderTopWidth: 1,
+        borderTopWidth: 1 / ratio,
         borderTopColor: gray
       },
       // tab bar的⽂本样式
@@ -201,7 +201,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'ByProfession',
+    initialRouteName: 'Home',
     initialRouteParams: {
       articleId: '389'
     },

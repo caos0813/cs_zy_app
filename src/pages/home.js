@@ -11,7 +11,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, formatDate } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
@@ -42,11 +42,6 @@ import { UltimateListView } from 'react-native-ultimate-listview'
   }
   bannerPress = (item) => {
     this.openNative('NewsDetail', { articleId: item.id })
-    // if (item.link) {
-    //   Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
-    // } else {
-    //   this.openUrl(`article`, { id: item.id, type: 'banner' })
-    // }
   }
 
   entryZhiyuan = () => {
@@ -113,22 +108,6 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     } else {
       this.openUrl(`holland-entry`, {}, true)
     }
-  }
-  // 转换时间
-  transferTime = (date) => {
-    let timeDiffer = ((new Date().getTime() - date) / (3600 * 1000))
-    if (timeDiffer <= 1) {
-      date = '刚刚'
-    } else if (timeDiffer > 1 && timeDiffer <= 2) {
-      date = '1小时前'
-    } else if (timeDiffer > 2 && timeDiffer < 24) {
-      date = `${Math.round(timeDiffer)}小时前`
-    } else if (timeDiffer >= 24 && timeDiffer <= 48) {
-      date = '昨天'
-    } else if (timeDiffer > 48) {
-      date = formatDate(date, 'M月d日')
-    }
-    return date
   }
   goHref (item) {
     if (item.href) {
@@ -264,12 +243,13 @@ import { UltimateListView } from 'react-native-ultimate-listview'
                   <Text dark06 text-11>{firstArticle.commentNumner}</Text>
                 </View>
               </View>
-              <Text dark06 text-11>{this.transferTime(firstArticle.releaseTime)}</Text>
+              <Text dark06 text-11>{transferTime(firstArticle.releaseTime)}</Text>
             </View>
           </CardItem>
         </View>}
         {/* 专题1 */}
         {this.renderTopics(firstTopic)}
+        {/* <CardItem title='hahah' imageSource={{ uri: 'http://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20181220095309' }} desc='hudhaudhuhaud' fileType='1' /> */}
         {/* 所有特殊专题 */}
         {
           specials.length > 0 &&
@@ -302,7 +282,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
                   <Text dark06 text-11>{item.commentNumner}</Text>
                 </View>
               </View>
-              <Text dark06 text-11>{this.transferTime(item.releaseTime)}</Text>
+              <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
             </View>
           </CardItem>
         </View>
@@ -340,7 +320,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
               <View paddingV-10>
                 <Text text-16 dark >{item.title}</Text>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
-                  <Text text-11 gray>{this.transferTime(item.createTime)}</Text>
+                  <Text text-11 gray>{transferTime(item.createTime)}</Text>
                 </View>
               </View>
             </Card.Item>

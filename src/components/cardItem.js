@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, findNodeHandle } from 'react-native'
 import { Image, TouchableOpacity, View, Text } from '../../react-native-ui-lib'
 import PropTypes from 'prop-types'
 import { colors } from '../theme'
-import { BlurView } from 'react-native-blur'
 import { imageResize } from '../utils'
+import { PlayBtn } from '../components'
 export default class CardItem extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      viewRef: null
+    }
+  }
   static propTypes = {
     title: PropTypes.string,
     desc: PropTypes.string,
@@ -15,22 +21,21 @@ export default class CardItem extends Component {
   static defaultProps = {
     fileType: 0
   }
+  imageLoaded = () => {
+    this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
+  }
   render () {
     const { imageSource, title, desc, children, imageStyle, fileType, onPress } = this.props
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={0.6} style={styles.wrap}>
         <View style={[styles.imgWap, imageStyle]}>
-          <Image source={imageSource} style={[styles.image]} />
-          {fileType !== 0 && <Image assetName='play' style={styles.playButton} tinkColor={colors.light} />}
-          {/* <BlurView
-            style={styles.blur}
+          <Image ref={(img) => { this.backgroundImage = img }} source={imageSource} style={[styles.image]} onLoadEnd={this.imageLoaded} />
+          {fileType !== 0 && <PlayBtn
+            size={30}
+            paused='true'
+            activeOpacity={1}
             viewRef={this.state.viewRef}
-            blurType='light'
-            blurAmount={1}
-            overlayColor='transparent'
-            downsampleFactor={1}
-            blurRadius={2}
-          /> */}
+          />}
         </View>
         <Text text-16 dark numberOfLines={1} marginV-5>{title}</Text>
         <Text text-12 dark06 numberOfLines={2}>{desc}</Text>
@@ -58,11 +63,8 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, hegith: 4 }
   },
   blur: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    left: 0,
-    bottom: 0
+    width: '20%',
+    height: '20%'
   },
   // falseImg: {
   //   position: 'absolute',

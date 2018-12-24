@@ -15,9 +15,4 @@ const platform = Platform.OS
 const ratio = PixelRatio.get()
 const statusBarHeight = StatusBar.currentHeight || 0
 let { width, height } = Dimensions.get('screen')
-const professionEn = {
-  '驾驶': 'DRIVE',
-  '运动': 'SPORT',
-  '体力劳动': ''
-}
-export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat, transferTime, professionEn }
+export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat, transferTime }
