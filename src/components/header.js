@@ -12,21 +12,27 @@ export default class Header extends Component {
     titleContainer: PropTypes.element,
     containerStyle: PropTypes.object,
     tintColor: PropTypes.string,
-    btnStyle: PropTypes.object
+    btnStyle: PropTypes.object,
+    leftContainer: PropTypes.element,
+    leftPress: PropTypes.func
   }
   static defaultProps={
     showLeft: true,
     showRight: false,
     tintColor: '#666'
   }
+  leftPress=() => {
+    const { leftPress } = this.props
+    leftPress() || navigator.goBack()
+  }
   render () {
-    const { leftPress, title, showLeft, titleContainer, containerStyle, showRight, tintColor, btnStyle } = this.props
+    const { leftPress, title, showLeft, titleContainer, containerStyle, showRight, tintColor, btnStyle, leftContainer } = this.props
     return (
       <View row centerV style={[styles.header, containerStyle]}>
         <View style={[styles.btnWrap, btnStyle]}>
           {showLeft &&
-          <TouchableOpacity activeOpacity={0.6} onPress={() => navigator.goBack()}>
-            <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />
+          <TouchableOpacity activeOpacity={0.6} onPress={this.leftPress}>
+            {leftContainer || <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />}
           </TouchableOpacity>
           }
         </View>

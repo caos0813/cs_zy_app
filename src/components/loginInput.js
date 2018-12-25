@@ -7,14 +7,18 @@ import { colors } from '../theme'
 import PropTypes from 'prop-types'
 export default class LoginInput extends Component {
   static propTypes = {
-    onChangeText: PropTypes.func
+    onChangeText: PropTypes.func,
+    maxLength: PropTypes.number
+  }
+  static defaultProps={
+    maxLength: 11
   }
   _onChangeText = (e) => {
     const { onChangeText } = this.props
     onChangeText(e)
   }
   render () {
-    const { onSubmitEditing } = this.props
+    const { onSubmitEditing, maxLength } = this.props
     if (platform === 'android') {
       const shadowOpt = {
         width: width - 50,
@@ -39,7 +43,7 @@ export default class LoginInput extends Component {
             returnKeyType='next'
             onSubmitEditing={onSubmitEditing}
             hideUnderline
-
+            maxLength={maxLength}
           />
         </BoxShadow>
 

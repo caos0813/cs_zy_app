@@ -16,4 +16,5 @@ import CardItem from './cardItem'
 import PlayBtn from './playBtn'
 import NewsFooter from './newsFooter'
 import ButtonCeil from './buttonCeil'
-export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item, IconCeil, CardItem, PlayBtn, NewsFooter, ButtonCeil }
+import Share from './share'
+export { Progress, Mask, ItemHead, CodeInput, LoadMore, Header, BackAvatar, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, LoginInput, Item, IconCeil, CardItem, PlayBtn, NewsFooter, ButtonCeil, Share }

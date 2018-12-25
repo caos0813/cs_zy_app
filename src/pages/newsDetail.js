@@ -7,8 +7,8 @@ import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime } from '../utils'
 import Video from 'react-native-video'
-import { Header, ItemHead, PlayBtn } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { Header, ItemHead, PlayBtn, NewsFooter } from '../components'
+import { Player, Share } from '../../react-native-root-ui'
 configure({
   enforceActions: 'always'
 })
@@ -56,6 +56,21 @@ configure({
     const { setValue } = this
     const { duration } = e
     setValue('duration', transferPlayerTime(duration))
+  }
+  footerFunc=(e) => {
+    switch (e) {
+      case 'share':
+        Share.show({
+          thumbImage: this.data.picture,
+          // description: PropTypes.string,
+          title: this.data.title,
+          // webpageUrl: PropTypes.string,
+          shareCallback: () => {
+            alert(1)
+          }
+        })
+        break
+    }
   }
   render () {
     const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
@@ -154,19 +169,12 @@ configure({
             </View>
           }
         </ScrollView>
+
         {!hideFooter &&
-        <View style={styles.footer} >
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='attention' tintColor={data.isPrise ? colors.assertive : colors.dark} />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='comment' />
-            <Text text-14 dark06 marginL-5>{data.commentNumber}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='share' />
-          </TouchableOpacity>
-        </View>
+          <NewsFooter
+            showLink={false}
+            onPress={this.footerFunc}
+          />
         }
       </View>
     )
