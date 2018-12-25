@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { configure, observable, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
-import { ratio, height, statusBarHeight, axios, api, transferTime, navigator } from '../utils'
+import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime } from '../utils'
 import Video from 'react-native-video'
 import { Header, ItemHead, PlayBtn } from '../components'
 import { Player } from '../../react-native-root-ui'
@@ -17,6 +17,7 @@ configure({
   @observable duration = '00:00'
   @observable position = '00:00'
   @observable currentTime = 0
+  @observable hideFooter = false
   @observable paused = true
   @observable data = {
   }
@@ -40,21 +41,6 @@ configure({
   play = () => {
     const { setValue, paused } = this
     setValue('paused', !paused)
-    /* if (this.data.fileType === 1) {
-      const { id } = Player.getPlayerConfig()
-      if (Player.player && this.data.id === id) {
-        Player.pause()
-      } else {
-        Player.play({
-          id: this.data.id,
-          image: this.data.picture,
-          url: this.data.videoFile,
-          title: this.data.title
-        })
-      }
-    } else if (Player.player) {
-      Player.close()
-    } */
   }
   onEnd = (e) => {
     this.setValue('paused', true)
@@ -63,24 +49,16 @@ configure({
   onProgress = (e) => {
     const { setValue } = this
     const { currentTime } = e
-    let m = Math.floor(currentTime / 60).toString()
-    let s = Math.floor(currentTime % 60).toString()
-    m = (m.length === 1) ? `0${m}` : m
-    s = (s.length === 1) ? `0${s}` : s
-    setValue('position', `${m}:${s}`)
+    setValue('position', transferPlayerTime(currentTime))
     setValue('currentTime', currentTime)
   }
   audioLoad = (e) => {
     const { setValue } = this
     const { duration } = e
-    let m = Math.floor(duration / 60).toString()
-    let s = Math.floor(duration % 60).toString()
-    m = (m.length === 1) ? `0${m}` : m
-    s = (s.length === 1) ? `0${s}` : s
-    setValue('duration', `${m}:${s}`)
+    setValue('duration', transferPlayerTime(duration))
   }
   render () {
-    const { data, html, webviewHeight, moreData, duration, position, paused } = this
+    const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
     return (
       <View flex useSafeArea>
         <Header
@@ -118,10 +96,9 @@ configure({
               }
             </View>
             }
-            {data.fileType !== 2 && data.picture &&
-              <Image
-                style={styles.coverImage}
-                source={{ uri: data.picture }} />
+            {(data.fileType !== 2 && data.picture) ? <Image
+              style={styles.coverImage}
+              source={{ uri: data.picture }} /> : null
             }
           </View>
           <View paddingV-50 paddingH-25 center>
@@ -162,7 +139,7 @@ configure({
           <View center paddingV-30><Text text-12 dark06>--END</Text></View>
           {data.isMore &&
             <View paddingT-10>
-              <ItemHead title='更多课程' seeAll='true' />
+              <ItemHead title='更多' seeAll='true' />
               <View paddingH-25>
                 {moreData.map((item) => (
                   <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>
@@ -177,6 +154,7 @@ configure({
             </View>
           }
         </ScrollView>
+        {!hideFooter &&
         <View style={styles.footer} >
           <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
             <Image assetName='attention' tintColor={data.isPrise ? colors.assertive : colors.dark} />
@@ -189,6 +167,7 @@ configure({
             <Image assetName='share' />
           </TouchableOpacity>
         </View>
+        }
       </View>
     )
   }
@@ -215,7 +194,8 @@ configure({
         url: this.data.videoFile,
         title: this.data.title,
         image: this.data.picture,
-        currentTime: this.currentTime
+        currentTime: this.currentTime,
+        others: this.data
       })
     }
 
@@ -234,27 +214,13 @@ configure({
         setValue('paused', true)
       }
     )
-    /* this.playerEvent = DeviceEventEmitter.addListener('playerEvent', e => {
-      const { id, currentTime } = e
-      if (parseInt(id) === getParam('articleId') && this.data.fileType === 1) {
-        this.player.seek(currentTime)
-      }
-      Player.player && Player.close()
-    }) */
-    /* this.didFocusEvent = addListener(
-      'didFocus',
-      payload => {
-        this.playerEvent = DeviceEventEmitter.addListener('playerEvent', e => {
-          const { paused, id } = e
-          console.log(id, getParam('articleId'))
-          if (id === getParam('articleId')) {
-            setValue('paused', paused)
-          }
-        })
-      }
-    ) */
-    axios.get(api.queryArticleInfoDetails, {
+    let apiUrl = getParam('type') === 'banner' ? api.bannerDetail : api.queryArticleInfoDetails
+    if (getParam('type') === 'banner' || getParam('type') === 'volunteer') {
+      setValue('hideFooter', true)
+    }
+    axios.get(apiUrl, {
       params: {
+        id: getParam('articleId'),
         articleInfoId: getParam('articleId')
       }
     }).then(data => {
@@ -301,7 +267,7 @@ configure({
       if (Player.player) {
         const { id, currentTime } = Player.getPlayerConfig()
         Player.close()
-        if (parseInt(id) === getParam('articleId')) {
+        if (id == getParam('articleId')) {
           this.player.seek(currentTime)
           this.onProgress({ currentTime })
         }

@@ -6,6 +6,7 @@ import Video from 'react-native-video'
 import PropTypes from 'prop-types'
 import * as Animatable from 'react-native-animatable'
 import { colors } from '../../src/theme'
+import { navigator, transferPlayerTime } from '../../src/utils'
 class PlayerContainer extends Component {
   static propTypes = {
     /* {
@@ -14,27 +15,42 @@ class PlayerContainer extends Component {
         title,
         url,
         image,
-        currentTime
+        currentTime,
+        others
       }
     } */
+    /*
+      e={
+        id,
+        title,
+        url,
+        image,
+        currentTime,
+        paused,
+        duration,
+        others
+      }
+    */
     config: PropTypes.object,
-    videoConfig: PropTypes.object,
     close: PropTypes.func,
     pause: PropTypes.func
   }
-  state = {
-    duration: '00:00',
-    position: '00:00',
-    audioEnd: false
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      duration: 0,
+      position: '00:00',
+      time: '00:00',
+      audioEnd: false,
+      opacity: 1
+    }
   }
   audioLoad = (e) => {
     const { duration } = e
-    let m = Math.floor(duration / 60).toString()
-    let s = Math.floor(duration % 60).toString()
-    m = (m.length === 1) ? `0${m}` : m
-    s = (s.length === 1) ? `0${s}` : s
     this.setState({
-      duration: `${m}:${s}`,
+      duration: duration,
+      time: transferPlayerTime(duration),
       currentTime: 0,
       audioEnd: false
     })
@@ -43,64 +59,78 @@ class PlayerContainer extends Component {
     this.setState({
       audioEnd: true
     })
-    const { config } = this.props
+    const { config, currentTime } = this.props
+    const { duration } = this.state
     DeviceEventEmitter.emit('playerEvent', {
       ...config,
-      paused: true
+      paused: true,
+      currentTime,
+      duration
+    })
+  }
+  setStatus=(flag) => {
+    this.setState({
+      opacity: flag ? 1 : 0
     })
   }
   onProgress = (e) => {
     const { currentTime } = e
-    let m = Math.floor(currentTime / 60).toString()
-    let s = Math.floor(currentTime % 60).toString()
-    m = (m.length === 1) ? `0${m}` : m
-    s = (s.length === 1) ? `0${s}` : s
+    const { duration } = this.state
     this.setState({
-      position: `${m}:${s}`,
+      position: transferPlayerTime(currentTime),
       currentTime
     })
-    const { config, videoConfig } = this.props
-    console.log('onProgress')
+    const { config } = this.props
     DeviceEventEmitter.emit('playerEvent', {
       ...config,
-      paused: !!videoConfig.paused,
-      currentTime
+      paused: false,
+      currentTime,
+      duration
     })
   }
   updatePlayer = () => {
     this.setState({
       audioEnd: false
     })
+    this.playerRef.seek(0)
+  }
+  toMiniPlayer=() => {
+    const { id } = this.props.config
+    navigator.push('Play', { articleId: id })
   }
   render () {
-    const { config, videoConfig, close, pause } = this.props
-    const { duration, audioEnd, position } = this.state
+    const { title, url, image, paused } = this.props.config
+    const { pause, close } = this.props
+    const { time, audioEnd, position, opacity } = this.state
     return (
-      <Animatable.View style={styles.wrap} row center animation='slideInUp' duration={300}>
+      <Animatable.View style={[styles.wrap, { opacity: opacity }]} row center animation='slideInUp' duration={300}>
         <View style={styles.player} row>
           <View row centerV>
             <Video
               ref={(ref) => { this.playerRef = ref }}
-              source={{ uri: config.url }}
-              {...videoConfig}
+              source={{ uri: url }}
+              playInBackground
               onLoad={this.audioLoad}
               onEnd={this.onEnd}
+              paused={paused}
               onProgress={this.onProgress}
               progressUpdateInterval={1000}
             />
-            {(videoConfig.paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close} style={{ marginRight: 9 }}><Image assetName='playerClose' /></TouchableOpacity>}
+            {(paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close} style={{ marginRight: 9 }}><Image assetName='playerClose' /></TouchableOpacity>}
           </View>
           <View flex row centerV paddingR-9>
-            <Image source={{ uri: config.image }} style={styles.image} />
+            <Image source={{ uri: image }} style={styles.image} />
             <View flex paddingL-5>
-              <Text text-14 light numberOfLines={1}>{config.title}</Text>
-              <Text text-12 grey>{position}/{duration}</Text>
+              <Text text-14 light numberOfLines={1}>{title}</Text>
+              <Text text-12 grey>{position}/{time}</Text>
             </View>
           </View>
           <View style={styles.btnWrap} >
-            <TouchableOpacity row activeOpacity={0.6} onPress={pause}><Image assetName='playerArrowUp' /></TouchableOpacity>
+            {!audioEnd && !paused &&
+            <TouchableOpacity row activeOpacity={0.6} onPress={this.toMiniPlayer}><Image assetName='playerArrowUp' tintColor={colors.light} /></TouchableOpacity>
+            }
             <TouchableOpacity style={{ marginLeft: 10 }} row activeOpacity={0.6} onPress={pause}>{
-              (videoConfig.paused || audioEnd) ? <Image assetName='playerPlay' /> : <Image assetName='playerPause' />
+              (paused || audioEnd) ? <Image assetName='playerPlay' /> : <Image assetName='playerPause' />
             }</TouchableOpacity>
           </View>
         </View>
@@ -130,17 +160,16 @@ export default class Player extends Component {
     } else {
       console.warn(`player.hide expected a \`RootSiblings\` instance as argument.\nBut got \`${typeof player}\` instead.`)
     }
-    console.log('close')
     DeviceEventEmitter.emit('playerEvent', {
-      paused: true,
-      ...this.config
+      ...this.config,
+      paused: true
     })
   }
   static pause () {
-    const { config, videoConfig } = this.playerContainer.props
+    const { config } = this.playerContainer.props
     const { state } = this.playerContainer
-    videoConfig.paused = !videoConfig.paused
-    this.play(config, videoConfig, state.audioEnd)
+    config.paused = !config.paused
+    this.play(config, state.audioEnd)
   }
   static getPlayerConfig () {
     let config = this.config
@@ -150,36 +179,35 @@ export default class Player extends Component {
     }
     return config
   }
-  static play (config = {}, videoConfig = {}, audioEnd = false) {
-    videoConfig.playInBackground = true
+  static setStatus (flag) {
+    if (this.player instanceof RootSiblings) {
+      this.playerContainer.setStatus(flag)
+    }
+  }
+  static play (config = {}, audioEnd = false) {
     if (this.player instanceof RootSiblings) {
       if (audioEnd && this.playerContainer) {
-        const { playerRef } = this.playerContainer
         /* 播放完成重置播放状态 */
-        videoConfig.paused = false
+        config.paused = false
         this.playerContainer.updatePlayer()
-        playerRef.seek(0)
       }
       this.player.update(
         <PlayerContainer
           ref={(ref) => { this.playerContainer = ref }}
           config={config}
-          videoConfig={videoConfig}
           pause={() => this.pause()}
           close={() => this.close()} />)
     } else {
+      config.paused = false
       this.player = new RootSiblings(<PlayerContainer
         ref={(ref) => { this.playerContainer = ref }}
         config={config}
-        videoConfig={videoConfig}
         pause={() => this.pause()}
-        close={() => this.close()} />)
+        close={() => this.close()}
+      />)
     }
     this.config = config
-    DeviceEventEmitter.emit('playerEvent', {
-      ...this.config,
-      paused: videoConfig.paused
-    })
+    DeviceEventEmitter.emit('playerEvent', config)
   }
   render () {
     return null

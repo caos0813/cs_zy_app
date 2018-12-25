@@ -7,10 +7,13 @@ function setTopLevelNavigator (navigatorRef) {
 }
 
 function navigate (routeName, params) {
+  console.log(_navigator)
+  console.log(StackActions)
   _navigator.dispatch(
-    StackActions.navigate({
+    NavigationActions.navigate({
       routeName,
-      params
+      params,
+      action: NavigationActions.navigate({ routeName: 'Home' })
     })
   )
 }

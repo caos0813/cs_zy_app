@@ -37,4 +37,11 @@ function transferTime (date) {
   }
   return date
 }
-export { formatDate, transferTime }
+function transferPlayerTime (currentTime) {
+  let m = Math.floor((currentTime || 0) / 60).toString()
+  let s = Math.floor((currentTime || 0) % 60).toString()
+  m = (m.length === 1) ? `0${m}` : m
+  s = (s.length === 1) ? `0${s}` : s
+  return `${m}:${s}`
+}
+export { formatDate, transferTime, transferPlayerTime }

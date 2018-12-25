@@ -33,5 +33,7 @@ export default {
   /* 文章下更多 */
   queryArticleInfoViewMore: '/content/articleInfo/queryArticleInfoViewMore',
   /* 专题-查看更多 */
-  queryViewMore: '/content/articleInfo/queryViewMore'
+  queryViewMore: '/content/articleInfo/queryViewMore',
+  /* banner */
+  bannerDetail: 'content/bannerInfo/queryBannerInfoParticulars'
 }
