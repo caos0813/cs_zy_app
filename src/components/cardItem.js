@@ -4,8 +4,10 @@ import { Image, TouchableOpacity, View, Text } from '../../react-native-ui-lib'
 import PropTypes from 'prop-types'
 import { colors } from '../theme'
 import { imageResize } from '../utils'
+import { configure, observable, action } from 'mobx'
 import { PlayBtn } from '../components'
 export default class CardItem extends Component {
+  @observable paused = true
   constructor (props) {
     super(props)
     this.state = {
@@ -32,7 +34,7 @@ export default class CardItem extends Component {
           <Image ref={(img) => { this.backgroundImage = img }} source={imageSource} style={[styles.image]} onLoadEnd={this.imageLoaded} />
           {fileType !== 0 && <PlayBtn
             size={30}
-            paused='true'
+            paused={this.paused}
             activeOpacity={1}
             viewRef={this.state.viewRef}
           />}

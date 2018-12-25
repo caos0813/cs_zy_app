@@ -3,7 +3,6 @@ import { View, Text, Image, TouchableOpacity, LoaderScreen, Card } from '../../r
 import { inject, observer } from 'mobx-react/native'
 // import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
-// import { UltimateListView } from 'react-native-ultimate-listview'
 import SplashScreen from 'react-native-splash-screen'
 import _ from 'lodash'
 import {
@@ -16,19 +15,32 @@ import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
 import { UltimateListView } from 'react-native-ultimate-listview'
-// import { stringify } from 'querystring'
-@inject('homeStore', 'userStore')
+import { configure, observable, action } from 'mobx'
+configure({
+  enforceActions: 'always'
+})
+@inject('userStore')
 @observer class Home extends Component {
+  @observable showSplash = false
+  @observable bannerData=[]
+  @observable firstArticle={}
+  @observable firstTopic=[]
+  @observable topics=[]
+  @observable specials=[]
+  @action.bound
+  setValue (key, val) {
+    this[key] = val
+  }
   constructor (props) {
     super(props)
     this.OpenUrl = new OpenUrl(props)
     this.state = {
-      bannerActiveIndex: 0,
-      animationConfig: {},
-      articles: []
+      // bannerActiveIndex: 0,
+      animationConfig: {}
     }
   }
   static navigationOptions = ({ navigation, screenProps }) => {
+    console.log(screenProps)
     // 启动页加载完以后再显示底部的tabNav
     let tabBarVisible
     if (screenProps.showSplash) {
@@ -83,8 +95,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     }
   }
   hideSplash = () => {
-    const { setValue } = this.props.homeStore
-    setValue('showSplash', false)
+    this.setValue('showSplash', false)
     storage.save({
       key: 'showSplash',
       data: false
@@ -125,13 +136,15 @@ import { UltimateListView } from 'react-native-ultimate-listview'
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 5
-    const { setValue } = this.props.homeStore
-    const { userInfo } = this.props.userStore
-    // alert(JSON.stringify(userInfo))
+    const userStorage = await storage.load({
+      key: 'userInfo'
+    })
+    let provinceId = userStorage.province.id
+    console.log(provinceId)
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,
-        provinceId: 430000,
+        provinceId: provinceId,
         page: page - 1,
         size: pageSize
       }
@@ -139,23 +152,23 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
       if (page === 1) {
         if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
-          setValue('firstArticle', articleInfoLabelList.content[0])
+          this.setValue('firstArticle', articleInfoLabelList.content[0])
         } else {
-          setValue('firstArticle', [])
+          this.setValue('firstArticle', [])
         }
         if (topicsAndArticlesList.length > 0) {
           let firstTopic = []
           firstTopic.push(topicsAndArticlesList.shift())
-          setValue('firstTopic', firstTopic)
-          setValue('topics', topicsAndArticlesList)
+          this.setValue('firstTopic', firstTopic)
+          this.setValue('topics', topicsAndArticlesList)
         } else {
-          setValue('firstTopic', [])
-          setValue('topics', [])
+          this.setValue('firstTopic', [])
+          this.setValue('topics', [])
         }
         if (provincePolicyList.length > 0) {
-          setValue('specials', provincePolicyList)
+          this.setValue('specials', provincePolicyList)
         } else {
-          setValue('specials', [])
+          this.setValue('specials', [])
         }
       }
       if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
@@ -189,8 +202,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       }, {
         title: '查职业',
         image: require('../assets/home/icon03.png'),
-        href: 'profession-list',
-        isBrowser: true
+        href: 'ByProfession'
       }, {
         title: '测一测',
         image: require('../assets/home/icon05.png'),
@@ -215,7 +227,6 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       obj.image = item.picture
       return obj
     })
-    const { firstArticle, firstTopic, specials, topics } = this.props.homeStore
     return (
       <View style={{ backgroundColor: 'transparent' }}>
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
@@ -229,37 +240,36 @@ import { UltimateListView } from 'react-native-ultimate-listview'
           }
         </View>
         {/* 文章1 */}
-        {firstArticle.length > 0 && <View style={styles.article}>
-          <ItemHead title={firstArticle.labelName} leftIcon='true' />
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: firstArticle.id }) }} title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} fileType={firstArticle.fileType} imageStyle={{ height: 115 }}>
+        {this.firstArticle.length > 0 && <View style={styles.article}>
+          <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
+          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
                 <View row centerV paddingR-10>
                   <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{firstArticle.priseNumber}</Text>
+                  <Text dark06 text-11>{this.firstArticle.priseNumber}</Text>
                 </View>
                 <View row centerV>
                   <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{firstArticle.commentNumner}</Text>
+                  <Text dark06 text-11>{this.firstArticle.commentNumner}</Text>
                 </View>
               </View>
-              <Text dark06 text-11>{transferTime(firstArticle.releaseTime)}</Text>
+              <Text dark06 text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
             </View>
           </CardItem>
         </View>}
         {/* 专题1 */}
-        {this.renderTopics(firstTopic)}
-        {/* <CardItem title='hahah' imageSource={{ uri: 'http://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20181220095309' }} desc='hudhaudhuhaud' fileType='1' /> */}
+        {this.renderTopics(this.firstTopic)}
         {/* 所有特殊专题 */}
         {
-          specials.length > 0 &&
+          this.specials.length > 0 &&
           <View paddingT-10>
-            <ItemHead title='省内高考政策' smallText='true' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
+            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
           </View>
         }
-        {this.renderSpecial(specials)}
+        {this.renderSpecial(this.specials)}
         {/* 剩余专题 */}
-        {this.renderTopics(topics)}
+        {this.renderTopics(this.topics)}
       </View>
     )
   }
@@ -269,7 +279,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     } else {
       return (
         <View style={styles.article} key={index}>
-          <ItemHead title={item.labelName} leftIcon='true' />
+          <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
           <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
@@ -295,13 +305,13 @@ import { UltimateListView } from 'react-native-ultimate-listview'
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} smallText='true' seeAll='true' />
+            <ItemHead onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
           </View>
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -358,7 +368,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     }
   }
   render () {
-    const { showSplash, bannerData } = this.props.homeStore
+    const { showSplash, bannerData } = this
     const { animationConfig } = this.state
     return (
       <View flex useSafeArea>
@@ -386,23 +396,22 @@ import { UltimateListView } from 'react-native-ultimate-listview'
   refresh = () => {
     const { state, replace } = this.props.navigation
     replace(state)
-    /* const { setValue } = this.props.homeStore
+    /*
     this.refs.scroll.refresh()
     axios.get(api.banner).then(data => {
       setValue('bannerData', data.content)
     }) */
   }
   componentDidMount () {
-    const { setValue } = this.props.homeStore
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
-      setValue('bannerData', data.content)
+      this.setValue('bannerData', data.content)
     })
     storage.load({
       key: 'showSplash'
     }).then(data => {
-      setValue('showSplash', false)
+      this.setValue('showSplash', false)
     }).catch(() => {
-      setValue('showSplash', true)
+      this.setValue('showSplash', true)
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()

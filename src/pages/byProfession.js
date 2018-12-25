@@ -60,7 +60,7 @@ configure({
         <View style={styles.iconsWrap} marginV-20>
           {
             this.tagData && this.tagData.map((item, index) => (
-              <ButtonCeil onPress={() => this.pressTag(item)} title={item.name} enlish={item.english} />
+              <ButtonCeil onPress={() => this.pressTag(item)} title={item.name} enlish={item.englishName} />
             ))
           }
         </View>
@@ -72,7 +72,7 @@ configure({
   }
   renderItem = (item, index, separator) => {
     return (
-      <View paddingH-12>
+      <View paddingH-12 marginB-15>
         <CardItem onPress={() => this.openUrl('profession-parent-group', { id: item.id }, true)} title={item.title} imageSource={{ uri: item.picture }} imageStyle={{ height: 115 }} />
       </View>
     )
@@ -101,7 +101,7 @@ configure({
   componentDidMount () {
     axios.get(api.queryCareerInterest).then(data => {
       if (data && data.randomCareerInterests) {
-        data.randomCareerInterests.push({ name: '更多', english: 'more' })
+        data.randomCareerInterests.push({ name: '更多', englishName: 'more' })
         this.setValue('tagData', data.randomCareerInterests)
       }
     }).catch(() => {

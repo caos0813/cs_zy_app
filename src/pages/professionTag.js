@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import { View } from '../../react-native-ui-lib'
+import { StyleSheet, ScrollView } from 'react-native'
+import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { ItemHead, ButtonCeil } from '../components'
 import { api, axios, OpenUrl } from '../utils'
 import { observer, inject } from 'mobx-react/native'
 import { configure, observable, action } from 'mobx'
+import { colors } from '../theme'
 configure({
   enforceActions: 'always'
 })
@@ -28,16 +29,21 @@ configure({
   render () {
     return (
       <View flex useSafeArea>
-        <View>
-          <ItemHead title='全部兴趣标签' />
-        </View>
-        <View style={styles.iconsWrap} marginV-20>
-          {
-            this.tagData && this.tagData.map((item, index) => (
-              <ButtonCeil onPress={() => this.openUrl('profession-list', { id: item.id, name: item.name }, true)} title={item.name} enlish={item.english} />
-            ))
-          }
-        </View>
+        {(!this.tagData || this.tagData.length <= 0) && <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+        {(this.tagData && this.tagData.length > 0) &&
+          <ScrollView>
+            <View>
+              <ItemHead title='全部兴趣标签' />
+            </View>
+            <View style={styles.iconsWrap} marginV-10 paddingL-5>
+              {
+                this.tagData && this.tagData.map((item, index) => (
+                  <ButtonCeil onPress={() => this.openUrl('profession-list', { id: item.id, name: item.name }, true)} title={item.name} enlish={item.englishName} />
+                ))
+              }
+            </View>
+          </ScrollView>
+        }
       </View>
     )
   }
@@ -54,7 +60,7 @@ const styles = StyleSheet.create({
   iconsWrap: {
     flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'flex-start'
   }
 })
 export default ProfessionTag

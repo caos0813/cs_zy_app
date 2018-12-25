@@ -3,11 +3,14 @@ import { StyleSheet, Linking } from 'react-native'
 import { View, Text, Image, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
 import { CardItem, ItemHead } from '../components'
 import { colors } from '../theme'
-import { axios, api, transferTime, ratio } from '../utils'
+import { axios, api, transferTime, ratio, OpenUrl, storage } from '../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
-export default class Page extends Component {
+import { observer, inject } from 'mobx-react/native'
+@inject('userStore')
+@observer class Page extends Component {
   constructor (props) {
     super(props)
+    this.OpenUrl = new OpenUrl(props)
     this.state = {
       articleData: []
     }
@@ -17,16 +20,27 @@ export default class Page extends Component {
       title: navigation.getParam('title', '大学解读')
     }
   }
+  openUrl = (path, query, auth) => {
+    this.OpenUrl.openBrowser(path, query, auth)
+  }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
+  }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
     const pageSize = 10
+    const userStorage = await storage.load({
+      key: 'userInfo'
+    })
+    let provinceId = userStorage.province.id
+    console.log(provinceId)
     axios.get(api.queryViewMore, {
       params: {
         specialTopicInfoId: params.specialTopicInfoId,
         page: page - 1,
         size: pageSize,
         type: params.type,
-        provinceId: 430000
+        provinceId: provinceId
       }
     }).then(data => {
       startFetch(data.content, pageSize)
@@ -41,9 +55,9 @@ export default class Page extends Component {
       return (
         <View style={styles.article} key={index} >
           <View paddingT-10>
-            <ItemHead title={item.specialTopicInfoTitle} leftIcon='true' />
+            <ItemHead title={item.specialTopicInfoTitle} leftIcon='true' smallText='true' />
           </View>
-          <CardItem imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
+          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
         </View>
       )
     } else {
@@ -108,3 +122,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12
   }
 })
+export default Page
