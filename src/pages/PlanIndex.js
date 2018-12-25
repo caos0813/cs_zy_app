@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react/native'
 import { HomeBanner, ItemHead, Item, CardItem, Header, NoNetwork } from '../components'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { colors } from '../theme'
-import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
+import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
 
 @inject('planStore', 'userStore')
 @observer class PlaneIndex extends Component {
@@ -16,22 +16,6 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
       bannerActiveIndex: 0,
       animationConfig: {}
     }
-  }
-  // 转换时间
-  transferTime = (date) => {
-    let timeDiffer = ((new Date().getTime() - date) / (3600 * 1000))
-    if (timeDiffer <= 1) {
-      date = '刚刚'
-    } else if (timeDiffer > 1 && timeDiffer <= 2) {
-      date = '1小时前'
-    } else if (timeDiffer > 2 && timeDiffer < 24) {
-      date = `${Math.round(timeDiffer)}小时前`
-    } else if (timeDiffer >= 24 && timeDiffer <= 48) {
-      date = '昨天'
-    } else if (timeDiffer > 48) {
-      date = formatDate(date, 'M月d日')
-    }
-    return date
   }
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
@@ -74,7 +58,7 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
                   <Text dark06 text-11>{firstArticle.commentNumner}</Text>
                 </View>
               </View>
-              <Text dark06 text-11>{this.transferTime(firstArticle.releaseTime)}</Text>
+              <Text dark06 text-11>{transferTime(firstArticle.releaseTime)}</Text>
             </View>
           </CardItem>
         </View>}
@@ -139,7 +123,7 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
                   <Text dark06 text-11>{item.commentNumner}</Text>
                 </View>
               </View>
-              <Text dark06 text-11>{this.transferTime(item.releaseTime)}</Text>
+              <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
             </View>
           </CardItem>
         </View>
@@ -152,7 +136,7 @@ import { axios, api, imageResize, OpenUrl, formatDate } from '../utils'
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead title={item.title} seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
+            <ItemHead title={item.title} smallText='true' seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           </View>
           <View row style={styles.topics}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&

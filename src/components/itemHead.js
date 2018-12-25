@@ -9,16 +9,17 @@ export default class itemHead extends Component {
   }
   static defaultProps = {
     leftIcon: false,
-    seeAll: false
+    seeAll: false,
+    smallText: false
   }
   renderTitle = (title) => {
-    if (this.props.seeAll) {
+    if (this.props.smallText) {
       return (
-        <Text dark text-24 style={styles.text}>{title}</Text>
+        <Text dark06 text-14 style={styles.text}>{title}</Text>
       )
     } else {
       return (
-        <Text dark06 text-14 style={styles.text}>{title}</Text>
+        <Text dark text-24 style={styles.text}>{title}</Text>
       )
     }
   }
@@ -33,7 +34,6 @@ export default class itemHead extends Component {
         {this.props.seeAll === 'true' && <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
           <Text calm text-14>查看全部</Text>
         </TouchableOpacity>}
-        {/* <Image assetName='cycle' style={styles.icon} /> */}
       </View>
     )
   }

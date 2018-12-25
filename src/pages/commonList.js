@@ -3,7 +3,7 @@ import { StyleSheet, Linking } from 'react-native'
 import { View, Text, Image, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
 import { CardItem, ItemHead } from '../components'
 import { colors } from '../theme'
-import { axios, api, formatDate, ratio } from '../utils'
+import { axios, api, transferTime, ratio } from '../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
 export default class Page extends Component {
   constructor (props) {
@@ -16,22 +16,6 @@ export default class Page extends Component {
     return {
       title: navigation.getParam('title', '大学解读')
     }
-  }
-  // 转换时间
-  transferTime = (date) => {
-    let timeDiffer = ((new Date().getTime() - date) / (3600 * 1000))
-    if (timeDiffer <= 1) {
-      date = '刚刚'
-    } else if (timeDiffer > 1 && timeDiffer <= 2) {
-      date = '1小时前'
-    } else if (timeDiffer > 2 && timeDiffer < 24) {
-      date = `${Math.round(timeDiffer)}小时前`
-    } else if (timeDiffer >= 24 && timeDiffer <= 48) {
-      date = '昨天'
-    } else if (timeDiffer > 48) {
-      date = formatDate(date, 'M月d日')
-    }
-    return date
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
@@ -70,7 +54,7 @@ export default class Page extends Component {
               <View paddingV-10>
                 <Text text-16 dark >{item.title}</Text>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
-                  <Text text-11 gray>{this.transferTime(item.createTime)}</Text>
+                  <Text text-11 gray>{transferTime(item.createTime)}</Text>
                 </View>
               </View>
             </Card.Item>

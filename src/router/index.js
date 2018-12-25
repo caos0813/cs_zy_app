@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
 import store from '../store'
 import { dark04, light, calm, gray } from '../theme/colors'
-import { platform, navigator, statusBarHeight } from '../utils'
+import { platform, navigator, statusBarHeight, ratio } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -17,6 +17,8 @@ import ByCollege from '../pages/byCollege'
 import CommonList from '../pages/commonList'
 import NewsDetail from '../pages/newsDetail'
 import VolunteerAnswer from '../pages/volunteerAnswer'
+import ByProfession from '../pages/byProfession'
+import ProfessionTag from '../pages/professionTag'
 import Test from '../pages/test'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
@@ -80,7 +82,7 @@ const TabStack = createBottomTabNavigator(
         backgroundColor: light,
         paddingBottom: 0,
         paddingTop: 6,
-        borderTopWidth: 1,
+        borderTopWidth: 1 / ratio,
         borderTopColor: gray
       },
       // tab bar的⽂本样式
@@ -143,6 +145,18 @@ const AppNavigation = createStackNavigator(
       screen: ByCollege,
       navigationOptions: () => ({
         title: '查大学'
+      })
+    },
+    ByProfession: {
+      screen: ByProfession,
+      navigationOptions: () => ({
+        title: '查职业'
+      })
+    },
+    ProfessionTag: {
+      screen: ProfessionTag,
+      navigationOptions: () => ({
+        title: '全部兴趣标签'
       })
     },
     CommonList: {
