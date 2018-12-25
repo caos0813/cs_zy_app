@@ -16,6 +16,7 @@ import PlanIndex from '../pages/PlanIndex'
 import ByCollege from '../pages/byCollege'
 import CommonList from '../pages/commonList'
 import NewsDetail from '../pages/newsDetail'
+import VolunteerAnswer from '../pages/volunteerAnswer'
 import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
 import Test from '../pages/test'
@@ -174,6 +175,12 @@ const AppNavigation = createStackNavigator(
     Test: {
       screen: Test
     },
+    VolunteerAnswer: {
+      screen: VolunteerAnswer,
+      navigationOptions: () => ({
+        title: '志愿问答'
+      })
+    },
     Browser: {
       screen: Browser,
       navigationOptions: () => ({
@@ -206,7 +213,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'Home',
+    initialRouteName: 'NewsDetail',
     initialRouteParams: {
       articleId: '389'
     },

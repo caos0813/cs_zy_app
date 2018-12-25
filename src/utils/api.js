@@ -34,6 +34,8 @@ export default {
   queryArticleInfoViewMore: '/content/articleInfo/queryArticleInfoViewMore',
   /* 专题-查看更多 */
   queryViewMore: '/content/articleInfo/queryViewMore',
+  /* banner */
+  bannerDetail: 'content/bannerInfo/queryBannerInfoParticulars',
   /* 获取随机7个职业标签数据 */
   queryCareerInterest: '/zhiyuan/careerGroup/queryCareerInterest',
   /* 职业族群展示列表 */

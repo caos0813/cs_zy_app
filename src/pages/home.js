@@ -53,7 +53,17 @@ configure({
     }
   }
   bannerPress = (item) => {
-    this.openNative('NewsDetail', { articleId: item.id })
+    if (item.articleInfoId) {
+      this.openNative('NewsDetail', { articleId: item.articleInfoId })
+    } else {
+      this.openNative('NewsDetail', { articleId: item.id, type: 'banner' })
+    }
+
+    // if (item.link) {
+    //   Linking.openURL(item.link).catch(err => console.error('An error occurred', err))
+    // } else {
+    //   this.openUrl(`article`, { id: item.id, type: 'banner' })
+    // }
   }
 
   entryZhiyuan = () => {
@@ -213,7 +223,8 @@ configure({
         isSpecial: true
       }, {
         title: '志愿问答',
-        image: require('../assets/home/icon06.png')
+        image: require('../assets/home/icon06.png'),
+        href: 'VolunteerAnswer'
       }, {
         title: '高考咨询',
         image: require('../assets/home/icon07.png')

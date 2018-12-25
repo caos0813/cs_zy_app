@@ -8,11 +8,11 @@ import BackPress from './backPress'
 import { imageResize, imageFormat } from './imageResize'
 import Toast from './toast'
 import OpenUrl from './openUrl'
-import { formatDate, transferTime } from './formatDate'
+import { formatDate, transferTime, transferPlayerTime } from './formatDate'
 import navigator from './navigator'
 
 const platform = Platform.OS
 const ratio = PixelRatio.get()
 const statusBarHeight = StatusBar.currentHeight || 0
 let { width, height } = Dimensions.get('screen')
-export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat, transferTime }
+export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat, transferTime, transferPlayerTime }

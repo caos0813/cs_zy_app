@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, Image, Button, Card, ListItem } from '../../react-native-ui-lib'
+import { Text, View, Avatar, Image, Button, ListItem, Assets } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'
@@ -8,7 +8,13 @@ import { NavigationActions } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
 import Config from 'react-native-config'
 import { Header } from '../components'
-
+Assets.loadAssetsGroup('mine', {
+  info: require('../assets/mine/info.png'),
+  star: require('../assets/mine/star.png'),
+  vip_center: require('../assets/mine/vip_center.png'),
+  feedback: require('../assets/mine/feedback.png'),
+  about: require('../assets/mine/about.png')
+})
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
   static defaultProps = {
@@ -65,17 +71,34 @@ import { Header } from '../components'
             }
             {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />}
           </View>
-          <View row paddingH-11 marginV-20>
-            <Card containerStyle={styles.card} onPress={() => this.openNative('Info', {}, true)} elevation={1}>
-              <Text text-18 dark>我的信息</Text>
-            </Card>
-            <Card containerStyle={styles.card} onPress={() => this.openUrl('favorite', {}, true)} elevation={1}>
-              <Text text-18 dark>我的关注</Text>
-            </Card>
-          </View>
           <View>
+            <ListItem style={styles.item} height={42} onPress={() => this.openNative('Info', {}, true)}>
+              <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
+                <Image assetName='info' assetGroup='mine' />
+              </ListItem.Part>
+              <ListItem.Part containerStyle={{ flex: 1 }}>
+                <Text text-18 dark>我的信息</Text>
+              </ListItem.Part>
+              <ListItem.Part >
+                <Image assetName='arrowRight' />
+              </ListItem.Part>
+            </ListItem>
+            <ListItem style={styles.item} height={42} onPress={() => this.openUrl('favorite', {}, true)} elevation={1}>
+              <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
+                <Image assetName='star' assetGroup='mine' />
+              </ListItem.Part>
+              <ListItem.Part containerStyle={{ flex: 1 }}>
+                <Text text-18 dark>我的关注</Text>
+              </ListItem.Part>
+              <ListItem.Part >
+                <Image assetName='arrowRight' />
+              </ListItem.Part>
+            </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => this.openNative('Pay', {}, true)}>
-              <ListItem.Part left>
+              <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
+                <Image assetName='vip_center' assetGroup='mine' />
+              </ListItem.Part>
+              <ListItem.Part containerStyle={{ flex: 1 }}>
                 <Text text-18 dark>会员中心</Text>
               </ListItem.Part>
               <ListItem.Part >
@@ -83,7 +106,10 @@ import { Header } from '../components'
               </ListItem.Part>
             </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => this.openNative('Feedback', {}, true)}>
-              <ListItem.Part left>
+              <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
+                <Image assetName='feedback' assetGroup='mine' />
+              </ListItem.Part>
+              <ListItem.Part containerStyle={{ flex: 1 }}>
                 <Text text-18 dark>反馈</Text>
               </ListItem.Part>
               <ListItem.Part >
@@ -91,7 +117,10 @@ import { Header } from '../components'
               </ListItem.Part>
             </ListItem>
             <ListItem style={styles.item} height={42} onPress={() => navigate('About')}>
-              <ListItem.Part left>
+              <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
+                <Image assetName='about' assetGroup='mine' />
+              </ListItem.Part>
+              <ListItem.Part containerStyle={{ flex: 1 }}>
                 <Text text-18 dark>关于</Text>
               </ListItem.Part>
               <ListItem.Part >
@@ -145,7 +174,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4
   },
   item: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     paddingHorizontal: 36,
     borderBottomColor: colors.grey,
     borderBottomWidth: 1 / ratio

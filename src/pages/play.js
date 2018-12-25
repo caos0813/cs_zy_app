@@ -1,11 +1,28 @@
 import React, { Component } from 'react'
-import { StyleSheet, findNodeHandle, DeviceEventEmitter, StatusBar, ScrollView } from 'react-native'
+import { StyleSheet, findNodeHandle, DeviceEventEmitter, ScrollView, Modal } from 'react-native'
+import { configure, observable, action } from 'mobx'
+import { observer } from 'mobx-react/native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { BlurView } from 'react-native-blur'
-import { width, statusBarHeight, ratio } from '../utils'
-import { Header } from '../components'
-class Play extends Component {
+import { width, statusBarHeight, transferTime, navigator, transferPlayerTime } from '../utils'
+import { Header, NewsFooter } from '../components'
+import { Player } from '../../react-native-root-ui'
+import _ from 'lodash'
+configure({
+  enforceActions: 'always'
+})
+@observer class Play extends Component {
+  @observable duration = '00:00'
+  @observable position = '00:00'
+  @observable currentTime = 0
+  @observable paused = true
+  @observable data = {
+  }
+  @action.bound
+  setValue (key, val) {
+    this[key] = val
+  }
   static navigationOptions = ({ navigation }) => {
     return {
       header: null
@@ -18,95 +35,91 @@ class Play extends Component {
   imageLoaded= () => {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
   }
-  close=() => {
-    alert(1)
+  play = () => {
+    Player.player && Player.pause()
   }
   render () {
+    const { data, duration, position, paused } = this
     return (
       <View flex useSafeArea>
-        <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         <ScrollView style={styles.scroll}>
           <View style={styles.imageWrap} centerH>
             <Header
               containerStyle={styles.header}
-              showLeft
-              showRight
-              titleContainer={<TouchableOpacity activeOpacity={0.6} onPress={this.close}><Image assetName='playerArrowDown' /></TouchableOpacity>}
+              showLeft={false}
+              showRight={false}
+              titleContainer={<TouchableOpacity activeOpacity={0.6} onPress={this.goBack}>
+                <Image assetName='playerArrowDown' tintColor={colors.light} />
+              </TouchableOpacity>}
             />
             <Image
               style={styles.imageBlur}
               ref={(img) => { this.backgroundImage = img }}
-              source={{ uri: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813' }}
+              source={{ uri: data.picture }}
               onLoadEnd={this.imageLoaded}
             />
-            {this.state.viewRef &&
-            <BlurView
-              style={styles.absolute}
-              viewRef={this.state.viewRef}
-              blurType='light'
-              blurAmount={10}
-            />
+            {this.state.viewRef && data.picture &&
+              <BlurView
+                style={styles.blur}
+                viewRef={this.state.viewRef}
+                blurAmount={100}
+                overlayColor='transparent'
+                downsampleFactor={10}
+              />
             }
             <Image
               style={styles.image}
-              source={{ uri: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813' }}
+              source={{ uri: data.picture }}
             />
-            <View style={styles.progress}>
-              <Text light text-9>1:11/3:00</Text>
+            <View style={[styles.progress]}>
+              <Text light text-9>{position}/{duration}</Text>
             </View>
           </View>
           <View center paddingT-50 paddingB-24>
-            <Text text-24 dark marginB-20>高中生如何做好生涯规划？</Text>
-            <Text text-14 dark06 dark marginB-20>知涯搜·30分钟前</Text>
-            <TouchableOpacity>
-              <Image assetName='playerPlayBig' tintColor={colors.dark} />
+            <Text text-24 dark marginB-20>{data.title}</Text>
+            <Text text-14 dark06 dark marginB-20>{transferTime(data.releaseTime)}</Text>
+            <TouchableOpacity onPress={this.play}>
+              <Image assetName={paused ? 'playerPlayBig' : 'playerPausedBig'} tintColor={colors.dark} />
             </TouchableOpacity>
           </View>
         </ScrollView>
-        <View style={styles.footer} >
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='detail' />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='attention' />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='comment' />
-            <Text text-14 dark06 marginL-5>66</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='share' />
-          </TouchableOpacity>
-        </View>
+        <NewsFooter />
       </View>
     )
   }
+  goBack=() => {
+    navigator.goBack()
+  }
+  componentWillUnmount () {
+    Player.player && Player.setStatus(true)
+    this.playerEvent.remove()
+  }
   componentDidMount () {
+    const { setValue, data } = this
+    Player.player && Player.setStatus(false)
+    this.playerEvent = DeviceEventEmitter.addListener('playerEvent', e => {
+      console.log(e)
+      const { duration, currentTime, others, paused } = e
+      setValue('paused', paused)
+      if (_.isEmpty(data)) {
+        setValue('data', others)
+      }
+      setValue('position', transferPlayerTime(currentTime))
+      setValue('duration', transferPlayerTime(duration))
+    })
   }
 }
 export default Play
 const styles = StyleSheet.create({
-  footer: {
-    borderTopColor: colors.grey,
-    borderTopWidth: 1 / ratio,
-    flexDirection: 'row',
-    height: 50
-  },
   progress: {
     backgroundColor: 'rgba(0, 0, 0, 0.65)',
     position: 'absolute',
-    left: 0,
+    left: '50%',
+    marginLeft: -30,
     bottom: -6,
     paddingHorizontal: 5,
     paddingVertical: 3,
-    borderRadius: 5
-  },
-  footerCeil: {
-    height: '100%',
-    flexDirection: 'row',
-    width: '25%',
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderRadius: 12
   },
   scroll: {
     flex: 1
@@ -117,8 +130,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     zIndex: 10
   },
-  absolute: {
-    position: 'absolute'
+  blur: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    left: 0
   },
   image: {
     position: 'absolute',
@@ -130,7 +146,6 @@ const styles = StyleSheet.create({
   imageBlur: {
     width: width,
     height: 425 + statusBarHeight,
-    borderRadius: 10,
-    transform: [{ scale: 0.75 }]
+    opacity: 0
   }
 })
