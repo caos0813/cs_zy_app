@@ -1,64 +1,55 @@
 import React, { Component } from 'react'
 import {
-  StyleSheet,
-  Animated
+  StyleSheet
 } from 'react-native'
-import { width, height } from '../utils'
+import * as Animatable from 'react-native-animatable'
 export default class Progress extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      // show: false,
-      opacity: new Animated.Value(0)
-    }
+  }
+  state={
+    show: false,
+    animationConfig: {}
   }
   show = () => {
-    this.state.opacity.setValue(0)
     this.setState({
-      show: true
-    })
-    Animated.timing(
-      this.state.opacity,
-      {
-        toValue: 1,
-        duration: 200
+      show: true,
+      animationConfig: {
+        animation: 'fadeIn',
+        duration: 150
       }
-    ).start()
+    })
   }
   status () {
     return this.state.show
   }
   hide = () => {
-    Animated.timing(
-      this.state.opacity,
-      {
-        toValue: 0,
-        duration: 200
+    this.setState({
+      animationConfig: {
+        animation: 'fadeOut',
+        duration: 150,
+        onAnimationEnd: () => {
+          this.setState({
+            show: false
+          })
+        }
       }
-    ).start(() => {
-      this.setState({
-        show: false
-      })
     })
   }
   render () {
-    if (this.state.show) {
-      return (
-        <Animated.View style={[styles.wrap, { opacity: this.state.opacity }]}></Animated.View>
-      )
-    } else {
-      return null
-    }
+    const { animationConfig, show } = this.state
+    return show ? <Animatable.View style={[styles.wrap]} {...animationConfig} /> : null
   }
 }
 const styles = StyleSheet.create({
   wrap: {
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    height: height,
-    width: width,
+    height: '100%',
+    width: '100%',
     position: 'absolute',
-    left: 0,
     top: 0,
+    left: 0,
+    bottom: 0,
     zIndex: 1001
   }
 })

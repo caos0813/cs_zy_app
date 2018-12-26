@@ -6,32 +6,39 @@ import { ratio } from '../utils'
 import PropTypes from 'prop-types'
 export default class Footer extends Component {
   static propTypes = {
-    id: PropTypes.string,
-    isPrise: PropTypes.string,
-    commentNumber: PropTypes.func,
+    isPrise: PropTypes.bool,
+    commentNumber: PropTypes.number,
     showLink: PropTypes.bool,
+    isCollect: PropTypes.bool,
+    showCollect: PropTypes.bool,
     onPress: PropTypes.func
   }
   static defaultProps = {
-    showLink: true
+    showLink: true,
+    showCollect: false
   }
   render () {
-    const { id, isPrise, commentNumber, showLink, onPress } = this.props
+    const { isPrise, commentNumber, showLink, onPress, isCollect, showCollect } = this.props
     return (
       <View style={styles.footer} >
         {showLink &&
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} >
+        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('detail')}>
           <Image assetName='detail' />
         </TouchableOpacity>
         }
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} >
-          <Image assetName='attention' tintColor={isPrise ? colors.assertive : colors.dark} />
+        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('attention')}>
+          {isPrise ? <Image assetName='attention_active' /> : <Image assetName='attention' />}
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} >
+        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('comment')}>
           <Image assetName='comment' />
           <Text text-14 dark06 marginL-5>{commentNumber}</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
+        {showCollect &&
+        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('star')}>
+          {isCollect ? <Image assetName='star_active' /> : <Image assetName='star' />}
+        </TouchableOpacity>
+        }
+        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('share')}>
           <Image assetName='share' />
         </TouchableOpacity>
       </View>

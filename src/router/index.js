@@ -1,8 +1,8 @@
 import React from 'react'
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
+import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation'
 import store from '../store'
-import { dark04, light, calm, gray } from '../theme/colors'
-import { platform, navigator, statusBarHeight, ratio } from '../utils'
+import { dark, light, calm, gray } from '../theme/colors'
+import { platform, navigator, statusBarHeight, ratio, width } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -19,6 +19,8 @@ import NewsDetail from '../pages/newsDetail'
 import VolunteerAnswer from '../pages/volunteerAnswer'
 import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
+import Comment from '../pages/comment/comment'
+import Praise from '../pages/comment/praise'
 import Test from '../pages/test'
 import { BackAvatar } from '../components'
 import { Image, View } from '../../react-native-ui-lib'
@@ -107,12 +109,101 @@ const TabStack = createBottomTabNavigator(
     initialRouteName: 'Index'
   }
 )
+const CommentTab = createMaterialTopTabNavigator({
+  Comment: {
+    screen: Comment,
+    navigationOptions: () => ({
+      tabBarLabel: '评论'
+    })
+  },
+  Praise: {
+    screen: Praise,
+    navigationOptions: () => ({
+      tabBarLabel: '点赞'
+    })
+  }
+}, {
+  tabBarOptions: {
+    style: {
+      elevation: 0,
+      borderColor: colors.gray,
+      backgroundColor: colors.light,
+      borderBottomWidth: 1 / ratio
+    },
+    indicatorStyle: {
+      borderColor: colors.dark04,
+      width: 110,
+      left: (width / 2 - 110) / 2,
+      borderBottomWidth: 2,
+      zIndex: 10
+    },
+    labelStyle: {
+      fontSize: 16,
+      color: colors.dark06
+    }
+  },
+  initialRouteName: 'Comment'
+})
+/* const CommentStack = createStackNavigator({
+  Comment: {
+    screen: CommentTab,
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
+      headerStyle: {
+        height: 44,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        overflow: 'hidden',
+        borderBottomColor: gray,
+        elevation: 0,
+        borderBottomWidth: 0
+      },
+      title: '互动',
+      headerTitleStyle: {
+        fontSize: 18,
+        fontWeight: 'normal',
+        color: dark
+      }
+    })
+  }
+}, {
+  initialRouteName: 'Comment',
+  headerLayoutPreset: 'center',
+  cardStyle: {
+    backgroundColor: colors.dark
+  }
+}
+) */
 const AppNavigation = createStackNavigator(
   {
     Login: {
       screen: Login,
       navigationOptions: () => ({
         title: '登录'
+      })
+    },
+    Comment: {
+      screen: CommentTab,
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
+        headerStyle: {
+          height: 44,
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          overflow: 'hidden',
+          borderBottomColor: gray,
+          elevation: 0,
+          borderBottomWidth: 0
+        },
+        title: '互动',
+        headerTitleStyle: {
+          fontSize: 18,
+          fontWeight: 'normal',
+          color: dark
+        },
+        cardStyle: {
+          backgroundColor: colors.dark
+        }
       })
     },
     Home: {
@@ -191,11 +282,12 @@ const AppNavigation = createStackNavigator(
   {
     navigationOptions: ({ navigation, screenProps }) => ({
       // gesturesEnabled: true,
-      // headerLeft: <BackAvatar onPress={navigation.goBack} />
-      headerBackImage: <View style={{ width: 35, height: 35, display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Image
+      headerLeft: <BackAvatar onPress={navigation.goBack} />,
+      /* headerBackImage: <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}><Image
         source={require('../assets/icons/ic_back.png')}
         tintColor={colors.dark}
-      /></View>,
+      /></View>, */
+      headerPressColorAndroid: 'transparent',
       headerStyle: {
         height: 44 + screenProps.statusBarHeight,
         paddingTop: screenProps.statusBarHeight,
@@ -206,20 +298,27 @@ const AppNavigation = createStackNavigator(
       headerTitleStyle: {
         fontSize: 18,
         fontWeight: 'normal',
-        color: dark04
+        color: dark
       }
     }),
     headerLayoutPreset: 'center',
     cardStyle: {
-      backgroundColor: light
+      backgroundColor: colors.light
     },
-    initialRouteName: 'NewsDetail',
+    initialRouteName: 'Comment',
     initialRouteParams: {
       articleId: '389'
     },
-    transitionConfig: () => ({
-      screenInterpolator: StackViewStyleInterpolator.forHorizontal
-    })
+    transitionConfig: ({ scene }) => {
+      const { route } = scene
+      let animation = StackViewStyleInterpolator.forHorizontal
+      if (route.routeName === 'Comment') {
+        animation = StackViewStyleInterpolator.forVertical
+      }
+      return {
+        screenInterpolator: animation
+      }
+    }
   }
 )
 const app = () => <AppNavigation

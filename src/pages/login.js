@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Button, TouchableOpacity } from '../../react-native-ui-lib/src'
 import { inject, observer } from 'mobx-react/native'
-import { CodeInput, LoginInput } from '../components'
+import { LoginInput } from '../components'
 import { api, axios, Toast, height } from '../utils'
 import { StyleSheet, Keyboard, AppState } from 'react-native'
 import { NavigationActions } from 'react-navigation'
@@ -116,21 +116,7 @@ let timer
               }
             </View>
             <View center marginT-20 style={{ height: 60 }}>
-              <CodeInput
-                ref='codeInput'
-                activeColor={colors.calm}
-                inactiveColor={colors.gray}
-                className={'border-b'}
-                space={12}
-                size={34}
-                codeLength={6}
-                inputPosition='left'
-                onFulfill={(code) => setValue('verificationCode', code)}
-                codeInputStyle={{
-                  fontSize: 32,
-                  color: colors.calm
-                }}
-              />
+              <LoginInput placeholder='请输入验证码' onChangeText={code => setValue('verificationCode', code)} maxLength={6} />
             </View>
             <View paddingT-100 paddingH-5>
               <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />
@@ -172,7 +158,6 @@ let timer
   componentWillUnmount () {
     const { setValue } = this.props.loginStore
     setValue('verificationCode', '')
-    this.refs.codeInput && this.refs.codeInput.clear()
     this.clearTimer()
     AppState.removeEventListener('change', this._handleAppStateChange)
   }

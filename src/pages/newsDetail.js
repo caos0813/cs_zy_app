@@ -7,8 +7,9 @@ import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime } from '../utils'
 import Video from 'react-native-video'
-import { Header, ItemHead, PlayBtn } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { Header, ItemHead, PlayBtn, NewsFooter } from '../components'
+import { Player, Share } from '../../react-native-root-ui'
+import _ from 'lodash'
 configure({
   enforceActions: 'always'
 })
@@ -56,6 +57,37 @@ configure({
     const { setValue } = this
     const { duration } = e
     setValue('duration', transferPlayerTime(duration))
+  }
+  footerFunc=(e) => {
+    let copyData = _.clone(this.data)
+    switch (e) {
+      case 'share':
+        Share.show({
+          thumbImage: this.data.picture,
+          // description: PropTypes.string,
+          title: this.data.title,
+          // webpageUrl: PropTypes.string,
+          shareCallback: () => {
+
+          }
+        })
+        break
+      case 'attention':
+        axios.post(api.changePraiseState, { articleId: this.data.id }).then(data => {
+          copyData.isPrise = !copyData.isPrise
+          this.setValue('data', copyData)
+        })
+        break
+      case 'star':
+        axios.post(api.changePraiseCollect, { articleId: this.data.id }).then(data => {
+          copyData.isCollect = !copyData.isCollect
+          this.setValue('data', copyData)
+        })
+        break
+      case 'comment':
+        navigator.push('Comment', { articleId: this.data.id })
+        break
+    }
   }
   render () {
     const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
@@ -154,19 +186,16 @@ configure({
             </View>
           }
         </ScrollView>
+
         {!hideFooter &&
-        <View style={styles.footer} >
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='attention' tintColor={data.isPrise ? colors.assertive : colors.dark} />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='comment' />
-            <Text text-14 dark06 marginL-5>{data.commentNumber}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil}>
-            <Image assetName='share' />
-          </TouchableOpacity>
-        </View>
+          <NewsFooter
+            isCollect={this.data.isCollect}
+            isPrise={this.data.isPrise}
+            commentNumber={this.data.commentNumber}
+            showCollect
+            showLink={false}
+            onPress={this.footerFunc}
+          />
         }
       </View>
     )

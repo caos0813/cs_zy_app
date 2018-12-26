@@ -10,7 +10,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
@@ -414,6 +414,7 @@ configure({
     }) */
   }
   componentDidMount () {
+    const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
@@ -436,6 +437,15 @@ configure({
     }
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
+    Linking.getInitialURL().then((url) => {
+      console.log(url)
+      if (url) {
+        const { id } = getUrlParams(url)
+        setTimeout(() => {
+          navigate('NewsDetail', { articleId: id })
+        }, 200)
+      }
+    })
   }
 }
 
