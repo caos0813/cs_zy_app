@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, Image, Button, ListItem, Assets } from '../../react-native-ui-lib'
+import { Text, View, Avatar, Image, Button, ListItem } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'
@@ -8,13 +8,6 @@ import { NavigationActions } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
 import Config from 'react-native-config'
 import { Header } from '../components'
-Assets.loadAssetsGroup('mine', {
-  info: require('../assets/mine/info.png'),
-  star: require('../assets/mine/star.png'),
-  vip_center: require('../assets/mine/vip_center.png'),
-  feedback: require('../assets/mine/feedback.png'),
-  about: require('../assets/mine/about.png')
-})
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
   static defaultProps = {

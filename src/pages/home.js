@@ -414,6 +414,7 @@ configure({
     }) */
   }
   componentDidMount () {
+    const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
@@ -437,9 +438,12 @@ configure({
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
     Linking.getInitialURL().then((url) => {
+      console.log(url)
       if (url) {
         const { id } = getUrlParams(url)
-        this.openNative('NewsDetail', { articleId: id })
+        setTimeout(() => {
+          navigate('NewsDetail', { articleId: id })
+        }, 200)
       }
     })
   }
