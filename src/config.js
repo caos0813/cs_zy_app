@@ -1,9 +1,8 @@
 import Config from 'react-native-config'
 let config = {}
 if (Config.ENV === 'development') {
-  config.WEB_URL = 'http://codepush.junyanginfo.com:8080/#/'
-  config.BASE_URL = 'http://192.168.1.142:8763'
-  // config.WEB_URL = 'http://codepush.junyanginfo.com:8080/#/'
+  config.BASE_URL = 'http://192.168.1.142:8763/'
+  config.WEB_URL = 'http://192.168.1.77:8082/#/'
 } else if (Config.ENV === 'staging') {
   config.BASE_URL = 'http://testapp.zhiyazhiyuan.com:8763/'
   config.WEB_URL = 'http://codepush.junyanginfo.com:8080/#/'

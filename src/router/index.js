@@ -21,8 +21,9 @@ import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
 import Test from '../pages/test'
 import { BackAvatar } from '../components'
-import { Image } from '../../react-native-ui-lib'
+import { Image, View } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
+import { colors } from '../theme'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 
 const TabStack = createBottomTabNavigator(
@@ -190,7 +191,11 @@ const AppNavigation = createStackNavigator(
   {
     navigationOptions: ({ navigation, screenProps }) => ({
       // gesturesEnabled: true,
-      headerLeft: <BackAvatar onPress={navigation.goBack} />,
+      // headerLeft: <BackAvatar onPress={navigation.goBack} />
+      headerBackImage: <View style={{ width: 35, height: 35, display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Image
+        source={require('../assets/icons/ic_back.png')}
+        tintColor={colors.dark}
+      /></View>,
       headerStyle: {
         height: 44 + screenProps.statusBarHeight,
         paddingTop: screenProps.statusBarHeight,

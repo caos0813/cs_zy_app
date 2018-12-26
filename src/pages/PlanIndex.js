@@ -45,7 +45,7 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
         </View>
         {/* 文章1 */}
         {firstArticle.length > 0 && <View style={styles.article}>
-          <ItemHead title={firstArticle.labelName} leftIcon='true' />
+          <ItemHead smallText='true' title={firstArticle.labelName} leftIcon='true' />
           <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: firstArticle.id }) }} imageStyle={{ height: 115 }} title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} fileType={firstArticle.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
@@ -110,7 +110,7 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
     } else {
       return (
         <View style={styles.article} key={index} >
-          <ItemHead title={item.labelName} leftIcon='true' />
+          <ItemHead smallText='true' title={item.labelName} leftIcon='true' />
           <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
@@ -136,7 +136,7 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead title={item.title} smallText='true' seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
+            <ItemHead title={item.title} seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           </View>
           <View row style={styles.topics}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&

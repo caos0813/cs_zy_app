@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Avatar, Assets } from '../../react-native-ui-lib'
 export default class BackAvatar extends Component {
-  _onPress=() => {
+  _onPress = () => {
     const { onPress } = this.props
     if (onPress) {
       onPress()

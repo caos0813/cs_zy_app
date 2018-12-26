@@ -22,8 +22,8 @@ export default class PlayBtn extends Component {
       <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity} style={[styles.wrap, style, { width: size, height: size, borderRadius: size }]}>
         {viewRef && <BlurView
           viewRef={viewRef}
-          blurType='light'
-          blurAmount={2}
+          blurType='dark'
+          blurAmount={20}
           overlayColor='transparent'
           blurRadius={1}
         />}
