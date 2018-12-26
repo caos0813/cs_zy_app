@@ -11,7 +11,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
@@ -427,6 +427,12 @@ import { UltimateListView } from 'react-native-ultimate-listview'
     }
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        const { id } = getUrlParams(url)
+        this.openNative('NewsDetail', { articleId: id })
+      }
+    })
   }
 }
 

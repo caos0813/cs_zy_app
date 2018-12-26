@@ -208,7 +208,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: light
     },
-    initialRouteName: 'NewsDetail',
+    initialRouteName: 'Home',
     initialRouteParams: {
       articleId: '389'
     },
