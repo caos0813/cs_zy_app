@@ -5,7 +5,7 @@ import { configure, observable, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
-import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime } from '../utils'
+import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime, OpenUrl } from '../utils'
 import Video from 'react-native-video'
 import { Header, ItemHead, PlayBtn, NewsFooter } from '../components'
 import { Player, Share } from '../../react-native-root-ui'
@@ -13,7 +13,7 @@ import _ from 'lodash'
 configure({
   enforceActions: 'always'
 })
-@inject('routeStore')
+@inject('routeStore', 'userStore')
 @observer class Page extends Component {
   @observable duration = '00:00'
   @observable position = '00:00'
@@ -31,6 +31,7 @@ configure({
   }
   constructor (props) {
     super(props)
+    this.OpenUrl = new OpenUrl(props)
   }
   onNavigationStateChange = (e) => {
     const { title } = e
@@ -58,7 +59,7 @@ configure({
     const { duration } = e
     setValue('duration', transferPlayerTime(duration))
   }
-  footerFunc=(e) => {
+  footerFunc = (e) => {
     let copyData = _.clone(this.data)
     switch (e) {
       case 'share':
@@ -89,8 +90,15 @@ configure({
         break
     }
   }
+  openUrl = (path, query, auth) => {
+    this.OpenUrl.openBrowser(path, query, auth)
+  }
+  openNative = (path, query, auth) => {
+    this.OpenUrl.openNative(path, query, auth)
+  }
   render () {
     const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
+    const { params } = this.props.navigation.state
     return (
       <View flex useSafeArea>
         <Header
@@ -171,7 +179,8 @@ configure({
           <View center paddingV-30><Text text-12 dark06>--END</Text></View>
           {data.isMore &&
             <View paddingT-10>
-              <ItemHead title='更多' seeAll='true' />
+              <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: params.title })} title='更多' seeAll='true' />
+              {/* <ItemHead title='更多' seeAll='true' /> */}
               <View paddingH-25>
                 {moreData.map((item) => (
                   <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>

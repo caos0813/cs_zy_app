@@ -3,7 +3,7 @@ import { StyleSheet, Linking } from 'react-native'
 import { View, Text, Image, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
 import { CardItem, ItemHead } from '../components'
 import { colors } from '../theme'
-import { axios, api, transferTime, ratio, OpenUrl, storage } from '../utils'
+import { axios, api, transferTime, ratio, OpenUrl, storage, navigator } from '../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { observer, inject } from 'mobx-react/native'
 @inject('userStore')
@@ -32,7 +32,7 @@ import { observer, inject } from 'mobx-react/native'
     const userStorage = await storage.load({
       key: 'userInfo'
     })
-    let provinceId = userStorage.province.id
+    let provinceId = userStorage.province ? userStorage.province.id : 430000
     console.log(provinceId)
     axios.get(api.queryViewMore, {
       params: {
@@ -57,7 +57,7 @@ import { observer, inject } from 'mobx-react/native'
           <View paddingT-10>
             <ItemHead title={item.specialTopicInfoTitle} leftIcon='true' smallText='true' />
           </View>
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
+          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
         </View>
       )
     } else {
