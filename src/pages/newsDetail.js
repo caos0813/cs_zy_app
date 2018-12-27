@@ -57,7 +57,7 @@ configure({
     const { duration } = e
     setValue('duration', transferPlayerTime(duration))
   }
-  footerFunc=(e) => {
+  footerFunc = (e) => {
     switch (e) {
       case 'share':
         Share.show({

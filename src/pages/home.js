@@ -40,10 +40,10 @@ configure({
     }
   }
   static navigationOptions = ({ navigation, screenProps }) => {
-    console.log(screenProps)
+    console.log(this.showSplash)
     // 启动页加载完以后再显示底部的tabNav
     let tabBarVisible
-    if (screenProps.showSplash) {
+    if (this.showSplash) {
       tabBarVisible = false
     } else {
       tabBarVisible = true
