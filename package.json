@@ -47,6 +47,7 @@
     "react-native-video": "^4.2.0",
     "react-native-webview": "^2.14.3",
     "react-native-wechat": "^1.9.10",
+    "react-navigation-stack": "./react-navigation-stack",
     "react-navigation": "^2.8.13"
   },
   "devDependencies": {

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, KeyboardAvoidingView, Keyboard } from 'react-native'
+import { StyleSheet, KeyboardAvoidingView, Keyboard, StatusBar } from 'react-native'
 import { configure, observable, action } from 'mobx'
 import { observer } from 'mobx-react/native'
-import { View, Text, Image, TextInput, Button, LoaderScreen } from '../../../react-native-ui-lib'
+import { View, Text, Image, TouchableOpacity, TextInput, Button, LoaderScreen } from '../../../react-native-ui-lib'
 import { colors } from '../../theme'
-import { ratio, api, axios, Toast } from '../../utils'
+import { ratio, api, axios, Toast, transferTime, imageFormat } from '../../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
 configure({
   enforceActions: 'always'
@@ -32,8 +32,9 @@ configure({
       Toast('发布成功')
       Keyboard.dismiss()
       setValue('content', '')
-    }).catch(() => {
-      Toast('发布失败')
+      this.listScroll.refresh()
+    }).catch((err) => {
+      Toast(err.message || '发布失败')
     })
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
@@ -53,15 +54,32 @@ configure({
       abortFetch()
     })
   }
+  deleteComment=(id) => {
+    const { getParam } = this.props.navigation
+    axios.post(api.deleteComment, {
+      articleInfoId: getParam('articleId'),
+      id
+    }).then(data => {
+      Toast('删除成功')
+      this.listScroll.refresh()
+    }).catch(() => {
+      Toast('操作失败')
+    })
+  }
   renderItem = (item, index) => {
     return (
       <View paddingV-15 row style={styles.item}>
-        <Image source={{ uri: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813' }} borderRadius={40} style={{ width: 38, height: 38 }} />
+        <Image source={imageFormat(item.userImage, true)} borderRadius={40} style={{ width: 38, height: 38 }} />
         <View flex paddingL-7>
-          <Text text-16 dark>舔狗之家</Text>
-          <Text text-12 dark06>一分钟前</Text>
-          <Text text-14 dark06 marginT-5>那段时间我几乎天天都要画画，画很多不同的“小人”。根据文章配图的需要，“小人”经常要表演出不同的姿势，不同的神情，时而忧伤，时而狂喜，大部分的时候我喜欢画他们面无表情。</Text>
+          <Text text-16 dark>{item.userName}</Text>
+          <Text text-12 dark06>{transferTime(item.commentTime)}</Text>
+          <Text text-14 dark06 marginT-5>{item.content}</Text>
         </View>
+        {item.deleteState &&
+        <TouchableOpacity activeOpacity={0.6} onPress={() => this.deleteComment(item.id)}>
+          <Image assetName='delete' />
+        </TouchableOpacity>
+        }
       </View>
     )
   }
@@ -70,7 +88,7 @@ configure({
     return (
       <View flex bg-light>
         <View paddingH-15 flex style={this.props.style}>
-          <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+          <UltimateListView ref={(ref) => { this.listScroll = ref }} style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
             onFetch={this.onFetch}
             item={this.renderItem}
             refreshable={false}
@@ -98,6 +116,16 @@ configure({
         </KeyboardAvoidingView>
       </View>
     )
+  }
+  componentWillUnmount () {
+    StatusBar.setTranslucent(true)
+    StatusBar.setBackgroundColor('transparent', true)
+    StatusBar.setBarStyle('dark-content', true)
+  }
+  componentDidMount () {
+    StatusBar.setTranslucent(false)
+    StatusBar.setBackgroundColor(colors.dark, true)
+    StatusBar.setBarStyle('light-content', true)
   }
 }
 export default Page

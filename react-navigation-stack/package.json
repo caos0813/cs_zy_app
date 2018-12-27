@@ -1,0 +1,90 @@
+{
+  "_args": [
+    [
+      "react-navigation-stack@0.7.0",
+      "E:\\zyzy_app"
+    ]
+  ],
+  "_from": "react-navigation-stack@0.7.0",
+  "_id": "react-navigation-stack@0.7.0",
+  "_inBundle": false,
+  "_integrity": "sha1-Cy8TnuHLqVMDfvUTU9+ZLsbHT6I=",
+  "_location": "/react-navigation-stack",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-navigation-stack@0.7.0",
+    "name": "react-navigation-stack",
+    "escapedName": "react-navigation-stack",
+    "rawSpec": "0.7.0",
+    "saveSpec": null,
+    "fetchSpec": "0.7.0"
+  },
+  "_requiredBy": [
+    "/react-navigation"
+  ],
+  "_resolved": "http://registry.npm.taobao.org/react-navigation-stack/download/react-navigation-stack-0.7.0.tgz",
+  "_spec": "0.7.0",
+  "_where": "E:\\zyzy_app",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation-stack/issues"
+  },
+  "dependencies": {},
+  "description": "Stack navigator component for React Navigation",
+  "devDependencies": {
+    
+  },
+  "files": [
+    "dist/"
+  ],
+  "homepage": "https://github.com/react-navigation/react-navigation-stack#readme",
+  "jest": {
+    "preset": "react-native",
+    "testRegex": "/__tests__/[^/]+-test\\.js$",
+    "setupFiles": [
+      "<rootDir>/jest-setup.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "jest-setup.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|react-navigation-deprecated-tab-navigator|react-navigation)"
+    ]
+  },
+  "keywords": [
+    "react-native-component",
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "stack"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "react-navigation-stack",
+  "peerDependencies": {
+    
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-navigation/react-navigation-stack.git"
+  },
+  "scripts": {
+    "build": "babel --no-babelrc --plugins=syntax-jsx,syntax-class-properties,syntax-object-rest-spread,transform-flow-strip-types src --copy-files --out-dir dist --ignore '**/__tests__/**'",
+    "format": "eslint . --fix",
+    "lint": "eslint .",
+    "precommit": "yarn lint && yarn test",
+    "prepare": "yarn build",
+    "test": "jest"
+  },
+  "version": "0.7.0"
+}
