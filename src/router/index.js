@@ -1,4 +1,5 @@
 import React from 'react'
+import { Animated, Easing } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation'
 import store from '../store'
 import { dark, light, calm, gray } from '../theme/colors'
@@ -309,14 +310,23 @@ const AppNavigation = createStackNavigator(
     initialRouteParams: {
       articleId: '389'
     },
-    transitionConfig: ({ scene }) => {
-      const { route } = scene
-      let animation = StackViewStyleInterpolator.forHorizontal
-      if (route.routeName === 'Comment') {
-        animation = StackViewStyleInterpolator.forVertical
+    transitionConfig: (transitionProps, prevTransitionProps) => {
+      const currentPage = transitionProps.scene
+      const prePage = prevTransitionProps && prevTransitionProps.scene
+      let amimate = StackViewStyleInterpolator.forHorizontal
+      const arr = ['Comment', 'Play']
+      if (currentPage && prePage) {
+        if (arr.indexOf(currentPage.route.routeName) > -1 || arr.indexOf(prePage.route.routeName) > -1) {
+          amimate = StackViewStyleInterpolator.forVertical
+        }
       }
       return {
-        screenInterpolator: animation
+        transitionSpec: {
+          duration: 200,
+          easing: Easing.out(Easing.poly(4)),
+          timing: Animated.timing
+        },
+        screenInterpolator: amimate
       }
     }
   }

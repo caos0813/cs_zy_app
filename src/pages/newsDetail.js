@@ -73,19 +73,19 @@ configure({
         })
         break
       case 'attention':
-        axios.post(api.changePraiseState, { articleId: this.data.id }).then(data => {
+        axios.post(api.changePraiseState, { articleInfoId: this.data.id }).then(data => {
           copyData.isPrise = !copyData.isPrise
           this.setValue('data', copyData)
         })
         break
       case 'star':
-        axios.post(api.changePraiseCollect, { articleId: this.data.id }).then(data => {
+        axios.post(api.changePraiseCollect, { articleInfoId: this.data.id }).then(data => {
           copyData.isCollect = !copyData.isCollect
           this.setValue('data', copyData)
         })
         break
       case 'comment':
-        navigator.push('Comment', { articleId: this.data.id })
+        navigator.push('Comment', { articleInfoId: this.data.id })
         break
     }
   }
