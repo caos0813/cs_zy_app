@@ -305,7 +305,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: colors.light
     },
-    initialRouteName: 'Comment',
+    initialRouteName: 'Home',
     initialRouteParams: {
       articleId: '389'
     },

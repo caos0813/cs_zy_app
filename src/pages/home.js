@@ -22,11 +22,11 @@ configure({
 @inject('userStore')
 @observer class Home extends Component {
   @observable showSplash = false
-  @observable bannerData=[]
-  @observable firstArticle={}
-  @observable firstTopic=[]
-  @observable topics=[]
-  @observable specials=[]
+  @observable bannerData = []
+  @observable firstArticle = {}
+  @observable firstTopic = []
+  @observable topics = []
+  @observable specials = []
   @action.bound
   setValue (key, val) {
     this[key] = val
@@ -40,10 +40,10 @@ configure({
     }
   }
   static navigationOptions = ({ navigation, screenProps }) => {
-    console.log(screenProps)
     // 启动页加载完以后再显示底部的tabNav
     let tabBarVisible
-    if (screenProps.showSplash) {
+    alert(this.showSplash)
+    if (screenProps.showSplash === undefined) {
       tabBarVisible = false
     } else {
       tabBarVisible = true
@@ -414,6 +414,8 @@ configure({
     }) */
   }
   componentDidMount () {
+    console.log(1111)
+    console.log(this.showSplash)
     const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
