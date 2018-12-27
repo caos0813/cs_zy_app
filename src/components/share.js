@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Text, Assets, Image, TouchableOpacity } from '../../react-native-ui-lib'
+import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import * as WeChat from 'react-native-wechat'
 import JShareModule from 'jshare-react-native'
 import PropTypes from 'prop-types'
 import { colors } from '../theme'
 import Header from './header'
 import { platform } from '../utils'
-Assets.loadAssetsGroup('share', {
-  close: require('../assets/share/close.png'),
-  wechat: require('../assets/share/wechat.png'),
-  timeline: require('../assets/share/timeline.png'),
-  qq: require('../assets/share/qq.png'),
-  weibo: require('../assets/share/weibo.png')
-})
 export default class Share extends Component {
   static propTypes={
     thumbImage: PropTypes.string,

@@ -39,5 +39,19 @@ export default {
   /* 获取随机7个职业标签数据 */
   queryCareerInterest: '/zhiyuan/careerGroup/queryCareerInterest',
   /* 职业族群展示列表 */
-  queryCareerGroupParent: '/zhiyuan/careerGroup/queryCareerGroupParent'
+  queryCareerGroupParent: '/zhiyuan/careerGroup/queryCareerGroupParent',
+  /* 文章点赞 */
+  changePraiseState: 'content/articleInfo/changePraiseState',
+  /* 添加评论 */
+  addComment: 'content/articleInfoCommentController/addComment',
+  /* 删除评论 */
+  deleteComment: 'content/articleInfoCommentController/deleteComment',
+  /* 文章收藏 */
+  changePraiseCollect: 'content/articleInfo/changePraiseCollect',
+  /* 评论列表 */
+  queryArticleInfoComment: 'content/articleInfoCommentController/queryArticleInfoComment',
+  /* 点赞列表 */
+  queryPraiseCollect: 'content/articleInfo/queryPraiseCollect',
+  /* 增加文章播放量，跳出量，推荐量 */
+  addNumber: 'content/articleInfo/addNumber'
 }

@@ -22,11 +22,11 @@ configure({
 @inject('userStore')
 @observer class Home extends Component {
   @observable showSplash = false
-  @observable bannerData=[]
-  @observable firstArticle={}
-  @observable firstTopic=[]
-  @observable topics=[]
-  @observable specials=[]
+  @observable bannerData = []
+  @observable firstArticle = {}
+  @observable firstTopic = []
+  @observable topics = []
+  @observable specials = []
   @action.bound
   setValue (key, val) {
     this[key] = val
@@ -40,12 +40,13 @@ configure({
     }
   }
   static navigationOptions = ({ navigation, screenProps }) => {
-    console.log(this.showSplash)
+    const { getParam } = navigation
+    console.log(getParam('showSplash'))
     // 启动页加载完以后再显示底部的tabNav
     let tabBarVisible
-    if (this.showSplash) {
+    if (getParam('showSplash') === 'show') {
       tabBarVisible = false
-    } else {
+    } else if (getParam('showSplash') === 'hide') {
       tabBarVisible = true
     }
     return {
@@ -73,11 +74,18 @@ configure({
     const { navigate } = this.props.navigation
     if (!token) {
       navigate('Login')
+      return
     } else if (!startYear) {
       navigate('Info', {
         type: 'complete'
       })
-    } else if (!level) {
+      return
+    }
+    if (userInfo.isSuperUser) {
+      this.openUrl(`volunteer-index`)
+      return
+    }
+    if (!level) {
       axios.post(api.tiralBinding, { phoneNumber }).then(data => {
         const copyUserInfo = _.clone(userInfo)
         copyUserInfo.level = 'EXPERIENCE'
@@ -105,7 +113,9 @@ configure({
     }
   }
   hideSplash = () => {
+    const { setParams } = this.props.navigation
     this.setValue('showSplash', false)
+    setParams({ showSplash: 'hide' })
     storage.save({
       key: 'showSplash',
       data: false
@@ -145,6 +155,7 @@ configure({
     }
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
+    // alert(1111)
     const pageSize = 5
     const userStorage = await storage.load({
       key: 'userInfo'
@@ -182,6 +193,10 @@ configure({
         }
       }
       if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+        if (articleInfoLabelList.content.length === 1 && page <= 1) {
+          console.log('只有一个，在第一页，所以删除一个')
+          articleInfoLabelList.content.shift()
+        }
         startFetch(articleInfoLabelList.content, pageSize)
       } else {
         startFetch([], pageSize)
@@ -238,6 +253,7 @@ configure({
       obj.image = item.picture
       return obj
     })
+    // alert(JSON.stringify(this.firstArticle))
     return (
       <View style={{ backgroundColor: 'transparent' }}>
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
@@ -251,7 +267,7 @@ configure({
           }
         </View>
         {/* 文章1 */}
-        {this.firstArticle.length > 0 && <View style={styles.article}>
+        {this.firstArticle && <View style={styles.article}>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
           <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
             <View style={styles.cardFooter} paddingT-5>
@@ -262,7 +278,7 @@ configure({
                 </View>
                 <View row centerV>
                   <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.commentNumner}</Text>
+                  <Text dark06 text-11>{this.firstArticle.commentNumber}</Text>
                 </View>
               </View>
               <Text dark06 text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
@@ -300,7 +316,7 @@ configure({
                 </View>
                 <View row centerV>
                   <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.commentNumner}</Text>
+                  <Text dark06 text-11>{item.commentNumber}</Text>
                 </View>
               </View>
               <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
@@ -414,6 +430,7 @@ configure({
     }) */
   }
   componentDidMount () {
+    const { navigate, setParams } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
@@ -421,11 +438,14 @@ configure({
       key: 'showSplash'
     }).then(data => {
       this.setValue('showSplash', false)
+      setParams({ showSplash: 'hide' })
     }).catch(() => {
       this.setValue('showSplash', true)
+      setParams({ showSplash: 'show' })
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()
+        setParams({ showSplash: 'hide' })
       }, 1000)
     })
     /* 监听点击推送时事件 */
@@ -437,9 +457,12 @@ configure({
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
     Linking.getInitialURL().then((url) => {
+      console.log(url)
       if (url) {
         const { id } = getUrlParams(url)
-        this.openNative('NewsDetail', { articleId: id })
+        setTimeout(() => {
+          navigate('NewsDetail', { articleId: id })
+        }, 200)
       }
     })
   }

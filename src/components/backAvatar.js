@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
-import { Avatar, Assets } from '../../react-native-ui-lib'
+import { TouchableOpacity, Image } from '../../react-native-ui-lib'
+import { colors } from '../theme'
 export default class BackAvatar extends Component {
+  static defaultProps={
+    assetName: 'backArrow'
+  }
   _onPress = () => {
     const { onPress } = this.props
     if (onPress) {
@@ -9,7 +13,9 @@ export default class BackAvatar extends Component {
   }
   render () {
     return (
-      <Avatar imageSource={Assets.icons.backArrow} resizeMode='cover' backgroundColor='transparent' containerStyle={{ width: 40, height: 40 }} imageStyle={{ left: 15, top: 8 }} size={24} onPress={this._onPress} />
+      <TouchableOpacity style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }} onPress={this._onPress}>
+        <Image assetName={this.props.assetName} tintColor={colors.dark} />
+      </TouchableOpacity>
     )
   }
 }

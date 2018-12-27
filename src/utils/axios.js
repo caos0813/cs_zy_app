@@ -44,7 +44,7 @@ axios.interceptors.response.use(function (response) {
   if (err.response && err.response.status === 401) {
     const { setUserInfo } = userStore
     setUserInfo({})
-    navigator.replace('Login')
+    // navigator.replace('Login')
     /* error({
       statusCode: 401,
       message: '您的登录状态已经过期，请重新登录。'

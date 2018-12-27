@@ -116,7 +116,7 @@ let timer
               }
             </View>
             <View center marginT-20 style={{ height: 60 }}>
-              <LoginInput onChangeText={code => setValue('verificationCode', code)} maxLength={6} />
+              <LoginInput placeholder='请输入验证码' onChangeText={code => setValue('verificationCode', code)} maxLength={6} />
             </View>
             <View paddingT-100 paddingH-5>
               <Button text-14 light label='登录' bg-calm marginT-10 onPress={this.login} disabled={verificationCode.length !== 6} />

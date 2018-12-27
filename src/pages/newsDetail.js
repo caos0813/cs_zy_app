@@ -9,6 +9,7 @@ import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, tr
 import Video from 'react-native-video'
 import { Header, ItemHead, PlayBtn, NewsFooter } from '../components'
 import { Player, Share } from '../../react-native-root-ui'
+import _ from 'lodash'
 configure({
   enforceActions: 'always'
 })
@@ -57,7 +58,8 @@ configure({
     const { duration } = e
     setValue('duration', transferPlayerTime(duration))
   }
-  footerFunc = (e) => {
+  footerFunc=(e) => {
+    let copyData = _.clone(this.data)
     switch (e) {
       case 'share':
         Share.show({
@@ -66,9 +68,24 @@ configure({
           title: this.data.title,
           // webpageUrl: PropTypes.string,
           shareCallback: () => {
-            alert(1)
+
           }
         })
+        break
+      case 'attention':
+        axios.post(api.changePraiseState, { articleId: this.data.id }).then(data => {
+          copyData.isPrise = !copyData.isPrise
+          this.setValue('data', copyData)
+        })
+        break
+      case 'star':
+        axios.post(api.changePraiseCollect, { articleId: this.data.id }).then(data => {
+          copyData.isCollect = !copyData.isCollect
+          this.setValue('data', copyData)
+        })
+        break
+      case 'comment':
+        navigator.push('Comment', { articleId: this.data.id })
         break
     }
   }
@@ -172,6 +189,10 @@ configure({
 
         {!hideFooter &&
           <NewsFooter
+            isCollect={this.data.isCollect}
+            isPrise={this.data.isPrise}
+            commentNumber={this.data.commentNumber}
+            showCollect
             showLink={false}
             onPress={this.footerFunc}
           />

@@ -2,13 +2,24 @@ import React, { Component } from 'react'
 import { Linking, StyleSheet } from 'react-native'
 import { View, Text, LoaderScreen, Image } from '../../react-native-ui-lib'
 import { observer, inject } from 'mobx-react/native'
-import { HomeBanner, ItemHead, Item, CardItem, Header, NoNetwork } from '../components'
+import { HomeBanner, ItemHead, CardItem, Header, NoNetwork } from '../components'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { colors } from '../theme'
 import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
+import { configure, observable, action } from 'mobx'
+configure({
+  enforceActions: 'always'
+})
 
 @inject('planStore', 'userStore')
 @observer class PlaneIndex extends Component {
+  @observable bannerData = []
+  @observable firstArticle = {}
+  @observable topics = []
+  @action.bound
+  setValue (key, val) {
+    this[key] = val
+  }
   constructor (props) {
     super(props)
     this.OpenUrl = new OpenUrl(props)
@@ -37,39 +48,38 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
       obj.image = item.picture
       return obj
     })
-    const { firstArticle, firstTopic } = this.props.planStore
+    // alert(JSON.stringify(this.topics))
     return (
       <View >
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
         {/* 文章1 */}
-        {firstArticle.length > 0 && <View style={styles.article}>
-          <ItemHead smallText='true' title={firstArticle.labelName} leftIcon='true' />
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: firstArticle.id }) }} imageStyle={{ height: 115 }} title={firstArticle.title} imageSource={{ uri: firstArticle.picture }} desc={firstArticle.introduction} fileType={firstArticle.fileType}>
+        {this.firstArticle && <View style={styles.article}>
+          <ItemHead smallText='true' title={this.firstArticle.labelName} leftIcon='true' />
+          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
                 <View row centerV paddingR-10>
                   <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{firstArticle.priseNumber}</Text>
+                  <Text dark06 text-11>{this.firstArticle.priseNumber}</Text>
                 </View>
                 <View row centerV>
                   <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{firstArticle.commentNumner}</Text>
+                  <Text dark06 text-11>{this.firstArticle.commentNumber}</Text>
                 </View>
               </View>
-              <Text dark06 text-11>{transferTime(firstArticle.releaseTime)}</Text>
+              <Text dark06 text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
             </View>
           </CardItem>
         </View>}
-        {/* 专题1 */}
-        {this.renderTopics(firstTopic)}
+        {/* 专题 */}
+        {this.renderTopics(this.topics)}
       </View>
     )
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 5
-    const { setValue } = this.props.planStore
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 5,
@@ -78,23 +88,28 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
       }
     }).then(data => {
       const { articleInfoLabelList, topicsAndArticlesList } = data
+      // alert(JSON.stringify(topicsAndArticlesList))
       if (page === 1) {
         if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
-          setValue('firstArticle', articleInfoLabelList.content[0])
+          this.setValue('firstArticle', articleInfoLabelList.content[0])
         } else {
-          setValue('firstArticle', [])
+          this.setValue('firstArticle', [])
         }
-        if (topicsAndArticlesList.articleInfoBean) {
-          let firstTopic = []
-          firstTopic.push(topicsAndArticlesList.shift())
-          setValue('firstTopic', firstTopic)
-          setValue('topics', topicsAndArticlesList)
+        if (topicsAndArticlesList && topicsAndArticlesList.length > 0) {
+          // let firstTopic = []
+          // firstTopic.push(topicsAndArticlesList.shift())
+          // this.setValue('firstTopic', firstTopic)
+          this.setValue('topics', topicsAndArticlesList)
         } else {
-          setValue('firstTopic', [])
-          setValue('topics', [])
+          // this.setValue('firstTopic', [])
+          this.setValue('topics', [])
         }
       }
       if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+        if (articleInfoLabelList.content.length === 1 && page <= 1) {
+          alert('只有一个，在第一页，所以删除一个')
+          articleInfoLabelList.content.shift()
+        }
         startFetch(articleInfoLabelList.content, pageSize)
       } else {
         startFetch([], pageSize)
@@ -120,7 +135,7 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
                 </View>
                 <View row centerV>
                   <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.commentNumner}</Text>
+                  <Text dark06 text-11>{item.commentNumber}</Text>
                 </View>
               </View>
               <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
@@ -139,10 +154,10 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
             <ItemHead title={item.title} seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           </View>
           <View row style={styles.topics}>
-            {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
+            {item.articleInfoBean.content &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -153,7 +168,7 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
   }
 
   render () {
-    const { bannerData } = this.props.planStore
+    const { bannerData } = this
     return (
       <View flex>
         {/* <NoNetwork refresh={this.refresh} /> */}
@@ -177,9 +192,8 @@ import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
   }
 
   componentDidMount () {
-    const { setValue } = this.props.planStore
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 5 } }).then(data => {
-      setValue('bannerData', data.content)
+      this.setValue('bannerData', data.content)
     })
   }
 }

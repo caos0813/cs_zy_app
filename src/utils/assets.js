@@ -1,6 +1,7 @@
 import { Assets } from '../../react-native-ui-lib'
 Assets.loadAssetsGroup('icons', {
   backArrow: require('../assets/icons/ic_back.png'),
+  backClose: require('../assets/share/close.png'),
   logo: require('../assets/logo.png'),
   cycle: require('../assets/home/cycle.png'),
   headIcon: require('../assets/home/account.png'),
@@ -45,7 +46,27 @@ Assets.loadAssetsGroup('icons', {
   comment: require('../assets/player/comment.png'),
   detail: require('../assets/player/detail.png'),
   attention: require('../assets/player/attention.png'),
+  attention_active: require('../assets/player/attention_active.png'),
+  star: require('../assets/player/star.png'),
+  star_active: require('../assets/player/star_active.png'),
   share: require('../assets/player/share.png'),
   play: require('../assets/icons/play.png'),
   paused: require('../assets/icons/paused.png')
+})
+
+/* share */
+Assets.loadAssetsGroup('share', {
+  close: require('../assets/share/close.png'),
+  wechat: require('../assets/share/wechat.png'),
+  timeline: require('../assets/share/timeline.png'),
+  qq: require('../assets/share/qq.png'),
+  weibo: require('../assets/share/weibo.png')
+})
+/* mine */
+Assets.loadAssetsGroup('mine', {
+  info: require('../assets/mine/info.png'),
+  star: require('../assets/mine/star.png'),
+  vip_center: require('../assets/mine/vip_center.png'),
+  feedback: require('../assets/mine/feedback.png'),
+  about: require('../assets/mine/about.png')
 })
