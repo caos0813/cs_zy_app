@@ -10,12 +10,16 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, formatVersion } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { configure, observable, action } from 'mobx'
+import DeviceInfo from 'react-native-device-info'
+import EnvConfig from 'react-native-config'
+import Config from '../config'
+
 configure({
   enforceActions: 'always'
 })
@@ -160,8 +164,7 @@ configure({
     const userStorage = await storage.load({
       key: 'userInfo'
     })
-    let provinceId = userStorage.province.id
-    console.log(provinceId)
+    let provinceId = userStorage.province ? userStorage.province.id : 430000
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,
@@ -384,14 +387,11 @@ configure({
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
     const extras = JSON.parse(e.extras)
-    if (extras.type === 'article') {
-      this.openUrl(`article`, { id: extras.id })
-    } else if (extras.type === 'banner') {
-      if (extras.link) {
-        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
-      } else {
-        this.openUrl(`article`, { id: extras.id, type: 'banner' })
-      }
+    console.log(extras)
+    if (extras.articleInfoId) {
+      this.openNative('NewsDetail', { articleId: extras.articleInfoId })
+    } else {
+      this.openNative('NewsDetail', { articleId: extras.id, type: 'banner' })
     }
   }
   render () {
@@ -402,21 +402,19 @@ configure({
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
         <NoNetwork refresh={this.refresh} />
-        {!showSplash && this.renderHeader()}
-        {!showSplash &&
-          <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
-            header={() => this.renderContainer(bannerData)}
-            onFetch={this.onFetch}
-            item={this.renderItem}
-            refreshable={false}
-            waitingSpinnerText='正在加载...'
-            spinnerColor={colors.calm}
-            allLoadedText='--我是有底线的--'
-            // onScroll={this.onScroll}
-            showsVerticalScrollIndicator={false}
-            paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
-          />
-        }
+        {this.renderHeader()}
+        <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+          header={() => this.renderContainer(bannerData)}
+          onFetch={this.onFetch}
+          item={this.renderItem}
+          refreshable={false}
+          waitingSpinnerText='正在加载...'
+          spinnerColor={colors.calm}
+          allLoadedText='--我是有底线的--'
+          // onScroll={this.onScroll}
+          showsVerticalScrollIndicator={false}
+          paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+        />
       </View >
     )
   }
@@ -430,6 +428,7 @@ configure({
     }) */
   }
   componentDidMount () {
+    //  this.refs.scroll.refresh()
     const { navigate, setParams } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
@@ -457,12 +456,27 @@ configure({
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
     Linking.getInitialURL().then((url) => {
-      console.log(url)
       if (url) {
         const { id } = getUrlParams(url)
         setTimeout(() => {
           navigate('NewsDetail', { articleId: id })
         }, 200)
+      }
+    })
+    axios.get(api.checkVersion, {
+      params: {
+        productId: 3,
+        platform,
+        isProduction: EnvConfig.ENV === 'production'
+      }
+    }).then(data => {
+      const nowVersion = formatVersion(DeviceInfo.getVersion())
+      const newVersion = formatVersion(data.version)
+      if (nowVersion < newVersion) {
+        dialog.confirm('检查到新版本，是否升级？').then(() => {
+          const downloadUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/download`
+          Linking.openURL(downloadUrl)
+        })
       }
     })
   }

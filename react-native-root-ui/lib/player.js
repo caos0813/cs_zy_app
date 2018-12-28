@@ -197,6 +197,12 @@ export default class Player extends Component {
           config={config}
           pause={() => this.pause()}
           close={() => this.close()} />)
+      const { duration, currentTime } = this.playerContainer.state
+      DeviceEventEmitter.emit('playerEvent', {
+        ...config,
+        duration,
+        currentTime
+      })
     } else {
       config.paused = false
       this.player = new RootSiblings(<PlayerContainer
@@ -205,9 +211,9 @@ export default class Player extends Component {
         pause={() => this.pause()}
         close={() => this.close()}
       />)
+      DeviceEventEmitter.emit('playerEvent', config)
     }
     this.config = config
-    DeviceEventEmitter.emit('playerEvent', config)
   }
   render () {
     return null
@@ -220,7 +226,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 50,
     left: 0,
-    bottom: 60
+    bottom: 70
   },
   player: {
     marginHorizontal: 10,

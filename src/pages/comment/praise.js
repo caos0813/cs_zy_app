@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { StyleSheet, Keyboard } from 'react-native'
-import { configure, observable, action } from 'mobx'
-import { observer } from 'mobx-react/native'
+import { StyleSheet } from 'react-native'
+import { configure, action } from 'mobx'
+import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, LoaderScreen } from '../../../react-native-ui-lib'
 import { colors } from '../../theme'
-import { ratio, api, axios, Toast } from '../../utils'
+import { ratio, api, axios, imageFormat, transferTime } from '../../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
 configure({
   enforceActions: 'always'
 })
+@inject('routeStore')
 @observer class Page extends Component {
   @action.bound
   setValue (key, val) {
@@ -17,12 +18,12 @@ configure({
 
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 10
-    const { getParam } = this.props.navigation
+    const { commentTabId } = this.props.routeStore
     axios.get(api.queryPraiseCollect, {
       params: {
         page: page - 1,
         size: pageSize,
-        articleInfoId: getParam('articleId')
+        articleInfoId: commentTabId
       }
     }).then(data => {
       startFetch(data.content, pageSize)
@@ -34,11 +35,10 @@ configure({
   renderItem = (item, index) => {
     return (
       <View paddingV-15 row style={styles.item}>
-        <Image source={{ uri: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813' }} borderRadius={40} style={{ width: 38, height: 38 }} />
+        <Image source={imageFormat(item.userImg, true)} borderRadius={40} style={{ width: 38, height: 38 }} />
         <View flex paddingL-7>
-          <Text text-16 dark>舔狗之家</Text>
-          <Text text-12 dark06>一分钟前</Text>
-          <Text text-14 dark06 marginT-5>那段时间我几乎天天都要画画，画很多不同的“小人”。根据文章配图的需要，“小人”经常要表演出不同的姿势，不同的神情，时而忧伤，时而狂喜，大部分的时候我喜欢画他们面无表情。</Text>
+          <Text text-16 dark>{item.userName}</Text>
+          <Text text-12 dark06>{transferTime(item.time)}</Text>
         </View>
       </View>
     )

@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
-import { StyleSheet, findNodeHandle, DeviceEventEmitter, ScrollView, Modal } from 'react-native'
+import { StyleSheet, findNodeHandle, DeviceEventEmitter, ScrollView } from 'react-native'
 import { configure, observable, action } from 'mobx'
-import { observer } from 'mobx-react/native'
+import { observer, inject } from 'mobx-react/native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { BlurView } from 'react-native-blur'
-import { width, statusBarHeight, transferTime, navigator, transferPlayerTime } from '../utils'
+import { width, statusBarHeight, transferTime, navigator, transferPlayerTime, api, axios, imageResize } from '../utils'
 import { Header, NewsFooter } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { Player, Share } from '../../react-native-root-ui'
 import _ from 'lodash'
+import Config from '../config'
 configure({
   enforceActions: 'always'
 })
+@inject('routeStore')
 @observer class Play extends Component {
   @observable duration = '00:00'
+  @observable toDetail = false
   @observable position = '00:00'
   @observable currentTime = 0
   @observable paused = true
@@ -37,6 +40,50 @@ configure({
   }
   play = () => {
     Player.player && Player.pause()
+  }
+  statistics=(type) => {
+    axios.post(api.addNumber, {
+      articleInfoId: this.data.id,
+      type: type
+    })
+  }
+  footerFunc= async (e) => {
+    let copyData = _.clone(this.data)
+    const webpageUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/article?id=${this.data.id}`
+    switch (e) {
+      case 'detail':
+        this.setValue('toDetail', true)
+        navigator.replace('NewsDetail', { articleId: this.data.id })
+        break
+      case 'share':
+        Share.show({
+          thumbImage: this.data.picture,
+          description: '',
+          title: this.data.title,
+          webpageUrl,
+          shareCallback: () => {
+            this.statistics(3)
+          }
+        })
+        break
+      case 'attention':
+        axios.post(api.changePraiseState, { articleInfoId: this.data.id }).then(data => {
+          copyData.isPrise = !copyData.isPrise
+          this.setValue('data', copyData)
+        })
+        break
+      case 'star':
+        axios.post(api.changePraiseCollect, { articleInfoId: this.data.id }).then(data => {
+          copyData.isCollect = !copyData.isCollect
+          this.setValue('data', copyData)
+        })
+        break
+      case 'comment':
+        const { setValue } = this.props.routeStore
+        setValue('commentTabId', this.data.id)
+        navigator.replace('Comment')
+        break
+    }
   }
   render () {
     const { data, duration, position, paused } = this
@@ -69,7 +116,7 @@ configure({
             }
             <Image
               style={styles.image}
-              source={{ uri: data.picture }}
+              source={{ uri: imageResize(data.picture, 600) }}
             />
             <View style={[styles.progress]}>
               <Text light text-9>{position}/{duration}</Text>
@@ -83,7 +130,14 @@ configure({
             </TouchableOpacity>
           </View>
         </ScrollView>
-        <NewsFooter />
+        <NewsFooter
+          showLink
+          isCollect={data.isCollect}
+          isPrise={data.isPrise}
+          commentNumber={data.commentNumber}
+          showCollect
+          onPress={this.footerFunc}
+        />
       </View>
     )
   }
@@ -91,18 +145,26 @@ configure({
     navigator.goBack()
   }
   componentWillUnmount () {
-    Player.player && Player.setStatus(true)
+    if (!this.toDetail) {
+      Player.player && Player.setStatus(true)
+    }
     this.playerEvent.remove()
   }
   componentDidMount () {
-    const { setValue, data } = this
     Player.player && Player.setStatus(false)
     this.playerEvent = DeviceEventEmitter.addListener('playerEvent', e => {
       console.log(e)
-      const { duration, currentTime, others, paused } = e
+      const { duration, currentTime, paused } = e
+      const { setValue, data } = this
       setValue('paused', paused)
       if (_.isEmpty(data)) {
-        setValue('data', others)
+        axios.get(api.queryArticleInfoDetails, {
+          params: {
+            articleInfoId: e.id
+          }
+        }).then(data => {
+          setValue('data', data)
+        })
       }
       setValue('position', transferPlayerTime(currentTime))
       setValue('duration', transferPlayerTime(duration))

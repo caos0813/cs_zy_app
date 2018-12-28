@@ -20,11 +20,11 @@ import NewsDetail from '../pages/newsDetail'
 import VolunteerAnswer from '../pages/volunteerAnswer'
 import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
-import Comment from '../pages/comment/comment'
+import CommentList from '../pages/comment/comment'
 import Praise from '../pages/comment/praise'
 import Test from '../pages/test'
 import { BackAvatar } from '../components'
-import { Image, View } from '../../react-native-ui-lib'
+import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { colors } from '../theme'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
@@ -112,7 +112,7 @@ const TabStack = createBottomTabNavigator(
 )
 const CommentTab = createMaterialTopTabNavigator({
   Comment: {
-    screen: Comment,
+    screen: CommentList,
     navigationOptions: () => ({
       tabBarLabel: '评论'
     })
@@ -143,38 +143,10 @@ const CommentTab = createMaterialTopTabNavigator({
       color: colors.dark06
     }
   },
+  lazy: true,
   initialRouteName: 'Comment'
 })
-/* const CommentStack = createStackNavigator({
-  Comment: {
-    screen: CommentTab,
-    navigationOptions: ({ navigation }) => ({
-      headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
-      headerStyle: {
-        height: 44,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        overflow: 'hidden',
-        borderBottomColor: gray,
-        elevation: 0,
-        borderBottomWidth: 0
-      },
-      title: '互动',
-      headerTitleStyle: {
-        fontSize: 18,
-        fontWeight: 'normal',
-        color: dark
-      }
-    })
-  }
-}, {
-  initialRouteName: 'Comment',
-  headerLayoutPreset: 'center',
-  cardStyle: {
-    backgroundColor: colors.dark
-  }
-}
-) */
+
 const AppNavigation = createStackNavigator(
   {
     Login: {

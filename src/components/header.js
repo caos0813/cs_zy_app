@@ -23,7 +23,7 @@ export default class Header extends Component {
   }
   leftPress=() => {
     const { leftPress } = this.props
-    leftPress() || navigator.goBack()
+    leftPress ? leftPress() : navigator.goBack()
   }
   render () {
     const { leftPress, title, showLeft, titleContainer, containerStyle, showRight, tintColor, btnStyle, leftContainer } = this.props
