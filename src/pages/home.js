@@ -12,8 +12,8 @@ import {
 } from 'react-native'
 import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator, formatVersion } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { ItemHead, HomeBanner, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
+import { SplashSwiper } from '../../react-native-root-ui'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { configure, observable, action } from 'mobx'
 import DeviceInfo from 'react-native-device-info'
@@ -25,7 +25,6 @@ configure({
 })
 @inject('userStore')
 @observer class Home extends Component {
-  @observable showSplash = false
   @observable bannerData = []
   @observable firstArticle = {}
   @observable firstTopic = []
@@ -120,8 +119,6 @@ configure({
     storage.save({
       key: 'showSplash',
       data: false
-    }).then(() => {
-      this.setValue('showSplash', false)
     })
   }
   openUrl = (path, query, auth) => {
@@ -370,21 +367,6 @@ configure({
       ))
     )
   }
-  testPlay = (index) => {
-    if (index === 1) {
-      Player.play({
-        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145',
-        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-        title: '学前教育'
-      })
-    } else {
-      Player.play({
-        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152050',
-        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084352',
-        title: '护理学'
-      })
-    }
-  }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
     const extras = JSON.parse(e.extras)
@@ -396,12 +378,12 @@ configure({
     }
   }
   render () {
-    const { showSplash, bannerData } = this
-    const { animationConfig } = this.state
+    const { bannerData } = this
+    // const { animationConfig } = this.state
     return (
       <View flex useSafeArea>
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
-        {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
+        {/* <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} /> */}
         <NoNetwork refresh={this.refresh} />
         {this.renderHeader()}
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
@@ -434,14 +416,16 @@ configure({
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
+
     storage.load({
       key: 'showSplash'
     }).then(data => {
-      this.setValue('showSplash', true)
-      console.log(1111)
     }).catch(() => {
-      this.setValue('showSplash', true)
-      console.log(2222)
+      SplashSwiper.init({
+        callback: () => {
+          this.hideSplash()
+        }
+      })
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()
