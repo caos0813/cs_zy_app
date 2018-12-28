@@ -43,7 +43,7 @@ configure({
       animationConfig: {}
     }
   }
-  static navigationOptions = ({ navigation, screenProps }) => {
+  /* static navigationOptions = ({ navigation, screenProps }) => {
     const { getParam } = navigation
     console.log(getParam('showSplash'))
     // 启动页加载完以后再显示底部的tabNav
@@ -56,7 +56,7 @@ configure({
     return {
       tabBarVisible
     }
-  }
+  } */
   bannerPress = (item) => {
     if (item.articleInfoId) {
       this.openNative('NewsDetail', { articleId: item.articleInfoId })
@@ -117,12 +117,11 @@ configure({
     }
   }
   hideSplash = () => {
-    const { setParams } = this.props.navigation
-    this.setValue('showSplash', false)
-    setParams({ showSplash: 'hide' })
     storage.save({
       key: 'showSplash',
       data: false
+    }).then(() => {
+      this.setValue('showSplash', false)
     })
   }
   openUrl = (path, query, auth) => {
@@ -431,25 +430,22 @@ configure({
   }
   componentDidMount () {
     //  this.refs.scroll.refresh()
-    const { navigate, setParams } = this.props.navigation
+    const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
     storage.load({
       key: 'showSplash'
     }).then(data => {
-      this.setValue('showSplash', false)
-      setParams({ showSplash: 'hide' })
+      // this.setValue('showSplash', false)
       console.log(1111)
     }).catch(() => {
       this.setValue('showSplash', true)
-      setParams({ showSplash: 'show' })
       console.log(2222)
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()
-        // setParams({ showSplash: 'hide' })
-        console.log(3333)
+        this.setValue('showSplash', true)
       }, 1000)
     })
     /* 监听点击推送时事件 */
