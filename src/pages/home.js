@@ -10,7 +10,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, formatVersion } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator, formatVersion } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { Player } from '../../react-native-root-ui'
@@ -165,6 +165,7 @@ configure({
       key: 'userInfo'
     })
     let provinceId = userStorage.province ? userStorage.province.id : 430000
+    console.log(provinceId)
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,
@@ -245,7 +246,8 @@ configure({
         href: 'VolunteerAnswer'
       }, {
         title: '高考咨询',
-        image: require('../assets/home/icon07.png')
+        image: require('../assets/home/icon07.png'),
+        href: 'Seek'
       }, {
         title: '升学课堂',
         image: require('../assets/home/icon08.png')
@@ -272,7 +274,7 @@ configure({
         {/* 文章1 */}
         {this.firstArticle && <View style={styles.article}>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
+          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
                 <View row centerV paddingR-10>
@@ -310,7 +312,7 @@ configure({
       return (
         <View style={styles.article} key={index}>
           <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
+          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
                 <View row centerV paddingR-10>
@@ -335,13 +337,13 @@ configure({
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
+            <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
           </View>
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
-                <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
+                <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
+                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -438,13 +440,16 @@ configure({
     }).then(data => {
       this.setValue('showSplash', false)
       setParams({ showSplash: 'hide' })
+      console.log(1111)
     }).catch(() => {
       this.setValue('showSplash', true)
       setParams({ showSplash: 'show' })
+      console.log(2222)
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()
-        setParams({ showSplash: 'hide' })
+        // setParams({ showSplash: 'hide' })
+        console.log(3333)
       }, 1000)
     })
     /* 监听点击推送时事件 */
@@ -538,6 +543,9 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  one: {
+    width: '100%'
   }
 })
 export default Home

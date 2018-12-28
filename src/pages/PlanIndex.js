@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react/native'
 import { HomeBanner, ItemHead, CardItem, Header, NoNetwork } from '../components'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { colors } from '../theme'
-import { axios, api, imageResize, OpenUrl, transferTime } from '../utils'
+import { axios, api, imageResize, OpenUrl, transferTime, navigator } from '../utils'
 import { configure, observable, action } from 'mobx'
 configure({
   enforceActions: 'always'
@@ -43,21 +43,21 @@ configure({
     this.openNative('NewsDetail', { articleId: item.id })
   }
   renderContainer = (bannerData) => {
-    const banner = bannerData.map(item => {
-      let obj = item
-      obj.image = item.picture
-      return obj
-    })
+    // const banner = bannerData.map(item => {
+    //   let obj = item
+    //   obj.image = item.picture
+    //   return obj
+    // })
     // alert(JSON.stringify(this.topics))
     return (
       <View >
-        <View style={{ height: 165 }} paddingT-10 paddingB-5>
+        {/* <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
-        </View>
+        </View> */}
         {/* 文章1 */}
         {this.firstArticle && <View style={styles.article}>
           <ItemHead smallText='true' title={this.firstArticle.labelName} leftIcon='true' />
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
+          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
                 <View row centerV paddingR-10>
@@ -126,7 +126,7 @@ configure({
       return (
         <View style={styles.article} key={index} >
           <ItemHead smallText='true' title={item.labelName} leftIcon='true' />
-          <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType}>
+          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType}>
             <View style={styles.cardFooter} paddingT-5>
               <View row>
                 <View row centerV paddingR-10>
@@ -151,13 +151,13 @@ configure({
       topicData.map((item, index) => (
         <View key={index}>
           <View paddingT-10>
-            <ItemHead title={item.title} seeAll='true' onPress={() => this.openNative('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
+            <ItemHead title={item.title} seeAll='true' onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           </View>
           <View row style={styles.topics}>
             {item.articleInfoBean.content &&
               item.articleInfoBean.content.map((el, i) => (
-                <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
+                <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
+                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -170,7 +170,7 @@ configure({
   render () {
     const { bannerData } = this
     return (
-      <View flex>
+      <View flex useSafeArea>
         {/* <NoNetwork refresh={this.refresh} /> */}
         <Header showLeft={false} title='生涯规划' />
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
@@ -192,9 +192,9 @@ configure({
   }
 
   componentDidMount () {
-    axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 5 } }).then(data => {
-      this.setValue('bannerData', data.content)
-    })
+    // axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 5 } }).then(data => {
+    //   this.setValue('bannerData', data.content)
+    // })
   }
 }
 
@@ -220,6 +220,9 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  one: {
+    width: '100%'
   }
 })
 export default PlaneIndex

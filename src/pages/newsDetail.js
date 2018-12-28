@@ -14,7 +14,7 @@ import Config from '../config'
 configure({
   enforceActions: 'always'
 })
-@inject('routeStore')
+@inject('routeStore', 'userStore')
 @observer class Page extends Component {
   @observable reachBottom = true
   @observable duration = '00:00'
@@ -124,6 +124,7 @@ configure({
    }
    render () {
      const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
+     const { getParam } = this.props.navigation
      return (
        <View flex useSafeArea onLayout={this.onLayout}>
          <Header
@@ -204,7 +205,7 @@ configure({
            <View center paddingV-30><Text text-12 dark06>--END</Text></View>
            {data.isMore &&
              <View paddingT-10>
-               <ItemHead title='更多' seeAll='true' />
+               <ItemHead title='更多' seeAll='true' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
                <View paddingH-25>
                  {moreData.map((item) => (
                    <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>

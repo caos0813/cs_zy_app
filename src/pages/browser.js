@@ -122,6 +122,7 @@ import _ from 'lodash'
     let data
     try {
       data = JSON.parse(e.nativeEvent.data)
+      // console.log(data)
     } catch (err) {
 
     }
@@ -195,6 +196,7 @@ import _ from 'lodash'
           break
         case 'navigate':
           const routes = data.data
+          console.log(routes.query)
           navigate(routes.path, routes.query)
           break
         case 'replace':

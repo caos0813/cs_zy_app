@@ -22,6 +22,7 @@ export default class Header extends Component {
     tintColor: '#666'
   }
   leftPress=() => {
+    alert(111)
     const { leftPress } = this.props
     leftPress ? leftPress() : navigator.goBack()
   }
