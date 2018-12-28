@@ -107,7 +107,7 @@ configure({
       }
       if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
         if (articleInfoLabelList.content.length === 1 && page <= 1) {
-          alert('只有一个，在第一页，所以删除一个')
+        //  alert('只有一个，在第一页，所以删除一个')
           articleInfoLabelList.content.shift()
         }
         startFetch(articleInfoLabelList.content, pageSize)

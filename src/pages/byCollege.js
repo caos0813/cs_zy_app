@@ -89,7 +89,7 @@ import { observer, inject } from 'mobx-react/native'
         topicData: data.topicsAndArticlesList
       })
     }).catch(() => {
-      alert(2)
+      // alert(2)
     })
   }
 }

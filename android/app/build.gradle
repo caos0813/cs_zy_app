@@ -185,6 +185,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-gesture-handler')
     compile project(':react-native-webview')
     compile project(':react-native-blur')
     compile project(':aliyun-oss-react-native')

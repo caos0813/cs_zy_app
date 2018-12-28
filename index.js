@@ -10,8 +10,9 @@ import codePush from 'react-native-code-push'
 require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
-import {  storage, platform, navigator } from './src/utils'
+import {  storage, platform, navigator, statusBarHeight } from './src/utils'
 import store from './src/store'
+const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 promise.polyfill()
 class App extends Component {
   constructor(props) {
@@ -20,12 +21,18 @@ class App extends Component {
   render () {
     return (
       <Provider {...store}>
-        <Router  onNavigationStateChange={(prev, current, action) => {
-          const { routes } = current
-          console.log(routes)
-          const { setRoutes } = store.routeStore
-          setRoutes(routes)
-        }}  />
+       <Router
+          onNavigationStateChange={(from, to) => {
+            const { routes } = to
+            const { setRoutes } = store.routeStore
+            setRoutes(routes)
+          }}
+          uriPrefix={prefix}
+          screenProps={{ statusBarHeight: statusBarHeight }}
+          ref={navigatorRef => {
+            navigator.setTopLevelNavigator(navigatorRef)
+          }} 
+        />
       </Provider>
     )
   }

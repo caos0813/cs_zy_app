@@ -174,7 +174,7 @@ const listItems = [{
           }
         }).catch((err) => {
           // Toast('用户取消')
-          alert(JSON.stringify(err))
+          // alert(JSON.stringify(err))
         })
       }).catch(() => {
         Toast('创建订单失败')

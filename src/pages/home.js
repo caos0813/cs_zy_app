@@ -437,7 +437,7 @@ configure({
     storage.load({
       key: 'showSplash'
     }).then(data => {
-      // this.setValue('showSplash', false)
+      this.setValue('showSplash', true)
       console.log(1111)
     }).catch(() => {
       this.setValue('showSplash', true)
