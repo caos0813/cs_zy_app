@@ -10,18 +10,21 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator, formatVersion } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { ItemHead, HomeBanner, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
+import { SplashSwiper } from '../../react-native-root-ui'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { configure, observable, action } from 'mobx'
+import DeviceInfo from 'react-native-device-info'
+import EnvConfig from 'react-native-config'
+import Config from '../config'
+
 configure({
   enforceActions: 'always'
 })
 @inject('userStore')
 @observer class Home extends Component {
-  @observable showSplash = false
   @observable bannerData = []
   @observable firstArticle = {}
   @observable firstTopic = []
@@ -39,7 +42,7 @@ configure({
       animationConfig: {}
     }
   }
-  static navigationOptions = ({ navigation, screenProps }) => {
+  /* static navigationOptions = ({ navigation, screenProps }) => {
     const { getParam } = navigation
     console.log(getParam('showSplash'))
     // 启动页加载完以后再显示底部的tabNav
@@ -52,7 +55,7 @@ configure({
     return {
       tabBarVisible
     }
-  }
+  } */
   bannerPress = (item) => {
     if (item.articleInfoId) {
       this.openNative('NewsDetail', { articleId: item.articleInfoId })
@@ -113,9 +116,6 @@ configure({
     }
   }
   hideSplash = () => {
-    const { setParams } = this.props.navigation
-    this.setValue('showSplash', false)
-    setParams({ showSplash: 'hide' })
     storage.save({
       key: 'showSplash',
       data: false
@@ -367,57 +367,37 @@ configure({
       ))
     )
   }
-  testPlay = (index) => {
-    if (index === 1) {
-      Player.play({
-        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145',
-        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-        title: '学前教育'
-      })
-    } else {
-      Player.play({
-        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152050',
-        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084352',
-        title: '护理学'
-      })
-    }
-  }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
     const extras = JSON.parse(e.extras)
-    if (extras.type === 'article') {
-      this.openUrl(`article`, { id: extras.id })
-    } else if (extras.type === 'banner') {
-      if (extras.link) {
-        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
-      } else {
-        this.openUrl(`article`, { id: extras.id, type: 'banner' })
-      }
+    console.log(extras)
+    if (extras.articleInfoId) {
+      this.openNative('NewsDetail', { articleId: extras.articleInfoId })
+    } else {
+      this.openNative('NewsDetail', { articleId: extras.id, type: 'banner' })
     }
   }
   render () {
-    const { showSplash, bannerData } = this
-    const { animationConfig } = this.state
+    const { bannerData } = this
+    // const { animationConfig } = this.state
     return (
       <View flex useSafeArea>
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
-        {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
+        {/* <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} /> */}
         <NoNetwork refresh={this.refresh} />
-        {!showSplash && this.renderHeader()}
-        {!showSplash &&
-          <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
-            header={() => this.renderContainer(bannerData)}
-            onFetch={this.onFetch}
-            item={this.renderItem}
-            refreshable={false}
-            waitingSpinnerText='正在加载...'
-            spinnerColor={colors.calm}
-            allLoadedText='--我是有底线的--'
-            // onScroll={this.onScroll}
-            showsVerticalScrollIndicator={false}
-            paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
-          />
-        }
+        {this.renderHeader()}
+        <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+          header={() => this.renderContainer(bannerData)}
+          onFetch={this.onFetch}
+          item={this.renderItem}
+          refreshable={false}
+          waitingSpinnerText='正在加载...'
+          spinnerColor={colors.calm}
+          allLoadedText='--我是有底线的--'
+          // onScroll={this.onScroll}
+          showsVerticalScrollIndicator={false}
+          paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+        />
       </View >
     )
   }
@@ -431,25 +411,26 @@ configure({
     }) */
   }
   componentDidMount () {
-    const { navigate, setParams } = this.props.navigation
+    //  this.refs.scroll.refresh()
+    const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
+
     storage.load({
       key: 'showSplash'
     }).then(data => {
-      this.setValue('showSplash', false)
-      setParams({ showSplash: 'hide' })
-      console.log(1111)
+
     }).catch(() => {
-      this.setValue('showSplash', true)
-      setParams({ showSplash: 'show' })
-      console.log(2222)
+      SplashSwiper.init({
+        callback: () => {
+          this.hideSplash()
+        }
+      })
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()
-        // setParams({ showSplash: 'hide' })
-        console.log(3333)
+        this.setValue('showSplash', true)
       }, 1000)
     })
     /* 监听点击推送时事件 */
@@ -461,12 +442,27 @@ configure({
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
     Linking.getInitialURL().then((url) => {
-      console.log(url)
       if (url) {
         const { id } = getUrlParams(url)
         setTimeout(() => {
           navigate('NewsDetail', { articleId: id })
         }, 200)
+      }
+    })
+    axios.get(api.checkVersion, {
+      params: {
+        productId: 3,
+        platform,
+        isProduction: EnvConfig.ENV === 'production'
+      }
+    }).then(data => {
+      const nowVersion = formatVersion(DeviceInfo.getVersion())
+      const newVersion = formatVersion(data.version)
+      if (nowVersion < newVersion) {
+        dialog.confirm('检查到新版本，是否升级？').then(() => {
+          const downloadUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/download`
+          Linking.openURL(downloadUrl)
+        })
       }
     })
   }

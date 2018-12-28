@@ -53,5 +53,9 @@ export default {
   /* 点赞列表 */
   queryPraiseCollect: 'content/articleInfo/queryPraiseCollect',
   /* 增加文章播放量，跳出量，推荐量 */
+  addNumber: 'content/articleInfo/addNumber',
+  /* 检查升级 */
+  checkVersion: 'content/appVersion/getNewest',
+  /* 增加统计 */
   addNumber: 'content/articleInfo/addNumber'
 }

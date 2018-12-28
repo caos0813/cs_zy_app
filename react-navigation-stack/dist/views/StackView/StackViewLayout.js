@@ -493,6 +493,7 @@ class StackViewLayout extends React.Component {
     const { screenInterpolator } = this._getTransitionConfig()
 
     const style = screenInterpolator && screenInterpolator({ ...this.props.transitionProps, scene })
+
     // When using a floating header, we need to add some top
     // padding on the scene.
     const { options } = scene.descriptor
@@ -502,7 +503,7 @@ class StackViewLayout extends React.Component {
     if (hasHeader && headerMode === 'float' && !options.headerTransparent) {
       paddingTop = this.state.floatingHeaderHeight
     }
-    console.log(options)
+
     return <Card {...this.props.transitionProps} key={`card_${scene.key}`} transparent={this.props.transparentCard} style={[style, { paddingTop }, this.props.cardStyle, options.cardStyle]} scene={scene}>
       {this._renderInnerScene(scene)}
     </Card>

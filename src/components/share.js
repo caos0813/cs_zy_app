@@ -34,7 +34,6 @@ export default class Share extends Component {
         }).then(data => {
           shareCallback && shareCallback()
         })
-
         break
       case 1: // 分享给qq好友
         WeChat.shareToTimeline({
@@ -89,25 +88,25 @@ export default class Share extends Component {
         <View row paddingV-50 paddingH-50 style={styles.ceilWrap}>
           {(!isWXAppInstalled && !isQQInstalled && !isWeiboInstalled) ? <Text dark text-16>暂时不支持分享功能</Text> : null}
           {isWXAppInstalled &&
-            <TouchableOpacity activeOpacity={0.7} style={styles.ceil}>
-              <Image assetName='timeline' assetGroup='share' />
-              <Text text-12 dark06 marginT-3>朋友圈</Text>
-            </TouchableOpacity>
-          }
-          {isWXAppInstalled &&
-            <TouchableOpacity activeOpacity={0.7} style={styles.ceil}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.ceil} onPress={() => this.share(0)}>
               <Image assetName='wechat' assetGroup='share' />
               <Text text-12 dark06 marginT-3>微信</Text>
             </TouchableOpacity>
           }
+          {isWXAppInstalled &&
+            <TouchableOpacity activeOpacity={0.7} style={styles.ceil} onPress={() => this.share(1)}>
+              <Image assetName='timeline' assetGroup='share' />
+              <Text text-12 dark06 marginT-3>朋友圈</Text>
+            </TouchableOpacity>
+          }
           {isQQInstalled &&
-            <TouchableOpacity activeOpacity={0.7} style={styles.ceil}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.ceil} onPress={() => this.share(2)}>
               <Image assetName='qq' assetGroup='share' />
               <Text text-12 dark06 marginT-3>QQ</Text>
             </TouchableOpacity>
           }
           {isWeiboInstalled &&
-            <TouchableOpacity activeOpacity={0.7} style={styles.ceil}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.ceil} onPress={() => this.share(3)}>
               <Image assetName='weibo' assetGroup='share' />
               <Text text-12 dark06 marginT-3>微博</Text>
             </TouchableOpacity>
@@ -132,7 +131,7 @@ export default class Share extends Component {
       })
     })
     this.setState({
-      isWXAppInstalled: await WeChat.isWXAppInstalled()
+      isWXAppInstalled: await WeChat.isWXAppInstalled() || true
     })
   }
 }

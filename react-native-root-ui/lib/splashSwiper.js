@@ -1,28 +1,29 @@
 import React, { Component } from 'react'
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel'
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { View, Button, Image } from '../../react-native-ui-lib'
-import { width, height } from '../utils'
-import { colors } from '../theme'
+import { width, height } from '../../src/utils'
+import { colors } from '../../src/theme'
 import * as Animatable from 'react-native-animatable'
-export default class SplashSwiper extends Component {
+import RootSiblings from 'react-native-root-siblings'
+class Splash extends Component {
   static defaultProps = {
     data: [
       {
-        img: require('../assets/splash/1.png'),
-        text: require('../assets/splash/text01.png')
+        img: require('../../src/assets/splash/1.png'),
+        text: require('../../src/assets/splash/text01.png')
       }, {
-        img: require('../assets/splash/2.png'),
-        text: require('../assets/splash/text02.png')
+        img: require('../../src/assets/splash/2.png'),
+        text: require('../../src/assets/splash/text02.png')
       }, {
-        img: require('../assets/splash/3.png'),
-        text: require('../assets/splash/text03.png')
+        img: require('../../src/assets/splash/3.png'),
+        text: require('../../src/assets/splash/text03.png')
       }, {
-        img: require('../assets/splash/4.png'),
-        text: require('../assets/splash/text04.png')
+        img: require('../../src/assets/splash/4.png'),
+        text: require('../../src/assets/splash/text04.png')
       }, {
-        img: require('../assets/splash/5.png'),
-        text: require('../assets/splash/text05.png')
+        img: require('../../src/assets/splash/5.png'),
+        text: require('../../src/assets/splash/text05.png')
       }
     ]
   }
@@ -83,11 +84,12 @@ export default class SplashSwiper extends Component {
     )
   }
   close = () => {
-    const { close } = this.props
+    const { close, callback } = this.props
     this.setState({
       animationConfig: {
         animation: 'fadeOut',
         onAnimationEnd: () => {
+          callback && callback()
           close && close()
         }
       }
@@ -118,6 +120,25 @@ export default class SplashSwiper extends Component {
   }
   componentDidMount () {
     // alert(height + ',' + 777 * height / 1080)
+  }
+}
+export default class SplashSwiper extends Component {
+  SplashSwiper=null
+  static init ({ callback }) {
+    this.SplashSwiper = new RootSiblings(<Splash close={() => this.close()} callback={callback} />)
+    return this.SplashSwiper
+  }
+  static close () {
+    if (this.SplashSwiper instanceof RootSiblings) {
+      this.SplashSwiper.destroy()
+    } else {
+      console.warn(`mask.hide expected a \`RootSiblings\` instance as argument.\nBut got \`${typeof mask}\` instead.`)
+    }
+  }
+  render () {
+    return (
+      null
+    )
   }
 }
 const styles = StyleSheet.create({

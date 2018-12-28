@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, KeyboardAvoidingView, Keyboard, StatusBar } from 'react-native'
 import { configure, observable, action } from 'mobx'
-import { observer } from 'mobx-react/native'
+import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity, TextInput, Button, LoaderScreen } from '../../../react-native-ui-lib'
 import { colors } from '../../theme'
 import { ratio, api, axios, Toast, transferTime, imageFormat } from '../../utils'
@@ -9,6 +9,7 @@ import { UltimateListView } from 'react-native-ultimate-listview'
 configure({
   enforceActions: 'always'
 })
+@inject('routeStore')
 @observer class Page extends Component {
   @observable content = ''
   @action.bound
@@ -21,13 +22,13 @@ configure({
   }
   submit=() => {
     const { content, setValue } = this
-    const { getParam } = this.props.navigation
+    const { commentTabId } = this.props.routeStore
     if (!content) {
       Toast('请输入内容')
     }
     axios.post(api.addComment, {
       content,
-      articleInfoId: getParam('articleId')
+      articleInfoId: commentTabId
     }).then(data => {
       Toast('发布成功')
       Keyboard.dismiss()
@@ -39,13 +40,12 @@ configure({
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 10
-    const { getParam } = this.props.navigation
-    console.log(this.props.navigation)
+    const { commentTabId } = this.props.routeStore
     axios.get(api.queryArticleInfoComment, {
       params: {
         page: page - 1,
         size: pageSize,
-        articleInfoId: getParam('articleId')
+        articleInfoId: commentTabId
       }
     }).then(data => {
       startFetch(data.content, pageSize)
@@ -55,9 +55,9 @@ configure({
     })
   }
   deleteComment=(id) => {
-    const { getParam } = this.props.navigation
+    const { commentTabId } = this.props.routeStore
     axios.post(api.deleteComment, {
-      articleInfoId: getParam('articleId'),
+      articleInfoId: commentTabId,
       id
     }).then(data => {
       Toast('删除成功')
@@ -123,6 +123,7 @@ configure({
     StatusBar.setBarStyle('dark-content', true)
   }
   componentDidMount () {
+    console.log(this.props.navigation)
     StatusBar.setTranslucent(false)
     StatusBar.setBackgroundColor(colors.dark, true)
     StatusBar.setBarStyle('light-content', true)
