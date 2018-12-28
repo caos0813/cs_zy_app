@@ -242,7 +242,8 @@ configure({
         href: 'VolunteerAnswer'
       }, {
         title: '高考咨询',
-        image: require('../assets/home/icon07.png')
+        image: require('../assets/home/icon07.png'),
+        href: 'Seek'
       }, {
         title: '升学课堂',
         image: require('../assets/home/icon08.png')

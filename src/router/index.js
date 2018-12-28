@@ -17,6 +17,7 @@ import PlanIndex from '../pages/PlanIndex'
 import ByCollege from '../pages/byCollege'
 import CommonList from '../pages/commonList'
 import NewsDetail from '../pages/newsDetail'
+import Seek from '../pages/seek'
 import VolunteerAnswer from '../pages/volunteerAnswer'
 import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
@@ -259,6 +260,12 @@ const AppNavigation = createStackNavigator(
       screen: NewsDetail,
       navigationOptions: () => ({
         header: null
+      })
+    },
+    Seek: {
+      screen: Seek,
+      navigationOptions: () => ({
+        title: '高考咨询'
       })
     },
     Play: {
