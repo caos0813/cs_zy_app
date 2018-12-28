@@ -43,17 +43,17 @@ configure({
     this.openNative('NewsDetail', { articleId: item.id })
   }
   renderContainer = (bannerData) => {
-    const banner = bannerData.map(item => {
-      let obj = item
-      obj.image = item.picture
-      return obj
-    })
+    // const banner = bannerData.map(item => {
+    //   let obj = item
+    //   obj.image = item.picture
+    //   return obj
+    // })
     // alert(JSON.stringify(this.topics))
     return (
       <View >
-        <View style={{ height: 165 }} paddingT-10 paddingB-5>
+        {/* <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
-        </View>
+        </View> */}
         {/* 文章1 */}
         {this.firstArticle && <View style={styles.article}>
           <ItemHead smallText='true' title={this.firstArticle.labelName} leftIcon='true' />
@@ -156,8 +156,8 @@ configure({
           <View row style={styles.topics}>
             {item.articleInfoBean.content &&
               item.articleInfoBean.content.map((el, i) => (
-                <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
+                <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
+                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -192,9 +192,9 @@ configure({
   }
 
   componentDidMount () {
-    axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 5 } }).then(data => {
-      this.setValue('bannerData', data.content)
-    })
+    // axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 5 } }).then(data => {
+    //   this.setValue('bannerData', data.content)
+    // })
   }
 }
 
@@ -220,6 +220,9 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  one: {
+    width: '100%'
   }
 })
 export default PlaneIndex

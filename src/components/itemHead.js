@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
 import { StyleSheet } from 'react-native'
-import { colors } from '../theme/index'
 import PropTypes from 'prop-types'
 export default class itemHead extends Component {
   static propTypes = {
@@ -11,6 +10,19 @@ export default class itemHead extends Component {
     leftIcon: false,
     seeAll: false,
     smallText: false
+  }
+  trnsfromImage = (title) => {
+    if (title === '生涯规划') {
+      return 'article_title1'
+    } else if (title === '文化素养') {
+      return 'article_title3'
+    } else if (title === '心理健康') {
+      return 'article_title2'
+    } else if (title === '行为习惯') {
+      return 'article_title4'
+    } else if (title === '学业能力') {
+      return 'article_title5'
+    }
   }
   renderTitle = (title) => {
     if (this.props.smallText) {
@@ -28,7 +40,7 @@ export default class itemHead extends Component {
     return (
       <View row padding-15 style={[styles.wrap, style]}>
         <View row style={{ alignItems: 'center' }}>
-          {this.props.leftIcon && <Image assetName='class' style={{ marginRight: 10 }} tintColor={colors.calm} />}
+          {this.props.leftIcon && <Image assetName={this.trnsfromImage(title)} style={{ marginRight: 10, width: 18, height: 18 }} />}
           {this.renderTitle(title)}
         </View>
         {this.props.seeAll === 'true' && <TouchableOpacity onPress={onPress} activeOpacity={0.6}>

@@ -54,9 +54,9 @@ import { observer, inject } from 'mobx-react/native'
     if (params.type === 1) {
       return (
         <View style={styles.article} key={index} >
-          <View paddingT-10>
-            <ItemHead title={item.specialTopicInfoTitle} leftIcon='true' smallText='true' />
-          </View>
+          {/* <View paddingT-10>
+            <ItemHead title={item.specialTopicInfoTitle} />
+          </View> */}
           <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
         </View>
       )
@@ -79,7 +79,7 @@ import { observer, inject } from 'mobx-react/native'
   }
   render () {
     return (
-      <View flex useSafeArea>
+      <View marginT-10 flex useSafeArea>
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           onFetch={this.onFetch}
           item={this.renderItem}
@@ -119,7 +119,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   article: {
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
+    // marginHorizontal: 10
+    marginBottom: 15
   }
 })
 export default Page

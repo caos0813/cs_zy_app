@@ -337,8 +337,8 @@ configure({
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
-                <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
+                <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
+                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -527,6 +527,9 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  one: {
+    width: '100%'
   }
 })
 export default Home
