@@ -158,11 +158,11 @@ const styles = StyleSheet.create({
   },
   splash: {
     position: 'absolute',
-    backgroundColor: colors.light,
+    backgroundColor: colors.dark,
     top: 0,
     left: 0,
     bottom: 0,
     width: '100%',
-    zIndex: 101
+    zIndex: 1001
   }
 })

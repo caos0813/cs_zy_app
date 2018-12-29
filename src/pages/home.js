@@ -421,7 +421,6 @@ configure({
     storage.load({
       key: 'showSplash'
     }).then(data => {
-
     }).catch(() => {
       SplashSwiper.init({
         callback: () => {

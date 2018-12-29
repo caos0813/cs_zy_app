@@ -1,9 +1,8 @@
 import React from 'react'
 import { Animated, Easing } from 'react-native'
-import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation'
-import store from '../store'
+import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import { dark, light, calm, gray } from '../theme/colors'
-import { platform, navigator, statusBarHeight, ratio, width } from '../utils'
+import { ratio, width } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -28,7 +27,6 @@ import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { colors } from '../theme'
-const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 
 const TabStack = createBottomTabNavigator(
   {
@@ -52,7 +50,7 @@ const TabStack = createBottomTabNavigator(
     }
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
         let iconName
@@ -260,7 +258,7 @@ const AppNavigation = createStackNavigator(
     }
   },
   {
-    navigationOptions: ({ navigation, screenProps }) => ({
+    defaultNavigationOptions: ({ navigation, screenProps }) => ({
       // gesturesEnabled: true,
       headerLeft: <BackAvatar onPress={navigation.goBack} />,
       /* headerBackImage: <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}><Image
@@ -310,7 +308,7 @@ const AppNavigation = createStackNavigator(
     }
   }
 )
-const app = () => <AppNavigation
+/* const app = () => <AppNavigation
   onNavigationStateChange={(from, to) => {
     const { routes } = to
     const { setRoutes } = store.routeStore
@@ -320,5 +318,5 @@ const app = () => <AppNavigation
   screenProps={{ statusBarHeight: statusBarHeight }}
   ref={navigatorRef => {
     navigator.setTopLevelNavigator(navigatorRef)
-  }} />
-export default app
+  }} /> */
+export default createAppContainer(AppNavigation)
