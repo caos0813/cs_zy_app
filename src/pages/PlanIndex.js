@@ -55,23 +55,25 @@ configure({
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View> */}
         {/* 文章1 */}
-        {this.firstArticle.labelName && <View style={styles.article}>
+        {this.firstArticle.labelName && <View>
           <ItemHead smallText='true' title={this.firstArticle.labelName} leftIcon='true' />
-          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
-            <View style={styles.cardFooter} paddingT-5>
-              <View row>
-                <View row centerV paddingR-10>
-                  <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.priseNumber}</Text>
+          <View paddingH-15>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
+              <View style={styles.cardFooter} paddingT-5>
+                <View row>
+                  <View row centerV paddingR-10>
+                    <Image assetName='attention' style={styles.cardItemImage} />
+                    <Text gray text-11>{this.firstArticle.priseNumber}</Text>
+                  </View>
+                  <View row centerV>
+                    <Image assetName='comment' style={styles.cardItemImage} />
+                    <Text gray text-11>{this.firstArticle.commentNumber}</Text>
+                  </View>
                 </View>
-                <View row centerV>
-                  <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.commentNumber}</Text>
-                </View>
+                <Text gray text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
               </View>
-              <Text dark06 text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
-            </View>
-          </CardItem>
+            </CardItem>
+          </View>
         </View>}
         {/* 专题 */}
         {this.renderTopics(this.topics)}
@@ -107,7 +109,7 @@ configure({
       }
       if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
         if (articleInfoLabelList.content.length === 1 && page <= 1) {
-        //  alert('只有一个，在第一页，所以删除一个')
+          //  alert('只有一个，在第一页，所以删除一个')
           articleInfoLabelList.content.shift()
         }
         startFetch(articleInfoLabelList.content, pageSize)
@@ -124,23 +126,25 @@ configure({
       return null
     } else {
       return (
-        <View style={styles.article} key={index} >
+        <View key={index} >
           <ItemHead smallText='true' title={item.labelName} leftIcon='true' />
-          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType}>
-            <View style={styles.cardFooter} paddingT-5>
-              <View row>
-                <View row centerV paddingR-10>
-                  <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.priseNumber}</Text>
+          <View paddingH-15>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType}>
+              <View style={styles.cardFooter} paddingT-5>
+                <View row>
+                  <View row centerV paddingR-10>
+                    <Image assetName='attention' style={styles.cardItemImage} />
+                    <Text gray text-11>{item.priseNumber}</Text>
+                  </View>
+                  <View row centerV>
+                    <Image assetName='comment' style={styles.cardItemImage} />
+                    <Text gray text-11>{item.commentNumber}</Text>
+                  </View>
                 </View>
-                <View row centerV>
-                  <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.commentNumber}</Text>
-                </View>
+                <Text gray text-11>{transferTime(item.releaseTime)}</Text>
               </View>
-              <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
-            </View>
-          </CardItem>
+            </CardItem>
+          </View>
         </View>
       )
     }
@@ -150,7 +154,7 @@ configure({
     return (
       topicData.map((item, index) => (
         <View key={index}>
-          <View paddingT-10>
+          <View paddingT-15>
             <ItemHead title={item.title} seeAll='true' onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           </View>
           <View row style={styles.topics}>
@@ -200,7 +204,7 @@ configure({
 
 const styles = StyleSheet.create({
   article: {
-    paddingHorizontal: 12
+    paddingHorizontal: 15
   },
   topics: {
     flexWrap: 'wrap',
@@ -215,7 +219,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 10,
     marginRight: 2,
-    tintColor: colors.dark06
+    tintColor: colors.gray
   },
   cardFooter: {
     flexDirection: 'row',

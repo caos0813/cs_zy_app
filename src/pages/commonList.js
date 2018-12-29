@@ -121,8 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   article: {
-    paddingHorizontal: 12,
-    // marginHorizontal: 10
+    paddingHorizontal: 15,
     marginBottom: 15
   }
 })
