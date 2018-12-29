@@ -37,7 +37,7 @@ export default class ButtonCeil extends Component {
       return (
         <BoxShadow setting={shadowOpt}>
           <TouchableOpacity style={[styles.wrap, title === '更多' ? styles.more : '']} onPress={onPress} activeOpacity={0.6}>
-            <Text numberOfLines={1} style={styles.enlish} text-26 gray>{enlish}</Text>
+            {/* <Text numberOfLines={1} style={styles.enlish} text-26 gray>{enlish}</Text> */}
             <Text numberOfLines={1} style={[styles.title, title === '更多' ? styles.more : '']} text-16>{title}</Text>
           </TouchableOpacity>
         </BoxShadow >
@@ -45,7 +45,7 @@ export default class ButtonCeil extends Component {
     } else {
       return (
         <TouchableOpacity onPress={onPress} activeOpacity={0.6} style={[styles.wrap, title === '更多' ? styles.more : '']}>
-          <Text numberOfLines={1} style={styles.enlish} text-26 gray>{enlish}</Text>
+          {/* <Text numberOfLines={1} style={styles.enlish} text-26 gray>{enlish}</Text> */}
           <Text numberOfLines={1} style={[styles.title, title === '更多' ? styles.more : '']} text-16>{title}</Text>
         </TouchableOpacity >
       )

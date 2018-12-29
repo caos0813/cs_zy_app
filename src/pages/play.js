@@ -93,7 +93,7 @@ configure({
   render () {
     const { data } = this
     const { duration, position, paused } = playerStore
-    const picture = Player.config.image
+    const picture = data.picture
     return (
       <View flex useSafeArea>
         <ScrollView style={styles.scroll}>

@@ -5,7 +5,7 @@ import { configure, observable, action, computed } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
-import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime, getLayoutInfo, imageResize } from '../utils'
+import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime, imageResize } from '../utils'
 import Video from 'react-native-video'
 import { Header, ItemHead, PlayBtn, NewsFooter } from '../components'
 import { Player, Share } from '../../react-native-root-ui'
@@ -16,7 +16,7 @@ configure({
   enforceActions: 'always'
 })
 @observer class Play extends Component {
-  @observable duration='00:00'
+  @observable duration = '00:00'
   @computed get position () {
     const { position, id } = this.props.playerStore
     if (id === this.props.data.id) {
@@ -256,14 +256,14 @@ configure({
           <View center paddingV-30><Text text-12 dark06>--END</Text></View>
           {data.isMore &&
             <View paddingT-10>
-              <ItemHead title='更多' seeAll='true' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
-              <View paddingH-25>
+              <ItemHead title='更多' seeAll='false' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
+              <View marginH-25>
                 {moreData.map((item) => (
                   <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>
                     <Image source={{ uri: imageResize(data.picture, 200) }} style={{ width: 48, height: 48 }} borderRadius={8} />
-                    <View paddingL-7>
-                      <Text text-16 dark>{item.title}</Text>
-                      <Text text-12 dark06>{item.introduction}</Text>
+                    <View paddingL-7 style={{ flex: 1 }}>
+                      <Text text-16 dark numberOfLines={2}>{item.title}</Text>
+                      <Text text-12 dark06 numberOfLines={2} ellipsizeMode='tail'>{item.introduction}</Text>
                     </View>
                   </TouchableOpacity>
                 ))}
@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
     top: '50%'
   },
   item: {
+    display: 'flex',
     paddingHorizontal: 15,
     paddingVertical: 10,
     flexDirection: 'row',

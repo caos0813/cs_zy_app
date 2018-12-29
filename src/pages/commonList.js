@@ -26,27 +26,29 @@ import { observer, inject } from 'mobx-react/native'
   openNative = (path, query, auth) => {
     this.OpenUrl.openNative(path, query, auth)
   }
-  onFetch = async (page = 1, startFetch, abortFetch) => {
+  onFetch = (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
     const pageSize = 10
-    const userStorage = await storage.load({
+    let provinceId
+    storage.load({
       key: 'userInfo'
-    })
-    let provinceId = userStorage.province ? userStorage.province.id : 430000
-    console.log(provinceId)
-    axios.get(api.queryViewMore, {
-      params: {
-        specialTopicInfoId: params.specialTopicInfoId,
-        page: page - 1,
-        size: pageSize,
-        type: params.type,
-        provinceId: provinceId
-      }
-    }).then(data => {
-      startFetch(data.content, pageSize)
-    }).catch(() => {
-      startFetch([], pageSize)
-      abortFetch()
+    }).then((data) => {
+      provinceId = data.province ? data.province.id : 430000
+      console.log(provinceId)
+      axios.get(api.queryViewMore, {
+        params: {
+          specialTopicInfoId: params.specialTopicInfoId,
+          page: page - 1,
+          size: pageSize,
+          type: params.type,
+          provinceId: provinceId
+        }
+      }).then(data => {
+        startFetch(data.content, pageSize)
+      }).catch(() => {
+        startFetch([], pageSize)
+        abortFetch()
+      })
     })
   }
   renderItem = (item, index) => {
@@ -119,8 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   article: {
-    paddingHorizontal: 12,
-    // marginHorizontal: 10
+    paddingHorizontal: 15,
     marginBottom: 15
   }
 })

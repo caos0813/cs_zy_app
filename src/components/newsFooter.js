@@ -22,9 +22,9 @@ export default class Footer extends Component {
     return (
       <View style={styles.footer} >
         {showLink &&
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('detail')}>
-          <Image assetName='detail' />
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('detail')}>
+            <Image assetName='detail' />
+          </TouchableOpacity>
         }
         <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('attention')}>
           {isPrise ? <Image assetName='attention_active' /> : <Image assetName='attention' />}
@@ -34,9 +34,9 @@ export default class Footer extends Component {
           <Text text-14 dark06 marginL-5>{commentNumber}</Text>
         </TouchableOpacity>
         {showCollect &&
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('star')}>
-          {isCollect ? <Image assetName='star_active' /> : <Image assetName='star' />}
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('star')}>
+            {isCollect ? <Image assetName='star_active' /> : <Image assetName='star' />}
+          </TouchableOpacity>
         }
         <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('share')}>
           <Image assetName='share' />

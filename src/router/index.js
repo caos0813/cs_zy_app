@@ -52,8 +52,9 @@ const TabStack = createBottomTabNavigator(
   {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
+        console.log(focused)
         const { routeName } = navigation.state
-        let iconName
+        let iconName, iconColor
         if (routeName === 'Index') {
           iconName = 'home'
         } else if (routeName === 'Plan') {
@@ -61,7 +62,12 @@ const TabStack = createBottomTabNavigator(
         } else if (routeName === 'Mine') {
           iconName = 'mine'
         }
-        return <Image assetName={iconName} tintColor={tintColor} />
+        if (!focused) {
+          iconColor = colors.dark
+        } else {
+          iconColor = colors.calm
+        }
+        return <Image assetName={iconName} tintColor={iconColor} />
       }
     }),
     tabBarOptions: {
@@ -90,7 +96,7 @@ const TabStack = createBottomTabNavigator(
       },
       // tab bar的⽂本样式
       labelStyle: {
-        fontSize: 14,
+        fontSize: 10,
         paddingTop: 5
       }
       // tab ⻚指示符的样式 (tab⻚下⾯的⼀条线).
