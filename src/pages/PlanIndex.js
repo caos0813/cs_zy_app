@@ -55,7 +55,7 @@ configure({
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View> */}
         {/* 文章1 */}
-        {this.firstArticle && <View style={styles.article}>
+        {this.firstArticle.labelName && <View style={styles.article}>
           <ItemHead smallText='true' title={this.firstArticle.labelName} leftIcon='true' />
           <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
             <View style={styles.cardFooter} paddingT-5>

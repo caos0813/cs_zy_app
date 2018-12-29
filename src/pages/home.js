@@ -154,56 +154,58 @@ configure({
       this.entryZhiyuan()
     }
   }
-  onFetch = async (page = 1, startFetch, abortFetch) => {
+  onFetch = (page = 1, startFetch, abortFetch) => {
     // alert(1111)
     const pageSize = 5
-    const userStorage = await storage.load({
+    let provinceId
+    storage.load({
       key: 'userInfo'
-    })
-    let provinceId = userStorage.province ? userStorage.province.id : 430000
-    console.log(provinceId)
-    axios.get(api.queryModuleArticleInfo, {
-      params: {
-        moduleId: 4,
-        provinceId: provinceId,
-        page: page - 1,
-        size: pageSize
-      }
-    }).then(data => {
-      const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
-      if (page === 1) {
+    }).then((data) => {
+      provinceId = data.province ? data.province.id : 430000
+      console.log(data)
+      axios.get(api.queryModuleArticleInfo, {
+        params: {
+          moduleId: 4,
+          provinceId: provinceId,
+          page: page - 1,
+          size: pageSize
+        }
+      }).then(data => {
+        const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
+        if (page === 1) {
+          if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+            this.setValue('firstArticle', articleInfoLabelList.content[0])
+          } else {
+            this.setValue('firstArticle', [])
+          }
+          if (topicsAndArticlesList.length > 0) {
+            let firstTopic = []
+            firstTopic.push(topicsAndArticlesList.shift())
+            this.setValue('firstTopic', firstTopic)
+            this.setValue('topics', topicsAndArticlesList)
+          } else {
+            this.setValue('firstTopic', [])
+            this.setValue('topics', [])
+          }
+          if (provincePolicyList.length > 0) {
+            this.setValue('specials', provincePolicyList)
+          } else {
+            this.setValue('specials', [])
+          }
+        }
         if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
-          this.setValue('firstArticle', articleInfoLabelList.content[0])
+          if (articleInfoLabelList.content.length === 1 && page <= 1) {
+            console.log('只有一个，在第一页，所以删除一个')
+            articleInfoLabelList.content.shift()
+          }
+          startFetch(articleInfoLabelList.content, pageSize)
         } else {
-          this.setValue('firstArticle', [])
+          startFetch([], pageSize)
         }
-        if (topicsAndArticlesList.length > 0) {
-          let firstTopic = []
-          firstTopic.push(topicsAndArticlesList.shift())
-          this.setValue('firstTopic', firstTopic)
-          this.setValue('topics', topicsAndArticlesList)
-        } else {
-          this.setValue('firstTopic', [])
-          this.setValue('topics', [])
-        }
-        if (provincePolicyList.length > 0) {
-          this.setValue('specials', provincePolicyList)
-        } else {
-          this.setValue('specials', [])
-        }
-      }
-      if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
-        if (articleInfoLabelList.content.length === 1 && page <= 1) {
-          console.log('只有一个，在第一页，所以删除一个')
-          articleInfoLabelList.content.shift()
-        }
-        startFetch(articleInfoLabelList.content, pageSize)
-      } else {
+      }).catch(() => {
         startFetch([], pageSize)
-      }
-    }).catch(() => {
-      startFetch([], pageSize)
-      abortFetch()
+        abortFetch()
+      })
     })
   }
   renderHeader = () => {
@@ -268,7 +270,7 @@ configure({
           }
         </View>
         {/* 文章1 */}
-        {this.firstArticle && <View style={styles.article}>
+        {this.firstArticle.labelName && <View style={styles.article}>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
           <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
             <View style={styles.cardFooter} paddingT-5>
@@ -411,7 +413,6 @@ configure({
     }) */
   }
   componentDidMount () {
-    //  this.refs.scroll.refresh()
     const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
