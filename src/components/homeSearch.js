@@ -17,7 +17,7 @@ export default class HomeSearch extends Component {
         height: 30,
         color: colors.black,
         border: 15,
-        radius: 15,
+        radius: 10,
         opacity: 0.05,
         x: 0,
         y: 0,

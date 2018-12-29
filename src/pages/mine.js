@@ -60,7 +60,7 @@ import { Header } from '../components'
             </View>
             {(isVipValid !== 2 && userInfo.token) && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            {!userInfo.token && <Button bg-assertive label='登陆' size='small' marginT-12 onPress={() => navigate('Login')} />
+            {!userInfo.token && <Button bg-assertive label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
             }
             {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />}
           </View>

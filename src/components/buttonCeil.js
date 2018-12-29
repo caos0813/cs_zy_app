@@ -22,7 +22,7 @@ export default class ButtonCeil extends Component {
         height: 40,
         color: colors.black,
         border: 8,
-        radius: 15,
+        radius: 10,
         opacity: 0.05,
         x: 0,
         y: 0,

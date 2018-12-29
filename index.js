@@ -12,6 +12,7 @@ require('./src/utils/assets')
 import theme from './src/theme'
 import {  storage, platform, navigator, statusBarHeight } from './src/utils'
 import store from './src/store'
+import SplashScreen from 'react-native-splash-screen'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 promise.polyfill()
 class App extends Component {
@@ -39,23 +40,23 @@ class App extends Component {
   update = () => {
     if (Config.ENV === 'production') {
       codePush.sync({
-        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESUME,
-        installMode: codePush.InstallMode.ON_NEXT_RESUME
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND 
       })
     } else {
       codePush.sync({
         updateDialog: {
           appendReleaseDescription: true,
-          descriptionPrefix: '检查到更新',
+          //descriptionPrefix: '检查到更新',
           title: '更新',
           mandatoryUpdateMessage: '',
           mandatoryContinueButtonLabel: '确定'
         },
-        installMode: codePush.InstallMode.IMMEDIATE
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND
       })
     }
   }
   async componentDidMount () {
+    SplashScreen.hide()
     this.update()
     /* 初始化极光 */
     if (platform === 'android') {
