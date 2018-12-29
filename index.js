@@ -15,6 +15,7 @@ import store from './src/store'
 import SplashScreen from 'react-native-splash-screen'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 promise.polyfill()
+import Config from 'react-native-config'
 class App extends Component {
   constructor(props) {
     super(props)
@@ -40,7 +41,8 @@ class App extends Component {
   update = () => {
     if (Config.ENV === 'production') {
       codePush.sync({
-        installMode: codePush.InstallMode.ON_NEXT_SUSPEND 
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND,
+        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_SUSPEND  
       })
     } else {
       codePush.sync({
@@ -51,12 +53,12 @@ class App extends Component {
           mandatoryUpdateMessage: '',
           mandatoryContinueButtonLabel: '确定'
         },
-        installMode: codePush.InstallMode.ON_NEXT_SUSPEND
+        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_SUSPEND,
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND 
       })
     }
   }
   async componentDidMount () {
-    SplashScreen.hide()
     this.update()
     /* 初始化极光 */
     if (platform === 'android') {
@@ -94,6 +96,9 @@ class App extends Component {
         getUserInfo()
       }
     })
+    if (Config.ENV === 'development') {
+      SplashScreen.hide()
+    }
   }
   componentWillMount () {
     console.log('componentWillUnmount')

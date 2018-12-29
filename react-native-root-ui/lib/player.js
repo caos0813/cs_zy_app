@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 50,
     left: 0,
-    bottom: 70
+    bottom: 65
   },
   player: {
     marginHorizontal: 10,

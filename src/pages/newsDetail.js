@@ -215,6 +215,7 @@ configure({
                 progressUpdateInterval={1000}
                 onEnd={this.onEnd}
                 ref={(ref) => { this.player = ref }}
+                resizeMode='cover'
               />
               {!paused
                 ? <View row centerV paddingH-10 paddingV-2 bg-dark06 style={styles.playControls}>

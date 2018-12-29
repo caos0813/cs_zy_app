@@ -26,29 +26,31 @@ import { observer, inject } from 'mobx-react/native'
   openNative = (path, query, auth) => {
     this.OpenUrl.openNative(path, query, auth)
   }
-  onFetch = (page = 1, startFetch, abortFetch) => {
+  onFetch = async (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
     const pageSize = 10
-    let provinceId
-    storage.load({
-      key: 'userInfo'
-    }).then((data) => {
-      provinceId = data.province ? data.province.id : 430000
-      console.log(provinceId)
-      axios.get(api.queryViewMore, {
-        params: {
-          specialTopicInfoId: params.specialTopicInfoId,
-          page: page - 1,
-          size: pageSize,
-          type: params.type,
-          provinceId: provinceId
-        }
-      }).then(data => {
-        startFetch(data.content, pageSize)
-      }).catch(() => {
-        startFetch([], pageSize)
-        abortFetch()
+    let userInfo = null
+    try {
+      userInfo = await storage.load({
+        key: 'userInfo'
       })
+    } catch (err) {
+
+    }
+    let provinceId = (userInfo && userInfo.province) ? userInfo.province.id : 430000
+    axios.get(api.queryViewMore, {
+      params: {
+        specialTopicInfoId: params.specialTopicInfoId,
+        page: page - 1,
+        size: pageSize,
+        type: params.type,
+        provinceId: provinceId
+      }
+    }).then(data => {
+      startFetch(data.content, pageSize)
+    }).catch(() => {
+      startFetch([], pageSize)
+      abortFetch()
     })
   }
   renderItem = (item, index) => {

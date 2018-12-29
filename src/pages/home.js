@@ -154,57 +154,61 @@ configure({
       this.entryZhiyuan()
     }
   }
-  onFetch = (page = 1, startFetch, abortFetch) => {
+  onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 5
-    let provinceId
-    storage.load({
-      key: 'userInfo'
-    }).then((data) => {
-      provinceId = data.province ? data.province.id : 430000
-      console.log(data)
-      axios.get(api.queryModuleArticleInfo, {
-        params: {
-          moduleId: 4,
-          provinceId: provinceId,
-          page: page - 1,
-          size: pageSize
-        }
-      }).then(data => {
-        const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
-        if (page === 1) {
-          if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
-            this.setValue('firstArticle', articleInfoLabelList.content[0])
-          } else {
-            this.setValue('firstArticle', [])
-          }
-          if (topicsAndArticlesList.length > 0) {
-            let firstTopic = []
-            firstTopic.push(topicsAndArticlesList.shift())
-            this.setValue('firstTopic', firstTopic)
-            this.setValue('topics', topicsAndArticlesList)
-          } else {
-            this.setValue('firstTopic', [])
-            this.setValue('topics', [])
-          }
-          if (provincePolicyList.content.length > 0) {
-            this.setValue('specials', provincePolicyList.content)
-          } else {
-            this.setValue('specials', [])
-          }
-        }
-        if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
-          if (articleInfoLabelList.content.length === 1 && page <= 1) {
-            console.log('只有一个，在第一页，所以删除一个')
-            articleInfoLabelList.content.shift()
-          }
-          startFetch(articleInfoLabelList.content, pageSize)
-        } else {
-          startFetch([], pageSize)
-        }
-      }).catch(() => {
-        startFetch([], pageSize)
-        abortFetch()
+
+    let userInfo = null
+    try {
+      userInfo = await storage.load({
+        key: 'userInfo'
       })
+    } catch (err) {
+
+    }
+    let provinceId = (userInfo && userInfo.province) ? userInfo.province.id : 430000
+    axios.get(api.queryModuleArticleInfo, {
+      params: {
+        moduleId: 4,
+        provinceId: provinceId,
+        page: page - 1,
+        size: pageSize
+      }
+    }).then(data => {
+      console.log('onFetch3')
+      const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
+      if (page === 1) {
+        if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+          this.setValue('firstArticle', articleInfoLabelList.content[0])
+        } else {
+          this.setValue('firstArticle', [])
+        }
+        if (topicsAndArticlesList.length > 0) {
+          let firstTopic = []
+          firstTopic.push(topicsAndArticlesList.shift())
+          this.setValue('firstTopic', firstTopic)
+          this.setValue('topics', topicsAndArticlesList)
+        } else {
+          this.setValue('firstTopic', [])
+          this.setValue('topics', [])
+        }
+        if (provincePolicyList.content.length > 0) {
+          this.setValue('specials', provincePolicyList.content)
+        } else {
+          this.setValue('specials', [])
+        }
+      }
+      if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
+        if (articleInfoLabelList.content.length === 1 && page <= 1) {
+          console.log('只有一个，在第一页，所以删除一个')
+          articleInfoLabelList.content.shift()
+        }
+        startFetch(articleInfoLabelList.content, pageSize)
+      } else {
+        startFetch([], pageSize)
+      }
+    }).catch(() => {
+      startFetch([], pageSize)
+      abortFetch()
     })
   }
   renderHeader = () => {
