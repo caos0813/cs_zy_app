@@ -308,32 +308,18 @@ configure({
       </View>
     )
   }
-  renderItem = (item, index, separator) => {
-    if (index === 0) {
-      return null
+  openNotificationListener = (e) => {
+    const extras = _.isObject(e.extras) ? e.extras : JSON.parse(e.extras)
+    if (extras.type === 'article') {
+      this.openUrl(`article`, { id: extras.id })
+    } else if (extras.type === 'banner') {
+      if (extras.link) {
+        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
+      } else {
+        this.openUrl(`article`, { id: extras.id, type: 'banner' })
+      }
     } else {
-      return (
-        <View key={index}>
-          <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
-          <View paddingH-15>
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
-              <View style={styles.cardFooter} paddingT-5>
-                <View row>
-                  <View row centerV paddingR-10>
-                    <Image assetName='attention' style={styles.cardItemImage} />
-                    <Text gray text-11>{item.priseNumber}</Text>
-                  </View>
-                  <View row centerV>
-                    <Image assetName='comment' style={styles.cardItemImage} />
-                    <Text gray text-11>{item.commentNumber}</Text>
-                  </View>
-                </View>
-                <Text gray text-11>{transferTime(item.releaseTime)}</Text>
-              </View>
-            </CardItem>
-          </View>
-        </View>
-      )
+      return false
     }
   }
   // 专题

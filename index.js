@@ -61,12 +61,8 @@ class App extends Component {
   async componentDidMount () {
     this.update()
     /* 初始化极光 */
-    if (platform === 'android') {
-      JPushModule.initPush()
-
-    } else {
-      JPushModule.setupPush()
-    }
+    JPushModule.initPush()
+    JPushModule.clearAllNotifications()
     /* 初始化极光 */
     const { setUserInfo, getUserInfo } = store.userStore
     try {
@@ -85,10 +81,11 @@ class App extends Component {
             //alert(JSON.stringify(e))
           })
         } catch (err) {
+          //alert(JSON.stringify(err))
         }
       }
     } catch (err) {
-
+      //alert(JSON.stringify(err))
     }
     DeviceEventEmitter.addListener('updateUserInfo', () => {
       const { userInfo } = store.userStore
