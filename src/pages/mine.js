@@ -60,7 +60,7 @@ import { Header } from '../components'
             </View>
             {(isVipValid !== 2 && userInfo.token) && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            {!userInfo.token && <Button bg-assertive label='登陆' size='small' marginT-12 onPress={() => navigate('Login')} />
+            {!userInfo.token && <Button bg-assertive label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
             }
             {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />}
           </View>
@@ -124,7 +124,7 @@ import { Header } from '../components'
             </ListItem>
           </View>
           {userInfo.token && <View paddingT-100 paddingH-50>
-            <Button label='退出登录' bg-calm text-18 onPress={this.signOut} />
+            <Button label='退出' bg-calm text-18 onPress={this.signOut} />
           </View>}
         </ScrollView>
       </View>

@@ -26,7 +26,7 @@ export default class LoginInput extends Component {
         height: 32,
         color: colors.black,
         border: 30,
-        radius: 16,
+        radius: 10,
         opacity: 0.05,
         x: 0,
         y: 0,

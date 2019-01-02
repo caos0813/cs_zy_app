@@ -5,7 +5,7 @@ import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
 import { Progress, Mask, NoNetwork } from '../components'
-import { width, BackPress, statusBarHeight, OpenUrl } from '../utils'
+import { width, BackPress, statusBarHeight, OpenUrl, navigator } from '../utils'
 import Picker from 'react-native-picker'
 import SplashScreen from 'react-native-splash-screen'
 import Config from '../config'
@@ -47,8 +47,13 @@ import _ from 'lodash'
       }))
       return
     }
+    // if (route.path === 'volunteer-fill-index') {
+    //   // return
+    // }
     if (this.state.canGoBack) {
+      console.log(2222)
       this.refs.webview.goBack()
+      // this.refs.webview.reload()
     } else {
       this.props.navigation.goBack()
     }
@@ -62,7 +67,15 @@ import _ from 'lodash'
       }))
       return true
     }
+    if (route.path === 'volunteer-fill-index') {
+      this.refs.webview.postMessage(JSON.stringify({
+        type: 'fillBack',
+        data: {}
+      }))
+      // return true
+    }
     if (this.state.canGoBack) {
+      console.log(333)
       this.refs.webview.goBack()
       return true
     } else {
@@ -240,6 +253,7 @@ import _ from 'lodash'
         />}
         {maskShow && <Mask />}
         <WebView ref='webview'
+          bounces={false}
           style={{ backgroundColor: colors.stable }}
           source={{ uri: `${Config.WEB_URL}${path}` }}
           onLoadStart={this.onLoadStart}

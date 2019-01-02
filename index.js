@@ -5,13 +5,14 @@ import { Provider } from 'mobx-react/native'
 import Router from './src/router'
 import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
-import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
+import Config from 'react-native-config'
 require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
 import {  storage, platform, navigator, statusBarHeight } from './src/utils'
 import store from './src/store'
+import SplashScreen from 'react-native-splash-screen'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 promise.polyfill()
 class App extends Component {
@@ -39,31 +40,28 @@ class App extends Component {
   update = () => {
     if (Config.ENV === 'production') {
       codePush.sync({
-        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESUME,
-        installMode: codePush.InstallMode.ON_NEXT_RESUME
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND,
+        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_SUSPEND  
       })
     } else {
       codePush.sync({
         updateDialog: {
           appendReleaseDescription: true,
-          descriptionPrefix: '检查到更新',
+          //descriptionPrefix: '检查到更新',
           title: '更新',
           mandatoryUpdateMessage: '',
           mandatoryContinueButtonLabel: '确定'
         },
-        installMode: codePush.InstallMode.IMMEDIATE
+        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_SUSPEND,
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND 
       })
     }
   }
   async componentDidMount () {
     this.update()
     /* 初始化极光 */
-    if (platform === 'android') {
-      JPushModule.initPush()
-
-    } else {
-      JPushModule.setupPush()
-    }
+    JPushModule.initPush()
+    JPushModule.clearAllNotifications()
     /* 初始化极光 */
     const { setUserInfo, getUserInfo } = store.userStore
     try {
@@ -82,10 +80,11 @@ class App extends Component {
             //alert(JSON.stringify(e))
           })
         } catch (err) {
+          //alert(JSON.stringify(err))
         }
       }
     } catch (err) {
-
+      //alert(JSON.stringify(err))
     }
     DeviceEventEmitter.addListener('updateUserInfo', () => {
       const { userInfo } = store.userStore
@@ -93,6 +92,9 @@ class App extends Component {
         getUserInfo()
       }
     })
+    if (Config.ENV === 'development') {
+      SplashScreen.hide()
+    }
   }
   componentWillMount () {
     console.log('componentWillUnmount')
