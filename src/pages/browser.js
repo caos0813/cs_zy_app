@@ -4,13 +4,8 @@ import { WebView } from 'react-native-webview'
 import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
-<<<<<<< HEAD
 import { NoNetwork } from '../components'
 import { BackPress, statusBarHeight, OpenUrl } from '../utils'
-=======
-import { Progress, Mask, NoNetwork } from '../components'
-import { width, BackPress, statusBarHeight, OpenUrl, navigator } from '../utils'
->>>>>>> 5aac79a4fa76738a87d6f8e9b607fe201c475a1d
 import Picker from 'react-native-picker'
 import Config from '../config'
 import _ from 'lodash'
@@ -75,7 +70,7 @@ import _ from 'lodash'
         type: 'fillBack',
         data: {}
       }))
-      // return true
+      return true
     }
     if (this.state.canGoBack) {
       console.log(333)
