@@ -29,27 +29,41 @@ import { observer, inject } from 'mobx-react/native'
   onFetch = (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
     const pageSize = 10
-    let provinceId
-    storage.load({
-      key: 'userInfo'
-    }).then((data) => {
-      provinceId = data.province ? data.province.id : 430000
-      console.log(provinceId)
-      axios.get(api.queryViewMore, {
-        params: {
-          specialTopicInfoId: params.specialTopicInfoId,
-          page: page - 1,
-          size: pageSize,
-          type: params.type,
-          provinceId: provinceId
-        }
-      }).then(data => {
-        startFetch(data.content, pageSize)
-      }).catch(() => {
-        startFetch([], pageSize)
-        abortFetch()
-      })
+    axios.get(api.queryViewMore, {
+      params: {
+        specialTopicInfoId: params.specialTopicInfoId,
+        page: page - 1,
+        size: pageSize,
+        type: params.type,
+        provinceId: 430000
+      }
+    }).then(data => {
+      startFetch(data.content, pageSize)
+    }).catch(() => {
+      startFetch([], pageSize)
+      abortFetch()
     })
+    // let provinceId
+    // storage.load({
+    //   key: 'userInfo'
+    // }).then((data) => {
+    //   provinceId = data.province ? data.province.id : 430000
+    //   console.log(provinceId)
+    //   axios.get(api.queryViewMore, {
+    //     params: {
+    //       specialTopicInfoId: params.specialTopicInfoId,
+    //       page: page - 1,
+    //       size: pageSize,
+    //       type: params.type,
+    //       provinceId: provinceId
+    //     }
+    //   }).then(data => {
+    //     startFetch(data.content, pageSize)
+    //   }).catch(() => {
+    //     startFetch([], pageSize)
+    //     abortFetch()
+    //   })
+    // })
   }
   renderItem = (item, index) => {
     const { params } = this.props.navigation.state
