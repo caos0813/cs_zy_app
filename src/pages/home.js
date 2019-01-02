@@ -227,8 +227,9 @@ configure({
       }, {
         title: '查专业',
         image: require('../assets/home/icon02.png'),
-        href: 'major-index',
-        isBrowser: true
+        href: 'ByMajor'
+        // href: 'major-index',
+        // isBrowser: true
       }, {
         title: '查职业',
         image: require('../assets/home/icon03.png'),

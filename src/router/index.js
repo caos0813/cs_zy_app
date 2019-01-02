@@ -23,6 +23,7 @@ import ProfessionTag from '../pages/professionTag'
 import CommentList from '../pages/comment/comment'
 import Praise from '../pages/comment/praise'
 import Test from '../pages/test'
+import ByMajor from '../pages/byMajor'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
@@ -259,6 +260,12 @@ const AppNavigation = createStackNavigator(
       screen: Browser,
       navigationOptions: () => ({
         header: null
+      })
+    },
+    ByMajor: {
+      screen: ByMajor,
+      navigationOptions: () => ({
+        title: '查专业'
       })
     }
   },

@@ -56,6 +56,6 @@ export default {
   addNumber: 'content/articleInfo/addNumber',
   /* 检查升级 */
   checkVersion: 'content/appVersion/getNewest',
-  /* 增加统计 */
-  addNumber: 'content/articleInfo/addNumber'
+  /* 获取专业下的音频列表 */
+  getMinuteAudioSpecialList: 'xuanke/guidanceInfo/getMinuteAudioSpecialList'
 }
