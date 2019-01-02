@@ -29,11 +29,15 @@ import { observer, inject } from 'mobx-react/native'
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
     const pageSize = 10
-    const userStorage = await storage.load({
-      key: 'userInfo'
-    })
-    let provinceId = userStorage.province ? userStorage.province.id : 430000
-    console.log(provinceId)
+    let userInfo = null
+    try {
+      userInfo = await storage.load({
+        key: 'userInfo'
+      })
+    } catch (err) {
+
+    }
+    let provinceId = (userInfo && userInfo.province) ? userInfo.province.id : 430000
     axios.get(api.queryViewMore, {
       params: {
         specialTopicInfoId: params.specialTopicInfoId,
@@ -48,6 +52,27 @@ import { observer, inject } from 'mobx-react/native'
       startFetch([], pageSize)
       abortFetch()
     })
+    // let provinceId
+    // storage.load({
+    //   key: 'userInfo'
+    // }).then((data) => {
+    //   provinceId = data.province ? data.province.id : 430000
+    //   console.log(provinceId)
+    //   axios.get(api.queryViewMore, {
+    //     params: {
+    //       specialTopicInfoId: params.specialTopicInfoId,
+    //       page: page - 1,
+    //       size: pageSize,
+    //       type: params.type,
+    //       provinceId: provinceId
+    //     }
+    //   }).then(data => {
+    //     startFetch(data.content, pageSize)
+    //   }).catch(() => {
+    //     startFetch([], pageSize)
+    //     abortFetch()
+    //   })
+    // })
   }
   renderItem = (item, index) => {
     const { params } = this.props.navigation.state
@@ -119,8 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   article: {
-    paddingHorizontal: 12,
-    // marginHorizontal: 10
+    paddingHorizontal: 15,
     marginBottom: 15
   }
 })

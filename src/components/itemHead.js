@@ -31,7 +31,7 @@ export default class itemHead extends Component {
       )
     } else {
       return (
-        <Text dark text-24 style={styles.text}>{title}</Text>
+        <Text dark text-24 style={styles.text}>{title ? (title.length > 12 ? title.substr(0, 12) + '...' : title) : ''}</Text>
       )
     }
   }

@@ -99,7 +99,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -113,6 +113,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode project.env.get("APP_VERSION_CODE").toInteger()
         versionName project.env.get("APP_VERSION_NAME")
+        manifestPlaceholders = [
+                JPUSH_APPKEY: "AppKey97ab5a6f89c340b6f61c74c4",
+                APP_CHANNEL : "default"
+        ]
+
         manifestPlaceholders = [
                 JPUSH_APPKEY: "97ab5a6f89c340b6f61c74c4",
                 APP_CHANNEL : project.env.get("APP_CHANNEL")

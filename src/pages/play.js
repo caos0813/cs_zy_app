@@ -1,25 +1,21 @@
 import React, { Component } from 'react'
-import { StyleSheet, findNodeHandle, DeviceEventEmitter, ScrollView } from 'react-native'
+import { StyleSheet, findNodeHandle, ScrollView } from 'react-native'
 import { configure, observable, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { BlurView } from 'react-native-blur'
-import { width, statusBarHeight, transferTime, navigator, transferPlayerTime, api, axios, imageResize } from '../utils'
+import { width, statusBarHeight, transferTime, navigator, api, axios, imageResize } from '../utils'
 import { Header, NewsFooter } from '../components'
 import { Player, Share } from '../../react-native-root-ui'
 import _ from 'lodash'
 import Config from '../config'
+import playerStore from '../store/playerStore'
 configure({
   enforceActions: 'always'
 })
 @inject('routeStore')
 @observer class Play extends Component {
-  @observable duration = '00:00'
-  @observable toDetail = false
-  @observable position = '00:00'
-  @observable currentTime = 0
-  @observable paused = true
   @observable data = {
   }
   @action.bound
@@ -39,7 +35,17 @@ configure({
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
   }
   play = () => {
-    Player.player && Player.pause()
+    const { id, videoFile, title, picture } = this.data
+    if (Player.player) {
+      Player.pause()
+    } else {
+      Player.play({
+        id: id,
+        url: videoFile,
+        title: title,
+        image: imageResize(picture, 200)
+      })
+    }
   }
   statistics=(type) => {
     axios.post(api.addNumber, {
@@ -52,8 +58,7 @@ configure({
     const webpageUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/article?id=${this.data.id}`
     switch (e) {
       case 'detail':
-        this.setValue('toDetail', true)
-        navigator.replace('NewsDetail', { articleId: this.data.id })
+        navigator.navigate('NewsDetail', { articleId: this.data.id })
         break
       case 'share':
         Share.show({
@@ -81,12 +86,14 @@ configure({
       case 'comment':
         const { setValue } = this.props.routeStore
         setValue('commentTabId', this.data.id)
-        navigator.replace('Comment')
+        navigator.navigate('Comment')
         break
     }
   }
   render () {
-    const { data, duration, position, paused } = this
+    const { data } = this
+    const { duration, position, paused } = playerStore
+    const picture = data.picture
     return (
       <View flex useSafeArea>
         <ScrollView style={styles.scroll}>
@@ -102,10 +109,10 @@ configure({
             <Image
               style={styles.imageBlur}
               ref={(img) => { this.backgroundImage = img }}
-              source={{ uri: data.picture }}
+              source={{ uri: picture }}
               onLoadEnd={this.imageLoaded}
             />
-            {this.state.viewRef && data.picture &&
+            {this.state.viewRef && picture &&
               <BlurView
                 style={styles.blur}
                 viewRef={this.state.viewRef}
@@ -116,7 +123,7 @@ configure({
             }
             <Image
               style={styles.image}
-              source={{ uri: imageResize(data.picture, 600) }}
+              source={{ uri: picture }}
             />
             <View style={[styles.progress]}>
               <Text light text-9>{position}/{duration}</Text>
@@ -145,29 +152,15 @@ configure({
     navigator.goBack()
   }
   componentWillUnmount () {
-    if (!this.toDetail) {
-      Player.player && Player.setStatus(true)
-    }
-    this.playerEvent.remove()
   }
   componentDidMount () {
-    Player.player && Player.setStatus(false)
-    this.playerEvent = DeviceEventEmitter.addListener('playerEvent', e => {
-      console.log(e)
-      const { duration, currentTime, paused } = e
-      const { setValue, data } = this
-      setValue('paused', paused)
-      if (_.isEmpty(data)) {
-        axios.get(api.queryArticleInfoDetails, {
-          params: {
-            articleInfoId: e.id
-          }
-        }).then(data => {
-          setValue('data', data)
-        })
+    const id = this.props.navigation.getParam('articleId')
+    axios.get(api.queryArticleInfoDetails, {
+      params: {
+        articleInfoId: id
       }
-      setValue('position', transferPlayerTime(currentTime))
-      setValue('duration', transferPlayerTime(duration))
+    }).then(data => {
+      this.setValue('data', data)
     })
   }
 }

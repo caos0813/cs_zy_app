@@ -32,9 +32,6 @@ configure({
         {(!this.tagData || this.tagData.length <= 0) && <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
         {(this.tagData && this.tagData.length > 0) &&
           <ScrollView>
-            <View>
-              <ItemHead title='全部兴趣标签' />
-            </View>
             <View style={styles.iconsWrap} marginV-10 paddingL-5>
               {
                 this.tagData && this.tagData.map((item, index) => (

@@ -155,13 +155,17 @@ configure({
     }
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
-    // alert(1111)
     const pageSize = 5
-    const userStorage = await storage.load({
-      key: 'userInfo'
-    })
-    let provinceId = userStorage.province ? userStorage.province.id : 430000
-    console.log(provinceId)
+
+    let userInfo = null
+    try {
+      userInfo = await storage.load({
+        key: 'userInfo'
+      })
+    } catch (err) {
+
+    }
+    let provinceId = (userInfo && userInfo.province) ? userInfo.province.id : 430000
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,
@@ -170,6 +174,7 @@ configure({
         size: pageSize
       }
     }).then(data => {
+      console.log('onFetch3')
       const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
       if (page === 1) {
         if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
@@ -186,8 +191,8 @@ configure({
           this.setValue('firstTopic', [])
           this.setValue('topics', [])
         }
-        if (provincePolicyList.length > 0) {
-          this.setValue('specials', provincePolicyList)
+        if (provincePolicyList.content.length > 0) {
+          this.setValue('specials', provincePolicyList.content)
         } else {
           this.setValue('specials', [])
         }
@@ -269,23 +274,25 @@ configure({
           }
         </View>
         {/* 文章1 */}
-        {this.firstArticle && <View style={styles.article}>
+        {this.firstArticle.labelName && <View>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
-          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
-            <View style={styles.cardFooter} paddingT-5>
-              <View row>
-                <View row centerV paddingR-10>
-                  <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.priseNumber}</Text>
+          <View paddingH-15>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
+              <View style={styles.cardFooter} paddingT-5>
+                <View row>
+                  <View row centerV paddingR-10>
+                    <Image assetName='attention' style={styles.cardItemImage} />
+                    <Text gray text-11>{this.firstArticle.priseNumber}</Text>
+                  </View>
+                  <View row centerV>
+                    <Image assetName='comment' style={styles.cardItemImage} />
+                    <Text gray text-11>{this.firstArticle.commentNumber}</Text>
+                  </View>
                 </View>
-                <View row centerV>
-                  <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.commentNumber}</Text>
-                </View>
+                <Text gray text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
               </View>
-              <Text dark06 text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
-            </View>
-          </CardItem>
+            </CardItem>
+          </View>
         </View>}
         {/* 专题1 */}
         {this.renderTopics(this.firstTopic)}
@@ -302,30 +309,18 @@ configure({
       </View>
     )
   }
-  renderItem = (item, index, separator) => {
-    if (index === 0) {
-      return null
+  openNotificationListener = (e) => {
+    const extras = _.isObject(e.extras) ? e.extras : JSON.parse(e.extras)
+    if (extras.type === 'article') {
+      this.openUrl(`article`, { id: extras.id })
+    } else if (extras.type === 'banner') {
+      if (extras.link) {
+        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
+      } else {
+        this.openUrl(`article`, { id: extras.id, type: 'banner' })
+      }
     } else {
-      return (
-        <View style={styles.article} key={index}>
-          <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
-          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
-            <View style={styles.cardFooter} paddingT-5>
-              <View row>
-                <View row centerV paddingR-10>
-                  <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.priseNumber}</Text>
-                </View>
-                <View row centerV>
-                  <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.commentNumber}</Text>
-                </View>
-              </View>
-              <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
-            </View>
-          </CardItem>
-        </View>
-      )
+      return false
     }
   }
   // 专题
@@ -412,7 +407,6 @@ configure({
     }) */
   }
   componentDidMount () {
-    //  this.refs.scroll.refresh()
     const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
@@ -500,9 +494,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1 / ratio,
     borderColor: colors.gray
   },
-  article: {
-    paddingHorizontal: 12
-  },
   topics: {
     flexWrap: 'wrap',
     paddingHorizontal: 3
@@ -519,7 +510,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 10,
     marginRight: 2,
-    tintColor: colors.dark06
+    tintColor: colors.gray
   },
   cardFooter: {
     flexDirection: 'row',
