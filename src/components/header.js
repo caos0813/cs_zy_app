@@ -32,7 +32,7 @@ export default class Header extends Component {
       <View row centerV style={[styles.header, containerStyle]}>
         <View style={[styles.btnWrap, btnStyle]}>
           {showLeft &&
-          <TouchableOpacity activeOpacity={0.6} onPress={this.leftPress}>
+          <TouchableOpacity style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }} activeOpacity={0.6} onPress={this.leftPress}>
             {leftContainer || <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />}
           </TouchableOpacity>
           }
@@ -42,7 +42,7 @@ export default class Header extends Component {
         </View>
         <View style={styles.btnWrap}>
           {showRight &&
-          <TouchableOpacity activeOpacity={0.6} onPress={leftPress}>
+          <TouchableOpacity style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }} activeOpacity={0.6} onPress={leftPress}>
             <Image assetName='backArrow' style={styles.backImage} tintColor={tintColor} />
           </TouchableOpacity>
           }

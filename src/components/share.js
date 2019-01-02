@@ -131,7 +131,7 @@ export default class Share extends Component {
       })
     })
     this.setState({
-      isWXAppInstalled: await WeChat.isWXAppInstalled() || true
+      isWXAppInstalled: await WeChat.isWXAppInstalled()
     })
   }
 }
@@ -161,7 +161,8 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    zIndex: 1004
   },
   ceil: {
     alignItems: 'center'

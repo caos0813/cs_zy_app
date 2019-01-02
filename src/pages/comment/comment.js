@@ -12,6 +12,7 @@ configure({
 @inject('routeStore')
 @observer class Page extends Component {
   @observable content = ''
+  @observable total = 0
   @action.bound
   setValue (key, val) {
     this[key] = val
@@ -49,6 +50,7 @@ configure({
       }
     }).then(data => {
       startFetch(data.content, pageSize)
+      this.setValue('total', data.totalElements)
     }).catch(() => {
       startFetch([], pageSize)
       abortFetch()
@@ -69,7 +71,7 @@ configure({
   renderItem = (item, index) => {
     return (
       <View paddingV-15 row style={styles.item}>
-        <Image source={imageFormat(item.userImage, true)} borderRadius={40} style={{ width: 38, height: 38 }} />
+        <Image source={imageFormat(item.userImage, item.gender)} borderRadius={40} style={{ width: 38, height: 38 }} />
         <View flex paddingL-7>
           <Text text-16 dark>{item.userName}</Text>
           <Text text-12 dark06>{transferTime(item.commentTime)}</Text>
@@ -118,12 +120,14 @@ configure({
     )
   }
   componentWillUnmount () {
+    const { getParam } = this.props.navigation
+    const refresh = getParam('refresh')
+    refresh && refresh(this.total)
     StatusBar.setTranslucent(true)
     StatusBar.setBackgroundColor('transparent', true)
     StatusBar.setBarStyle('dark-content', true)
   }
   componentDidMount () {
-    console.log(this.props.navigation)
     StatusBar.setTranslucent(false)
     StatusBar.setBackgroundColor(colors.dark, true)
     StatusBar.setBarStyle('light-content', true)

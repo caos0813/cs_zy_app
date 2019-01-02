@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
+import { View, Text, TouchableOpacity, Image, Constants } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { ratio } from '../utils'
 import PropTypes from 'prop-types'
@@ -51,10 +51,11 @@ const styles = StyleSheet.create({
     borderTopColor: colors.grey,
     borderTopWidth: 1 / ratio,
     flexDirection: 'row',
-    height: 50
+    height: 50 + (Constants.isIphoneX ? 34 : 0),
+    paddingBottom: Constants.isIphoneX ? 34 : 0
   },
   footerCeil: {
-    height: '100%',
+    height: 50,
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',

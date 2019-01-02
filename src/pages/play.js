@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, findNodeHandle, ScrollView } from 'react-native'
+import { StyleSheet, findNodeHandle, ScrollView, Platform } from 'react-native'
 import { configure, observable, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
@@ -11,6 +11,7 @@ import { Player, Share } from '../../react-native-root-ui'
 import _ from 'lodash'
 import Config from '../config'
 import playerStore from '../store/playerStore'
+import { NavigationActions } from 'react-navigation'
 configure({
   enforceActions: 'always'
 })
@@ -86,16 +87,26 @@ configure({
       case 'comment':
         const { setValue } = this.props.routeStore
         setValue('commentTabId', this.data.id)
-        navigator.navigate('Comment')
+        navigator.navigate('Comment', { articleId: this.data.id },
+          NavigationActions.navigate({
+            routeName: 'Comment',
+            params: { refresh: (e) => this.refreshComment(e) }
+          })
+        )
         break
     }
+  }
+  refreshComment=(num) => {
+    let data = _.clone(this.data)
+    data.commentNumber = num
+    this.setValue('data', data)
   }
   render () {
     const { data } = this
     const { duration, position, paused } = playerStore
     const picture = data.picture
     return (
-      <View flex useSafeArea>
+      <View flex >
         <ScrollView style={styles.scroll}>
           <View style={styles.imageWrap} centerH>
             <Header
@@ -189,7 +200,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    left: 0
+    left: 0,
+    bottom: 0
   },
   image: {
     position: 'absolute',
@@ -201,6 +213,11 @@ const styles = StyleSheet.create({
   imageBlur: {
     width: width,
     height: 425 + statusBarHeight,
-    opacity: 0
+    opacity: 0,
+    ...Platform.select({
+      ios: {
+        opacity: 1
+      }
+    })
   }
 })

@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { observer, inject } from 'mobx-react/native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
 import { colors } from './../theme'
-import { Progress, Mask, NoNetwork } from '../components'
-import { width, BackPress, statusBarHeight, OpenUrl } from '../utils'
+import { NoNetwork } from '../components'
+import { BackPress, statusBarHeight, OpenUrl } from '../utils'
 import Picker from 'react-native-picker'
-import SplashScreen from 'react-native-splash-screen'
 import Config from '../config'
 import _ from 'lodash'
 @inject('userStore')
@@ -27,8 +26,7 @@ import _ from 'lodash'
   constructor (props) {
     super(props)
     this.state = {
-      loading: false,
-      maskShow: false,
+      firstLoad: true,
       canGoBack: false,
       route: {}// webview route
     }
@@ -71,39 +69,23 @@ import _ from 'lodash'
   }
   onNavigationStateChange = (e) => {
     const { canGoBack } = e
-    console.log(this.state.route)
+    console.log(e)
     this.setState({
       canGoBack: canGoBack
     })
     this.props.navigation.setParams({// 给导航中增加监听事件
       webviewCanBack: canGoBack
     })
-    /* global.webviewCanBack = canGoBack
-    this.props.navigation.setParams({// 给导航中增加监听事件
-      webviewCanBack: canGoBack
-    }) */
   }
   onLoadStart = () => {
-    this.refs.progress.start()
-    this.setState({ loading: true })
+    // Loading.show()
   }
   onLoadEnd = () => {
     this.initMessage()
-    this.refs.progress.end()
-    //  this.refs.webview.injectJavaScript(`document.body.style.paddingTop="${statusBarHeight}px"`)
-    setTimeout(() => {
-      try {
-        this.setState({
-          animationConfig: {
-            animation: 'fadeOut',
-            duration: 1,
-            onAnimationEnd: () => this.setState({ loading: false })
-          }
-        })
-      } catch (err) {
-
-      }
-    }, 800)
+    // Loading.hide()
+    this.setState({
+      firstLoad: false
+    })
   }
   /* 打开浏览器时发送到webview的数据 */
   initMessage = () => {
@@ -129,18 +111,13 @@ import _ from 'lodash'
     if (data) {
       switch (data.type) {
         case 'picker':
-          this.setState({
-            maskShow: true
-          })
+
           Picker.init({
             ...data.data,
             pickerConfirmBtnText: '确定',
             pickerCancelBtnText: '取消',
             pickerTitleText: '请选择',
             onPickerConfirm: data => {
-              this.setState({
-                maskShow: false
-              })
               this.refs.webview.postMessage(JSON.stringify({
                 type: 'picker',
                 data: {
@@ -150,9 +127,6 @@ import _ from 'lodash'
               }))
             },
             onPickerCancel: data => {
-              this.setState({
-                maskShow: false
-              })
               this.refs.webview.postMessage(JSON.stringify({
                 type: 'picker',
                 data: {
@@ -162,9 +136,6 @@ import _ from 'lodash'
               }))
             },
             onPickerSelect: data => {
-              this.setState({
-                maskShow: false
-              })
               this.refs.webview.postMessage(JSON.stringify({
                 type: 'picker',
                 data: {
@@ -209,7 +180,6 @@ import _ from 'lodash'
   }
   componentDidMount () {
     this.backPress.componentDidMount()
-    SplashScreen.hide()
   }
   componentWillUnmount () {
     this.backPress.componentWillUnmount()
@@ -221,24 +191,10 @@ import _ from 'lodash'
   }
   render () {
     const { getParam } = this.props.navigation
-    const { loading, animationConfig, maskShow } = this.state
     const path = getParam('path')
     return (
-      <View flex useSafeArea>
+      <View flex >
         <NoNetwork refresh={this.refresh} />
-        <Progress
-          ref='progress'
-          style={styles.progress}
-          width={width}
-        />
-        {loading && <LoaderScreen
-          color={colors.dark09}
-          message='正在加载'
-          messageStyle={{ color: colors.dark09 }}
-          overlay
-          {...animationConfig}
-        />}
-        {maskShow && <Mask />}
         <WebView ref='webview'
           bounces={false}
           style={{ backgroundColor: colors.stable }}
@@ -246,6 +202,10 @@ import _ from 'lodash'
           onLoadStart={this.onLoadStart}
           onLoadEnd={this.onLoadEnd}
           onNavigationStateChange={this.onNavigationStateChange}
+          useWebKit={false}
+          renderLoading={() => <LoaderScreen message='正在加载' messageStyle={{ color: colors.dark09 }}
+            overlay />}
+          startInLoadingState
           onMessage={(e) => {
             this.onMessage(e)
           }}
@@ -255,10 +215,3 @@ import _ from 'lodash'
   }
 }
 export default Browser
-const styles = StyleSheet.create({
-  progress: {
-    position: 'absolute',
-    top: 0,
-    zIndex: 1
-  }
-})

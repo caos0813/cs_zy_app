@@ -35,7 +35,7 @@ configure({
   renderItem = (item, index) => {
     return (
       <View paddingV-15 row style={styles.item}>
-        <Image source={imageFormat(item.userImg, true)} borderRadius={40} style={{ width: 38, height: 38 }} />
+        <Image source={imageFormat(item.userImg, item.gender)} borderRadius={40} style={{ width: 38, height: 38 }} />
         <View flex paddingL-7>
           <Text text-16 dark>{item.userName}</Text>
           <Text text-12 dark06>{transferTime(item.time)}</Text>

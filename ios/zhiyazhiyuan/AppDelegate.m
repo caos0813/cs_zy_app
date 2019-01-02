@@ -13,6 +13,7 @@
 #import "RNSplashScreen.h"
 #import <CodePush/CodePush.h>
 #import <RCTJPushModule.h>
+#import <RCTJShareModule.h>
 #ifdef NSFoundationVersionNumber_iOS_9_x_Max
 #import <UserNotifications/UserNotifications.h>
 #endif
@@ -20,11 +21,21 @@
 
 @implementation AppDelegate
 // ios 9.0+
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-            options:(NSDictionary<NSString*, id> *)options
-{
-  return [RCTLinkingManager application:application openURL:url options:options];
-}
+ - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+             options:(NSDictionary<NSString*, id> *)options
+ {
+   NSString *string =[url absoluteString];
+  //NSLog(@"absoluteString: %@", string);
+   if ([string hasPrefix:@"weixin"]){
+     return [RCTLinkingManager application:application openURL:url options:options];
+   }else if ([string hasPrefix:@"zyzyapp"]){
+     return [RCTLinkingManager application:application openURL:url options:options];
+   }else{
+     [JSHAREService handleOpenUrl:url];
+     return YES;
+   }
+ }
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -87,4 +98,20 @@
   
   completionHandler();
 }
+//jshare
+// work in iOS(8.0)
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+  [JSHAREService handleOpenUrl:url];
+  return YES;
+}
+// work in iOS(9_0)
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url{
+  [JSHAREService handleOpenUrl:url];
+  return YES;
+}
+// work in iOS(9_0,++)
+// - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+//   [JSHAREService handleOpenUrl:url];
+//   return YES;
+// }
 @end

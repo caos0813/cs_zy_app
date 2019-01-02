@@ -5,8 +5,9 @@ import { Provider } from 'mobx-react/native'
 import Router from './src/router'
 import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
-import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
+import Config from 'react-native-config'
+import JAnalyticsModule from 'janalytics-react-native'
 require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
@@ -15,7 +16,6 @@ import store from './src/store'
 import SplashScreen from 'react-native-splash-screen'
 const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 promise.polyfill()
-import Config from 'react-native-config'
 class App extends Component {
   constructor(props) {
     super(props)
@@ -41,8 +41,8 @@ class App extends Component {
   update = () => {
     if (Config.ENV === 'production') {
       codePush.sync({
-        installMode: codePush.InstallMode.ON_NEXT_SUSPEND,
-        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_SUSPEND  
+        installMode: codePush.InstallMode.IMMEDIATE,
+        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE  
       })
     } else {
       codePush.sync({
@@ -63,6 +63,9 @@ class App extends Component {
     /* 初始化极光 */
     JPushModule.initPush()
     JPushModule.clearAllNotifications()
+    if(platform==='ios'){
+      JAnalyticsModule.setup({appKey: "97ab5a6f89c340b6f61c74c4"})  // iOS 端需要先调用该方法
+    }
     /* 初始化极光 */
     const { setUserInfo, getUserInfo } = store.userStore
     try {

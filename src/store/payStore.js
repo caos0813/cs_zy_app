@@ -3,13 +3,11 @@ configure({
   enforceActions: 'always'
 })
 class Store {
-  @observable routes = []
-  @observable commentTabId = ''
-  @action.bound
-  setRoutes (val) {
-    console.log(typeof val)
-    this.routes = val
-  }
+  @observable payType = 'wechat'
+  @observable wechatInstall = false
+  @observable payAmount = 0.00
+  @observable cardNumber = ''
+  @observable password = ''
   @action.bound
   setValue (key, val) {
     this[key] = val

@@ -38,16 +38,16 @@ import { Header } from '../components'
     const { navigate } = this.props.navigation
     const { version } = this.props
     return (
-      <View flex useSafeArea>
+      <View flex >
         <Header showLeft={false} title='我的' />
         <ScrollView>
-          <View row top paddingH-25 paddingV-15 style={styles.infoWrap}>
+          <View row top paddingH-15 paddingV-15 style={styles.infoWrap}>
             <View row>
               <Avatar containerStyle={styles.avatar} imageStyle={{ width: 50, height: 50 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
                 backgroundColor={userInfo.image ? 'transparent' : colors.stable}
                 onPress={() => navigate('Mine')}
               />
-              <View paddingL-10 paddingR-24>
+              <View paddingL-10 paddingR-15>
                 <View row>
                   <Text text-22>{userInfo.token ? userInfo.name : '未登录'}</Text>
                   {(isVipValid === 2) && <Image assetName='vipIcon' style={styles.vipIcon} />}

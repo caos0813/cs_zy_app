@@ -1,8 +1,8 @@
 import React from 'react'
 import { Animated, Easing } from 'react-native'
-import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
+import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator, createAppContainer, NavigationActions } from 'react-navigation'
 import { dark, light, calm, gray } from '../theme/colors'
-import { ratio, width } from '../utils'
+import { ratio, width, platform } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -27,10 +27,10 @@ import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { colors } from '../theme'
-
+import userStore from '../store/userStore'
 const TabStack = createBottomTabNavigator(
   {
-    Index: {
+    Home: {
       screen: Home,
       navigationOptions: () => ({
         tabBarLabel: '⾸⻚'
@@ -52,10 +52,9 @@ const TabStack = createBottomTabNavigator(
   {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
-        console.log(focused)
         const { routeName } = navigation.state
         let iconName, iconColor
-        if (routeName === 'Index') {
+        if (routeName === 'Home') {
           iconName = 'home'
         } else if (routeName === 'Plan') {
           iconName = 'class'
@@ -87,10 +86,10 @@ const TabStack = createBottomTabNavigator(
       pressOpacity: 0.8,
       // tab bar的样式
       style: {
-        height: 60,
+        height: 50,
         backgroundColor: light,
         paddingBottom: 0,
-        paddingTop: 6,
+        paddingTop: 5,
         borderTopWidth: 1 / ratio,
         borderTopColor: gray
       },
@@ -112,7 +111,7 @@ const TabStack = createBottomTabNavigator(
     lazy: true,
     // 返回按钮是否会导致tab切换到初始tab⻚？ 如果是，则设置为initialRoute，否则为none。 缺省为initialRoute。
     backBehavior: 'none',
-    initialRouteName: 'Index'
+    initialRouteName: 'Home'
   }
 )
 const CommentTab = createMaterialTopTabNavigator({
@@ -273,8 +272,8 @@ const AppNavigation = createStackNavigator(
       /></View>, */
       headerPressColorAndroid: 'transparent',
       headerStyle: {
-        height: 44 + screenProps.statusBarHeight,
-        paddingTop: screenProps.statusBarHeight,
+        height: 44 + (platform === 'android' ? screenProps.statusBarHeight : 0),
+        paddingTop: platform === 'android' ? screenProps.statusBarHeight : 0,
         // borderBottomColor: gray,
         elevation: 0,
         borderBottomWidth: 0
@@ -291,7 +290,7 @@ const AppNavigation = createStackNavigator(
     },
     initialRouteName: 'Home',
     initialRouteParams: {
-      articleId: '389'
+      articleId: '607'
     },
     transitionConfig: (transitionProps, prevTransitionProps) => {
       const currentPage = transitionProps.scene
@@ -314,15 +313,47 @@ const AppNavigation = createStackNavigator(
     }
   }
 )
-/* const app = () => <AppNavigation
-  onNavigationStateChange={(from, to) => {
-    const { routes } = to
-    const { setRoutes } = store.routeStore
-    setRoutes(routes)
-  }}
-  uriPrefix={prefix}
-  screenProps={{ statusBarHeight: statusBarHeight }}
-  ref={navigatorRef => {
-    navigator.setTopLevelNavigator(navigatorRef)
-  }} /> */
+// 拦截登录的路由
+const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail']
+
+const defaultGetStateForAction = AppNavigation.router.getStateForAction
+
+AppNavigation.router.getStateForAction = (action, state) => {
+  const { routeName, type } = action
+  const { token, startYear } = userStore.userInfo
+  const params = state ? state.routes[state.routes.length - 1].params : null
+  if (state &&
+    type === NavigationActions.NAVIGATE && params &&
+    routeName === params.name) {
+    return null
+  } else if (routeName && unNeedLoginRoute.indexOf(routeName) < 0 && state) {
+    let interceptName = 'Login'
+    let routes = []
+    if (!token) {
+      routes = [
+        ...state.routes,
+        { key: 'id-' + Date.now(), routeName: interceptName, params: { name: routeName, params: action.params } }
+      ]
+      return {
+        ...state,
+        routes,
+        index: routes.length - 1
+      }
+    } else if (token && !startYear) {
+      interceptName = 'Info'
+      routes = [
+        ...state.routes,
+        { key: 'id-' + Date.now(), routeName: interceptName, params: { name: routeName, params: action.params, type: 'complete' } }
+      ]
+      return {
+        ...state,
+        routes,
+        index: routes.length - 1
+      }
+    } else {
+      return defaultGetStateForAction(action, state)
+    }
+  }
+  return defaultGetStateForAction(action, state)
+}
 export default createAppContainer(AppNavigation)
