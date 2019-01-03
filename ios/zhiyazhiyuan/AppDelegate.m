@@ -16,6 +16,7 @@
 #import <RCTJShareModule.h>
 #ifdef NSFoundationVersionNumber_iOS_9_x_Max
 #import <UserNotifications/UserNotifications.h>
+#import "Orientation.h"
 #endif
 
 
@@ -114,4 +115,7 @@
 //   [JSHAREService handleOpenUrl:url];
 //   return YES;
 // }
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  return [Orientation getOrientation];
+}
 @end
