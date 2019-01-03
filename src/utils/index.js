@@ -11,9 +11,15 @@ import OpenUrl from './openUrl'
 import { formatDate, transferTime, transferPlayerTime, formatVersion } from './formatDate'
 import navigator from './navigator'
 import getUrlParams from './urlParams'
+import { Constants } from '../../react-native-ui-lib/src/helpers'
 
 const platform = Platform.OS
 const ratio = PixelRatio.get()
-const statusBarHeight = StatusBar.currentHeight || 0
+let statusBarHeight = StatusBar.currentHeight
+if (platform === 'ios' && !Constants.isIphoneX) {
+  statusBarHeight = 20
+} else if (Constants.isIphoneX) {
+  statusBarHeight = 44
+}
 let { width, height } = Dimensions.get('screen')
 export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat, transferTime, transferPlayerTime, getUrlParams, formatVersion }

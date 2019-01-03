@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
+import { View, Image, TouchableOpacity, Text, Constants } from '../../react-native-ui-lib'
 import RootSiblings from 'react-native-root-siblings'
 import Video from 'react-native-video'
 import PropTypes from 'prop-types'
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 50,
     left: 0,
-    bottom: 65
+    bottom: 60 + (Constants.isIphoneX ? 34 : 0)
   },
   player: {
     marginHorizontal: 10,

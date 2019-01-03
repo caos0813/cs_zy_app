@@ -174,7 +174,7 @@ configure({
   render () {
     const { bannerData } = this
     return (
-      <View flex useSafeArea>
+      <View flex >
         {/* <NoNetwork refresh={this.refresh} /> */}
         <Header showLeft={false} title='生涯规划' />
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}

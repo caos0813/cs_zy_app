@@ -36,6 +36,7 @@ export default class CardItem extends Component {
             size={30}
             paused={this.paused}
             activeOpacity={1}
+            onPress={onPress}
             viewRef={this.state.viewRef}
           />}
         </View>

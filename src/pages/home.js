@@ -227,8 +227,9 @@ configure({
       }, {
         title: '查专业',
         image: require('../assets/home/icon02.png'),
-        href: 'major-index',
-        isBrowser: true
+        href: 'ByMajor'
+        // href: 'major-index',
+        // isBrowser: true
       }, {
         title: '查职业',
         image: require('../assets/home/icon03.png'),
@@ -376,7 +377,7 @@ configure({
     const { bannerData } = this
     // const { animationConfig } = this.state
     return (
-      <View flex useSafeArea>
+      <View flex >
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         {/* <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} /> */}
         <NoNetwork refresh={this.refresh} />
@@ -439,7 +440,7 @@ configure({
         const { id } = getUrlParams(url)
         setTimeout(() => {
           navigate('NewsDetail', { articleId: id })
-        }, 200)
+        }, 1000)
       }
     })
     axios.get(api.checkVersion, {

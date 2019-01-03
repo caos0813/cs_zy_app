@@ -161,6 +161,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
       let reg = /[^\u4e00-\u9fa5]/
       if (reg.test(name)) {
         Toast('姓名必需为中文')
+        return
       }
     }
     let params = {
@@ -211,6 +212,8 @@ import AliyunOSS from 'aliyun-oss-react-native'
         hideBottomControls: true,
         cropping: true
       }).then(image => {
+        console.log(image)
+        console.log(AliyunOSS)
         AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
           console.log(res)
         }).catch(err => {
@@ -316,6 +319,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
         <ActionSheet
           visible={actionSheetStatus}
           title='请选择'
+          useNativeIOS
           options={
             [
               { label: '相册', onPress: () => this.pickOption(0) },
@@ -348,7 +352,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
       const { securityToken, accessKeyId, accessKeySecret } = data.credentials
       console.log(securityToken)
       const endPoint = 'oss-cn-huhehaote.aliyuncs.com'
-      AliyunOSS.initWithSecurityToken(securityToken, accessKeyId, accessKeySecret, endPoint, configuration)
+      AliyunOSS.initWithSecurityToken('CAISgwJ1q6Ft5B2yfSjIr4iADoLCuZNI5fqxN0Lc3HU3f8tLhbaeljz2IHxMdHZgB+oXtPkwnWFS5voblqVoRoReREvCKM1565kPF6Ud+mKE6aKP9rUhpMCPKwr6UmzGvqL7Z+H+U6mqGJOEYEzFkSle2KbzcS7YMXWuLZyOj+wIDLkQRRLqL0AFZrFsKxBltdUROFbIKP+pKWSKuGfLC1dysQcO7gEa4K+kkMqH8Uic3h+oiM1t/tqhfMD+MZkyYMogDI3lg9YbLPSRjHRijDFR77pzgaB+/jPKg8qQGVE54W/db7KErY0xdl4jO/djSvQU8KHm9fpjofPJlpj62/mztEvWlrO1GoABMBdKOm43VgeutisWI0XC/+DR/ydPeFrnfJqN/mUhANLfzoQNp9cBqlnADfvagTtByMXMDgX/8HMhfzWyB+Voo7ci/tYGA8oz/XRd7VCLqra/5x8PYUEQvPNpwNm8I1x4T4OanQIgtDpBqplZiATi5+AByAsVUCOK06ftXnrKw1g=', 'STS.NK5E8vTLiR8Z5dm8ubsDgjs5t', 'J3VkaHJuhA6XJmrDSAESrR2i84HL4MMZECeyiNKkjyCa', endPoint, configuration)
     })
   }
   componentWillUnmount () {

@@ -5,13 +5,14 @@ import { configure, observable, action, computed } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
 import { colors } from '../theme'
-import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime, imageResize } from '../utils'
+import { ratio, height, statusBarHeight, axios, api, transferTime, navigator, transferPlayerTime, imageResize, BackPress } from '../utils'
 import Video from 'react-native-video'
 import { Header, ItemHead, PlayBtn, NewsFooter } from '../components'
 import { Player, Share } from '../../react-native-root-ui'
 import _ from 'lodash'
 import Config from '../config'
 import playerStore from '../store/playerStore'
+import { NavigationActions } from 'react-navigation'
 configure({
   enforceActions: 'always'
 })
@@ -40,6 +41,16 @@ configure({
   constructor (props) {
     super(props)
     this.setValue = props.playerStore.setValue
+    this.backPress = new BackPress({ backPress: this.onBackPress })
+  }
+  onBackPress = () => {
+    const status = Share.shareDom
+    if (status) {
+      Share.close()
+      return true
+    } else {
+      return false
+    }
   }
   audioLoad = (e) => {
     const { duration } = e
@@ -63,7 +74,7 @@ configure({
     const { position, duration, paused } = this
     const { videoFile, picture, title } = this.props.data
     return (
-      <View paddingH-25>
+      <View paddingH-25 useSafeArea>
         <TouchableOpacity style={styles.item} onPress={this.play}>
           <Video
             paused
@@ -95,7 +106,7 @@ configure({
   @observable paused = true
   @observable data = {
   }
-  @observable html = null
+  @observable html = ''
   @observable webviewHeight = 0
   @observable moreData = []
   @action.bound
@@ -139,8 +150,6 @@ configure({
     setValue('duration', transferPlayerTime(duration))
   }
   footerFunc = (e) => {
-    console.log(this.props)
-
     let copyData = _.clone(this.data)
     const webpageUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/article?id=${this.data.id}`
     switch (e) {
@@ -168,176 +177,187 @@ configure({
         })
         break
       case 'comment':
-        console.log(this.props)
+        // navigator.navigate('Comment', { articleId: this.data.id })
         const { setValue } = this.props.routeStore
-        // (this.data.id)
         setValue('commentTabId', this.data.id)
-        navigator.navigate('Comment')
+        navigator.navigate('Comment', { articleId: this.data.id },
+          NavigationActions.navigate({
+            routeName: 'Comment',
+            params: { refresh: (e) => this.refreshComment(e) }
+          })
+        )
         break
     }
   }
-  onLayout = (e) => {
-    let { layout } = e.nativeEvent
-    const clientHeight = height - 50
-    if (layout.height >= clientHeight) {
-      this.setValue('reachBottom', false)
-    } else {
-      this.setValue('reachBottom', true)
-    }
+onLayout = (e) => {
+  let { layout } = e.nativeEvent
+  const clientHeight = height - 50
+  if (layout.height >= clientHeight) {
+    this.setValue('reachBottom', false)
+  } else {
+    this.setValue('reachBottom', true)
   }
-  onScroll = (e) => {
-    const offsetY = e.nativeEvent.contentOffset.y // 滑动距离
-    const contentSizeHeight = e.nativeEvent.contentSize.height // scrollView contentSize高度
-    const oriageScrollHeight = e.nativeEvent.layoutMeasurement.height // scrollView高度
-    if (offsetY + oriageScrollHeight >= contentSizeHeight - 100) {
-      this.setValue('reachBottom', true)
-    }
+}
+onScroll = (e) => {
+  const offsetY = e.nativeEvent.contentOffset.y // 滑动距离
+  const contentSizeHeight = e.nativeEvent.contentSize.height // scrollView contentSize高度
+  const oriageScrollHeight = e.nativeEvent.layoutMeasurement.height // scrollView高度
+  if (offsetY + oriageScrollHeight >= contentSizeHeight - 100) {
+    this.setValue('reachBottom', true)
   }
-  render () {
-    const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
-    const { getParam } = this.props.navigation
-    return (
-      <View flex useSafeArea onLayout={this.onLayout}>
-        <Header
-          showLeft
-          btnStyle={{ backgroundColor: 'rgba(0,0,0,.48)', marginLeft: 15 }}
-          containerStyle={styles.header}
-          tintColor={colors.light} />
-        <ScrollView ref='scroll' style={styles.scroll} onScroll={this.onScroll}>
-          <View>
-            {data.fileType === 2 && <View>
-              <Video
-                style={styles.video}
-                paused={paused}
-                source={{ uri: data.videoFile }}
-                onLoad={this.audioLoad}
-                onProgress={this.onProgress}
-                progressUpdateInterval={1000}
-                onEnd={this.onEnd}
-                ref={(ref) => { this.player = ref }}
-                resizeMode='cover'
-              />
-              {!paused
-                ? <View row centerV paddingH-10 paddingV-2 bg-dark06 style={styles.playControls}>
-                  <PlayBtn
-                    size={20}
-                    paused={paused}
-                    onPress={this.play}
-                  />
-                  <Text text-12 marginL-5 stable>{position}/{duration}</Text>
-                </View>
-                : <PlayBtn
+}
+render () {
+  const { data, html, webviewHeight, moreData, duration, position, paused, hideFooter } = this
+  const { getParam } = this.props.navigation
+  return (
+    <View flex onLayout={this.onLayout}>
+      <Header
+        showLeft
+        btnStyle={{ backgroundColor: 'rgba(0,0,0,.48)', marginLeft: 15 }}
+        containerStyle={styles.header}
+        tintColor={colors.light} />
+      <ScrollView ref='scroll' style={styles.scroll} onScroll={this.onScroll}>
+        <View>
+          {data.fileType === 2 && <View>
+            <Video
+              style={styles.video}
+              paused={paused}
+              source={{ uri: data.videoFile }}
+              onLoad={this.audioLoad}
+              onProgress={this.onProgress}
+              progressUpdateInterval={1000}
+              onEnd={this.onEnd}
+              ref={(ref) => { this.player = ref }}
+              resizeMode='cover'
+            />
+            {!paused
+              ? <View row centerV paddingH-10 paddingV-2 bg-dark06 style={styles.playControls}>
+                <PlayBtn
+                  size={20}
                   paused={paused}
-                  style={styles.videoPaused}
                   onPress={this.play}
                 />
-              }
-            </View>
-            }
-            {(data.fileType !== 2 && data.picture) ? <Image
-              style={styles.coverImage}
-              source={{ uri: imageResize(data.picture, 600) }} /> : null
-            }
-          </View>
-          <View paddingV-50 paddingH-25 center>
-            <Text text-24 dark>{data.title}</Text>
-            <Text text-14 dark06 marginT-20>{transferTime(data.releaseTime)}</Text>
-          </View>
-          {data.fileType === 1 &&
-            <Play playerStore={playerStore} data={this.data} />
-          }
-          <View paddingH-20>
-            <WebView
-              style={[styles.webview, { height: webviewHeight }]}
-              source={{ html: html }}
-              bounces={false}
-              onNavigationStateChange={this.onNavigationStateChange}
-            />
-          </View>
-          <View center paddingV-30><Text text-12 dark06>--END</Text></View>
-          {data.isMore &&
-            <View paddingT-10>
-              <ItemHead title='更多' seeAll='false' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
-              <View marginH-25>
-                {moreData.map((item) => (
-                  <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>
-                    <Image source={{ uri: imageResize(data.picture, 200) }} style={{ width: 48, height: 48 }} borderRadius={8} />
-                    <View paddingL-7 style={{ flex: 1 }}>
-                      <Text text-16 dark numberOfLines={2}>{item.title}</Text>
-                      <Text text-12 dark06 numberOfLines={2} ellipsizeMode='tail'>{item.introduction}</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                <Text text-12 marginL-5 stable>{position}/{duration}</Text>
               </View>
-            </View>
+              : <PlayBtn
+                paused={paused}
+                style={styles.videoPaused}
+                onPress={this.play}
+              />
+            }
+          </View>
           }
-        </ScrollView>
-
-        {!hideFooter &&
-          <NewsFooter
-            isCollect={this.data.isCollect}
-            isPrise={this.data.isPrise}
-            commentNumber={this.data.commentNumber}
-            showCollect
-            showLink={false}
-            onPress={this.footerFunc}
+          {(data.fileType !== 2 && data.picture) ? <Image
+            style={styles.coverImage}
+            source={{ uri: imageResize(data.picture, 600) }} /> : null
+          }
+        </View>
+        <View paddingV-50 paddingH-25 center>
+          <Text text-24 dark>{data.title}</Text>
+          <Text text-14 dark06 marginT-20>{transferTime(data.releaseTime)}</Text>
+        </View>
+        {data.fileType === 1 &&
+          <Play playerStore={playerStore} data={this.data} />
+        }
+        <View paddingH-20>
+          <WebView
+            style={[styles.webview, { height: webviewHeight }]}
+            source={{ html: html }}
+            bounces={false}
+            onNavigationStateChange={this.onNavigationStateChange}
+            useWebKit
+            scrollEnabled={false}
           />
+        </View>
+        <View center paddingV-30><Text text-12 dark06>--END</Text></View>
+        {data.isMore &&
+          <View paddingT-10>
+            <ItemHead title='更多' seeAll='false' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
+            <View marginH-25>
+              {moreData.map((item) => (
+                <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>
+                  <Image source={{ uri: imageResize(data.picture, 200) }} style={{ width: 48, height: 48 }} borderRadius={8} />
+                  <View paddingL-7 style={{ flex: 1 }}>
+                    <Text text-16 dark numberOfLines={2}>{item.title}</Text>
+                    <Text text-12 dark06 numberOfLines={2} ellipsizeMode='tail'>{item.introduction}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
         }
-      </View>
-    )
-  }
-  getMore = (specialTopicInfoId, id) => {
-    const { setValue } = this
-    axios.get(api.queryArticleInfoViewMore, {
-      params: {
-        specialTopicInfoId: specialTopicInfoId,
-        id: id,
-        size: 4,
-        page: 0
+      </ScrollView>
+
+      {!hideFooter &&
+        <NewsFooter
+          isCollect={this.data.isCollect}
+          isPrise={this.data.isPrise}
+          commentNumber={this.data.commentNumber}
+          showCollect
+          showLink={false}
+          onPress={this.footerFunc}
+        />
       }
-    }).then(data => {
-      setValue('moreData', data.content)
-    })
-  }
-  componentWillUnmount () {
-    this.didBlurEvent.remove()
-    const { getParam } = this.props.navigation
-    const { reachBottom } = this
-    if (getParam('type') !== 'banner' && getParam('type') !== 'volunteer' && !reachBottom) {
-      this.statistics(2)
+    </View>
+  )
+}
+getMore = (specialTopicInfoId, id) => {
+  const { setValue } = this
+  axios.get(api.queryArticleInfoViewMore, {
+    params: {
+      specialTopicInfoId: specialTopicInfoId,
+      id: id,
+      size: 4,
+      page: 0
     }
-    // this.didFocusEvent.remove()
+  }).then(data => {
+    setValue('moreData', data.content)
+  })
+}
+refreshComment=(num) => {
+  let data = _.clone(this.data)
+  data.commentNumber = num
+  this.setValue('data', data)
+}
+componentWillUnmount () {
+  this.didBlurEvent.remove()
+  const { getParam } = this.props.navigation
+  const { reachBottom } = this
+  if (getParam('type') !== 'banner' && getParam('type') !== 'volunteer' && !reachBottom) {
+    this.statistics(2)
   }
-  async componentDidMount () {
-    const { getParam } = this.props.navigation
-    const { setValue, reachBottom } = this
-    const { addListener } = this.props.navigation
-    this.didBlurEvent = addListener(
-      'didBlur',
-      payload => {
-        const { routes } = this.props.routeStore
-        const curpage = routes[routes.length - 1]
-        setValue('paused', true)
-        if (curpage.routeName !== 'NewsDetail' && getParam('type') !== 'banner' && getParam('type') !== 'volunteer' && !reachBottom) {
-          this.statistics(2)
-        }
+  // this.didFocusEvent.remove()
+}
+async componentDidMount () {
+  const { getParam } = this.props.navigation
+  const { setValue, reachBottom } = this
+  const { addListener } = this.props.navigation
+  this.didBlurEvent = addListener(
+    'didBlur',
+    payload => {
+      const { routes } = this.props.routeStore
+      const curpage = routes[routes.length - 1]
+      setValue('paused', true)
+      if (curpage.routeName !== 'NewsDetail' && getParam('type') !== 'banner' && getParam('type') !== 'volunteer' && !reachBottom) {
+        this.statistics(2)
       }
-    )
-    let apiUrl = getParam('type') === 'banner' ? api.bannerDetail : api.queryArticleInfoDetails
-    if (getParam('type') === 'banner' || getParam('type') === 'volunteer') {
-      setValue('hideFooter', true)
     }
-    axios.get(apiUrl, {
-      params: {
-        id: getParam('articleId'),
-        articleInfoId: getParam('articleId')
-      }
-    }).then(data => {
-      if (data.isMore) {
-        this.getMore(data.specialTopInfoId, data.id)
-      }
-      setValue('data', data)
-      setValue('html', `<!DOCTYPE html>
+  )
+  let apiUrl = getParam('type') === 'banner' ? api.bannerDetail : api.queryArticleInfoDetails
+  if (getParam('type') === 'banner' || getParam('type') === 'volunteer') {
+    setValue('hideFooter', true)
+  }
+  axios.get(apiUrl, {
+    params: {
+      id: getParam('articleId'),
+      articleInfoId: getParam('articleId')
+    }
+  }).then(data => {
+    if (data.isMore) {
+      this.getMore(data.specialTopInfoId, data.id)
+    }
+    setValue('data', data)
+    setValue('html', `<!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
@@ -347,9 +367,13 @@ configure({
               color:${colors.dark};
               font-size:14px;
               line-height:1.5;
-              padding-bottom:20px
+              overflow:hidden;
+              padding-bottom:50px;
             }
             *{margin:0,padding:0}
+            table{
+              width:100%!important;
+            }
             img{
               width:100%!important;
               height:auto!important;
@@ -373,8 +397,8 @@ configure({
         </body>
       </html>
       `)
-    })
-  }
+  })
+}
 }
 const styles = StyleSheet.create({
   playControls: {

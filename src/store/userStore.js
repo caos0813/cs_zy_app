@@ -8,8 +8,8 @@ class Store {
   @observable userInfo = {}
   @computed get isVipValid () {
     if (!_.isEmpty(this.userInfo)) {
-      const { isValid, level } = this.userInfo
-      if (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN')) {
+      const { isValid, level, isSuperUser } = this.userInfo
+      if (isSuperUser || (isValid && (level === 'FULL_FEATURED' || level === 'ZHI_YUAN'))) {
         return 2
       } else if (isValid && level === 'EXPERIENCE') {
         return 1
