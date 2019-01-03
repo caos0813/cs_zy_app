@@ -69,6 +69,7 @@ configure({
           webpageUrl,
           shareCallback: () => {
             this.statistics(3)
+            Share.close()
           }
         })
         break

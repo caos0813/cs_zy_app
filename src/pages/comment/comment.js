@@ -123,13 +123,9 @@ configure({
     const { getParam } = this.props.navigation
     const refresh = getParam('refresh')
     refresh && refresh(this.total)
-    StatusBar.setTranslucent(true)
-    StatusBar.setBackgroundColor('transparent', true)
     StatusBar.setBarStyle('dark-content', true)
   }
   componentDidMount () {
-    StatusBar.setTranslucent(false)
-    StatusBar.setBackgroundColor(colors.dark, true)
     StatusBar.setBarStyle('light-content', true)
   }
 }

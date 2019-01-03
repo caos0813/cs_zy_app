@@ -12,6 +12,8 @@ import ImagePicker from 'react-native-image-crop-picker'
 import AliyunOSS from 'aliyun-oss-react-native'
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
+  endPoint = 'oss-cn-huhehaote.aliyuncs.com'
+  CDN ='https://fdappdata.oss-cn-huhehaote.aliyuncs.com/'
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('type') === 'complete' ? '完善用户信息' : '修改用户信息'
@@ -202,8 +204,10 @@ import AliyunOSS from 'aliyun-oss-react-native'
     })
   }
   pickOption = (index) => {
-    const { setValue } = this.props.infoStore
+    const { setValue, userInfo, updateUserInfo } = this.props.infoStore
     setValue('actionSheetStatus', false)
+    const uploadPath = `touxiang/${userInfo.userId}.jpg`
+    const imageUrl = `${this.CDN}/${uploadPath}`
     if (index === 0) {
       ImagePicker.openPicker({
         width: 300,
@@ -214,8 +218,9 @@ import AliyunOSS from 'aliyun-oss-react-native'
       }).then(image => {
         console.log(image)
         console.log(AliyunOSS)
-        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+        AliyunOSS.asyncUpload('fdappdata', uploadPath, image.path).then((res) => {
           console.log(res)
+          updateUserInfo('image', imageUrl)
         }).catch(err => {
           console.log(err)
         })
@@ -230,7 +235,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
       }).then(image => {
         console.log(image)
         AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
-          console.log(res)
+          updateUserInfo('image', imageUrl)
         }).catch(err => {
           console.log(err)
         })
@@ -350,9 +355,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
     }
     axios.get(api.getAssumeRole).then(data => {
       const { securityToken, accessKeyId, accessKeySecret } = data.credentials
-      console.log(securityToken)
-      const endPoint = 'oss-cn-huhehaote.aliyuncs.com'
-      AliyunOSS.initWithSecurityToken('CAISgwJ1q6Ft5B2yfSjIr4iADoLCuZNI5fqxN0Lc3HU3f8tLhbaeljz2IHxMdHZgB+oXtPkwnWFS5voblqVoRoReREvCKM1565kPF6Ud+mKE6aKP9rUhpMCPKwr6UmzGvqL7Z+H+U6mqGJOEYEzFkSle2KbzcS7YMXWuLZyOj+wIDLkQRRLqL0AFZrFsKxBltdUROFbIKP+pKWSKuGfLC1dysQcO7gEa4K+kkMqH8Uic3h+oiM1t/tqhfMD+MZkyYMogDI3lg9YbLPSRjHRijDFR77pzgaB+/jPKg8qQGVE54W/db7KErY0xdl4jO/djSvQU8KHm9fpjofPJlpj62/mztEvWlrO1GoABMBdKOm43VgeutisWI0XC/+DR/ydPeFrnfJqN/mUhANLfzoQNp9cBqlnADfvagTtByMXMDgX/8HMhfzWyB+Voo7ci/tYGA8oz/XRd7VCLqra/5x8PYUEQvPNpwNm8I1x4T4OanQIgtDpBqplZiATi5+AByAsVUCOK06ftXnrKw1g=', 'STS.NK5E8vTLiR8Z5dm8ubsDgjs5t', 'J3VkaHJuhA6XJmrDSAESrR2i84HL4MMZECeyiNKkjyCa', endPoint, configuration)
+      AliyunOSS.initWithSecurityToken(securityToken, accessKeyId, accessKeySecret, this.endPoint, configuration)
     })
   }
   componentWillUnmount () {

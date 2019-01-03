@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -63,6 +62,7 @@
 		E45E3C54D25E4CDC8547094F /* libRCTJPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9083658157214A468E51D4FA /* libRCTJPushModule.a */; };
 		EBD8DAEEC77C44978F21622B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF9B4768EDB4F2397ADCD62 /* Security.framework */; };
 		EE37520A972A43ED9D547C00 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C45B27ECD18A41E59BE3F5E8 /* libReactNativeConfig.a */; };
+		4904909C8F6C4C3A9551B910 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5872C2F1198C48878AE25629 /* libRCTOrientation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -615,6 +615,8 @@
 		F9D4F7434719406DB7206A10 /* libRCTJAnalyticsModule.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTJAnalyticsModule.a; sourceTree = "<group>"; };
 		FAEEF94C760D4913B26AFB54 /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		FDCA51F5DE574475A8AF5F1B /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A07CF9D6C95943448C9DF2AE /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; name = "RCTOrientation.xcodeproj"; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5872C2F1198C48878AE25629 /* libRCTOrientation.a */ = {isa = PBXFileReference; name = "libRCTOrientation.a"; path = "libRCTOrientation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -671,6 +673,7 @@
 				93784A5B708C42DEA98731A4 /* CoreLocation.framework in Frameworks */,
 				4B499A66C5284B4296E9FEBB /* libRNCWebView.a in Frameworks */,
 				82FAD477A2874B61BF7B1056 /* libRNGestureHandler.a in Frameworks */,
+				4904909C8F6C4C3A9551B910 /* libRCTOrientation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,6 +857,7 @@
 				6F5B88E7E19B46CA9C30B40C /* RNAliyunOSS.xcodeproj */,
 				4026547E8D584BF2B8C44680 /* RNCWebView.xcodeproj */,
 				024E81FAAB4E42BEA830FD85 /* RNGestureHandler.xcodeproj */,
+				A07CF9D6C95943448C9DF2AE /* RCTOrientation.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1834,13 +1838,17 @@
 					"$(SRCROOT)/../node_modules/react-native-webviewios",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handlerios/**",
 					"$(SRCROOT)/../node_modules/jshare-react-native/ios/RCTJShareModule",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1892,13 +1900,17 @@
 					"$(SRCROOT)/../node_modules/react-native-webviewios",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handlerios/**",
 					"$(SRCROOT)/../node_modules/jshare-react-native/ios/RCTJShareModule",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2102,13 +2114,17 @@
 					"$(SRCROOT)/../node_modules/react-native-webviewios",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handlerios/**",
 					"$(SRCROOT)/../node_modules/jshare-react-native/ios/RCTJShareModule",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = zhiyazhiyuan/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/zhiyazhiyuan\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
