@@ -181,7 +181,7 @@ const AppNavigation = createStackNavigator(
           color: dark
         },
         cardStyle: {
-          paddingTop: screenProps.statusBarHeight,
+          // paddingTop: screenProps.statusBarHeight,
           backgroundColor: colors.dark
         }
       })
@@ -301,9 +301,9 @@ const AppNavigation = createStackNavigator(
     }),
     headerLayoutPreset: 'center',
     cardStyle: {
-      backgroundColor: colors.dark
+      backgroundColor: colors.light
     },
-    initialRouteName: 'Comment',
+    initialRouteName: 'Home',
     initialRouteParams: {
       articleId: '678'
     },
