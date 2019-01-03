@@ -72,7 +72,7 @@ import _ from 'lodash'
         type: 'fillBack',
         data: {}
       }))
-      // return true
+      return true
     }
     if (this.state.canGoBack) {
       console.log(333)
