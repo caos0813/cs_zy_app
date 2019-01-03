@@ -18,7 +18,7 @@ import Orientation from 'react-native-orientation'
 configure({
   enforceActions: 'always'
 })
-@inject('routeStore', 'userStore')
+@inject('routeStore')
 @observer class Page extends Component {
   @observable reachBottom = true
   @observable duration = '00:00'
