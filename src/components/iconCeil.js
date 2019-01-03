@@ -21,7 +21,7 @@ import { inject, observer } from 'mobx-react/native'
     if (token) {
       if (!level || (level === 'EXPERIENCE' && isValid)) {
         return (
-          <View bg-assertive paddingH-6 paddingV-2 borderRadius={8} style={{ position: 'absolute', top: 0, right: 10 }}>
+          <View bg-assertive paddingH-6 paddingV-2 borderRadius={8} style={{ position: 'absolute', top: 2, right: -10 }}>
             <Text light text-12>免费体验</Text>
           </View>
         )

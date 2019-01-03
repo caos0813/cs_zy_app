@@ -38,6 +38,7 @@ import _ from 'lodash'
   }
   goBack = (enforcement) => {
     const { route } = this.state
+    const { navigate } = this.props.navigation
     if (route.path === 'holland' && !enforcement) {
       this.refs.webview.postMessage(JSON.stringify({
         type: 'preventBack',
@@ -45,13 +46,12 @@ import _ from 'lodash'
       }))
       return
     }
-    // if (route.path === 'volunteer-fill-index') {
-    //   // return
-    // }
+    if (route.path === 'volunteer-index') {
+      navigate('Home')
+      return false
+    }
     if (this.state.canGoBack) {
-      console.log(2222)
       this.refs.webview.goBack()
-      // this.refs.webview.reload()
     } else {
       this.props.navigation.goBack()
     }
@@ -64,6 +64,9 @@ import _ from 'lodash'
         data: {}
       }))
       return true
+    }
+    if (route.path === 'volunteer-index') {
+      return false
     }
     if (route.path === 'volunteer-fill-index') {
       this.refs.webview.postMessage(JSON.stringify({

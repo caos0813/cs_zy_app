@@ -33,6 +33,7 @@ export default class OpenUrl {
   openNative (path, query, needAuth) {
     const { navigation, userStore } = this.props
     const { userInfo } = userStore
+    navigation.navigate(path, query)
     if (!needAuth) {
       navigation.navigate(path, query)
     } else {

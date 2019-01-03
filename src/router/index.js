@@ -17,6 +17,7 @@ import ByCollege from '../pages/byCollege'
 import CommonList from '../pages/commonList'
 import NewsDetail from '../pages/newsDetail'
 import Seek from '../pages/seek'
+import Policy from '../pages/policy'
 import VolunteerAnswer from '../pages/volunteerAnswer'
 import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
@@ -188,6 +189,12 @@ const AppNavigation = createStackNavigator(
       screen: TabStack,
       navigationOptions: ({ navigation }) => ({
         header: null
+      })
+    },
+    Policy: {
+      screen: Policy,
+      navigationOptions: () => ({
+        title: '高考政策'
       })
     },
     Feedback: {

@@ -81,7 +81,7 @@ import { Header } from '../components'
                 <Image assetName='star' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>我的关注</Text>
+                <Text text-18 dark>我的收藏</Text>
               </ListItem.Part>
               <ListItem.Part >
                 <Image assetName='arrowRight' />

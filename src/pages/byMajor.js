@@ -22,6 +22,32 @@ import { observer, inject } from 'mobx-react/native'
   openUrl = (path, query, auth) => {
     this.OpenUrl.openBrowser(path, query, auth)
   }
+  entryHolland = () => {
+    const { userInfo } = this.props.userStore
+    const { isFinishTest, continues } = userInfo
+    if (isFinishTest) {
+      if (continues) {
+        this.openUrl(`holland-entry`, {}, true)
+      } else {
+        this.openUrl(`report`, {}, true)
+      }
+    } else {
+      this.openUrl(`holland-entry`, {}, true)
+    }
+  }
+  goList = (id, name) => {
+    const { userInfo } = this.props.userStore
+    const { isFinishTest } = userInfo
+    if (id === 1002) {
+      if (isFinishTest) {
+        this.openUrl('major-list', { typeId: id, name: name }, true)
+      } else {
+        this.entryHolland()
+      }
+    } else {
+      this.openUrl('major-list', { typeId: id, name: name }, true)
+    }
+  }
   imageLoaded = () => {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
   }
@@ -46,15 +72,15 @@ import { observer, inject } from 'mobx-react/native'
     }]
     return (
       <View flex useSafeArea>
-        <View centerH paddingV-10>
-          <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
-        </View>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View centerH paddingV-10>
+            <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
+          </View>
           <View style={styles.iconsWrap} paddingH-10 marginT-20>
             {
               iconsList.map((item, index) =>
                 <View key={index} style={styles.icon}>
-                  <IconCeil onPress={() => { this.openUrl('major-list', { typeId: item.id, name: item.text }, false) }} imageSource={item.image} title={item.title} />
+                  <IconCeil onPress={() => this.goList(item.id, item.text)} imageSource={item.image} title={item.title} />
                   <Text center text-12 dark06>{item.text}</Text>
                 </View>
               )

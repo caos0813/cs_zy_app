@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, Linking } from 'react-native'
-import { View, Text, Image, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
-import { CardItem, ItemHead } from '../components'
+import { StyleSheet } from 'react-native'
+import { View, Text, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
+import { CardItem } from '../components'
 import { colors } from '../theme'
 import { axios, api, transferTime, ratio, OpenUrl, storage, navigator } from '../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
@@ -52,27 +52,6 @@ import { observer, inject } from 'mobx-react/native'
       startFetch([], pageSize)
       abortFetch()
     })
-    // let provinceId
-    // storage.load({
-    //   key: 'userInfo'
-    // }).then((data) => {
-    //   provinceId = data.province ? data.province.id : 430000
-    //   console.log(provinceId)
-    //   axios.get(api.queryViewMore, {
-    //     params: {
-    //       specialTopicInfoId: params.specialTopicInfoId,
-    //       page: page - 1,
-    //       size: pageSize,
-    //       type: params.type,
-    //       provinceId: provinceId
-    //     }
-    //   }).then(data => {
-    //     startFetch(data.content, pageSize)
-    //   }).catch(() => {
-    //     startFetch([], pageSize)
-    //     abortFetch()
-    //   })
-    // })
   }
   renderItem = (item, index) => {
     const { params } = this.props.navigation.state
@@ -87,11 +66,13 @@ import { observer, inject } from 'mobx-react/native'
       )
     } else {
       return (
-        <TouchableOpacity onPress={() => Linking.openURL(item.link).catch(err => console.error('An error occurred', err))} style={styles.item} activeOpacity={0.6} key={index}>
+        <TouchableOpacity onPress={() => navigator.push('Policy', { path: item.link })} style={styles.item} activeOpacity={0.6} key={index}>
           <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
             <Card.Item>
               <View paddingV-10>
-                <Text text-16 dark >{item.title}</Text>
+                <View row style={{ width: '90%', justifyContent: 'flex-end' }}>
+                  <Text text-16 dark numberOfLines={1} >{item.title}</Text>
+                </View>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
                   <Text text-11 gray>{transferTime(item.createTime)}</Text>
                 </View>
@@ -129,8 +110,9 @@ const styles = StyleSheet.create({
     padding: 15
   },
   item: {
-    marginHorizontal: 10,
+    marginHorizontal: 15,
     borderTopWidth: 1 / ratio,
+    borderBottomWidth: 1 / ratio,
     borderColor: colors.gray
   },
   cardItemImage: {

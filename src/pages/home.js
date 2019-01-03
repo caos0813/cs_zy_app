@@ -263,6 +263,7 @@ configure({
     // alert(JSON.stringify(this.firstArticle))
     return (
       <View style={{ backgroundColor: 'transparent' }}>
+        {this.renderHeader()}
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
@@ -300,7 +301,7 @@ configure({
         {
           this.specials.length > 0 &&
           <View paddingT-10>
-            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
+            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' }, false)} />
           </View>
         }
         {this.renderSpecial(this.specials)}
@@ -328,9 +329,7 @@ configure({
     return (
       topicData.map((item, index) => (
         <View key={index}>
-          <View paddingT-10>
-            <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
-          </View>
+          <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title }, false)} title={item.title} seeAll='true' />
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
@@ -348,11 +347,13 @@ configure({
   renderSpecial = (specials) => {
     return (
       specials.map((item, index) => (
-        <TouchableOpacity onPress={() => Linking.openURL(item.link).catch(err => console.error('An error occurred', err))} style={styles.item} activeOpacity={0.6} key={index}>
+        <TouchableOpacity onPress={() => navigator.push('Policy', { path: item.link })} style={[styles.item, index === specials.length - 1 ? styles.lastItem : '']} activeOpacity={0.6} key={index}>
           <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
             <Card.Item>
               <View paddingV-10>
-                <Text text-16 dark >{item.title}</Text>
+                <View row style={{ width: '90%' }}>
+                  <Text numberOfLines={1} text-16 dark >{item.title}</Text>
+                </View>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
                   <Text text-11 gray>{transferTime(item.createTime)}</Text>
                 </View>
@@ -373,15 +374,45 @@ configure({
       this.openNative('NewsDetail', { articleId: extras.id, type: 'banner' })
     }
   }
+  renderItem = (item, index, separator) => {
+    if (index === 0) {
+      return null
+    } else {
+      return (
+        <View style={styles.article} key={index}>
+          <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
+          <View paddingH-15>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} imageStyle={{ height: 115 }}>
+              <View style={styles.cardFooter} paddingT-5>
+                <View row>
+                  <View row centerV paddingR-10>
+                    <Image assetName='attention' style={styles.cardItemImage} />
+                    <Text gray text-11>{item.priseNumber}</Text>
+                  </View>
+                  <View row centerV>
+                    <Image assetName='comment' style={styles.cardItemImage} />
+                    <Text gray text-11>{item.commentNumber}</Text>
+                  </View>
+                </View>
+                <Text gray text-11>{transferTime(item.releaseTime)}</Text>
+              </View>
+            </CardItem>
+          </View>
+        </View>
+      )
+    }
+  }
+
   render () {
     const { bannerData } = this
     // const { animationConfig } = this.state
     return (
-      <View flex >
+      <View paddingT-5 flex useSafeArea >
+        {/* backgroundColor={colors.light} */}
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         {/* <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} /> */}
         <NoNetwork refresh={this.refresh} />
-        {this.renderHeader()}
+        <View><Text style={{ color: colors.grey, opacity: 0 }}>1</Text></View>
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           header={() => this.renderContainer(bannerData)}
           onFetch={this.onFetch}
@@ -390,7 +421,6 @@ configure({
           waitingSpinnerText='正在加载...'
           spinnerColor={colors.calm}
           allLoadedText='--我是有底线的--'
-          // onScroll={this.onScroll}
           showsVerticalScrollIndicator={false}
           paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
         />
@@ -490,9 +520,12 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   item: {
-    marginHorizontal: 10,
+    marginHorizontal: 15,
     borderTopWidth: 1 / ratio,
     borderColor: colors.gray
+  },
+  lastItem: {
+    borderBottomWidth: 1 / ratio
   },
   topics: {
     flexWrap: 'wrap',
@@ -502,6 +535,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingBottom: 15,
     width: '50%'
+    // borderTopWidth: 1
   },
   fullWidth: {
     width: '100%'

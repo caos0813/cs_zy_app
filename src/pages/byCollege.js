@@ -50,10 +50,10 @@ import { observer, inject } from 'mobx-react/native'
     }]
     return (
       <View flex useSafeArea>
-        <View centerH paddingV-10>
-          <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
-        </View>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View centerH paddingV-10>
+            <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
+          </View>
           <View style={styles.iconsWrap} marginV-20>
             {
               iconsList.map((item, index) => (

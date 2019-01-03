@@ -154,9 +154,7 @@ configure({
     return (
       topicData.map((item, index) => (
         <View key={index}>
-          <View paddingT-15>
-            <ItemHead title={item.title} seeAll='true' onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
-          </View>
+          <ItemHead title={item.title} seeAll='true' onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           <View row style={styles.topics}>
             {item.articleInfoBean.content &&
               item.articleInfoBean.content.map((el, i) => (
