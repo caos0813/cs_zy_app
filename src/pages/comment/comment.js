@@ -17,15 +17,19 @@ configure({
   setValue (key, val) {
     this[key] = val
   }
-  onChangeText=(e) => {
+  onChangeText = (e) => {
     const { setValue } = this
     setValue('content', e)
   }
-  submit=() => {
+  submit = () => {
     const { content, setValue } = this
     const { commentTabId } = this.props.routeStore
+    alert(content.length)
     if (!content) {
       Toast('请输入内容')
+    } else if (content.trim().length > 100) {
+      Toast('评论字数不能超过100字')
+      return
     }
     axios.post(api.addComment, {
       content,
@@ -56,7 +60,7 @@ configure({
       abortFetch()
     })
   }
-  deleteComment=(id) => {
+  deleteComment = (id) => {
     const { commentTabId } = this.props.routeStore
     axios.post(api.deleteComment, {
       articleInfoId: commentTabId,
@@ -78,9 +82,9 @@ configure({
           <Text text-14 dark06 marginT-5>{item.content}</Text>
         </View>
         {item.deleteState &&
-        <TouchableOpacity activeOpacity={0.6} onPress={() => this.deleteComment(item.id)}>
-          <Image assetName='delete' />
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => this.deleteComment(item.id)}>
+            <Image assetName='delete' />
+          </TouchableOpacity>
         }
       </View>
     )
