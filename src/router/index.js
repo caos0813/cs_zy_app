@@ -162,7 +162,7 @@ const AppNavigation = createStackNavigator(
     },
     Comment: {
       screen: CommentTab,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: ({ navigation, screenProps }) => ({
         headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
         headerStyle: {
           height: 44,
@@ -180,6 +180,7 @@ const AppNavigation = createStackNavigator(
           color: dark
         },
         cardStyle: {
+          paddingTop: screenProps.statusBarHeight,
           backgroundColor: colors.dark
         }
       })
@@ -293,11 +294,11 @@ const AppNavigation = createStackNavigator(
     }),
     headerLayoutPreset: 'center',
     cardStyle: {
-      backgroundColor: colors.light
+      backgroundColor: colors.dark
     },
-    initialRouteName: 'Home',
+    initialRouteName: 'Comment',
     initialRouteParams: {
-      articleId: '607'
+      articleId: '678'
     },
     transitionConfig: (transitionProps, prevTransitionProps) => {
       const currentPage = transitionProps.scene

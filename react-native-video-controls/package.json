@@ -1,0 +1,61 @@
+{
+  "_from": "react-native-video-controls",
+  "_id": "react-native-video-controls@2.2.3",
+  "_inBundle": false,
+  "_integrity": "sha1-8JJ+Ea6yy7sDk14husDKodRtimc=",
+  "_location": "/react-native-video-controls",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-video-controls",
+    "name": "react-native-video-controls",
+    "escapedName": "react-native-video-controls",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://registry.npm.taobao.org/react-native-video-controls/download/react-native-video-controls-2.2.3.tgz",
+  "_shasum": "f0927e11aeb2cbbb03935e21bac0caa1d46d8a67",
+  "_spec": "react-native-video-controls",
+  "_where": "E:\\zyzy_app",
+  "author": {
+    "name": "Nubix",
+    "url": "https://github.com/itsnubix"
+  },
+  "bugs": {
+    "url": "https://github.com/itsnubix/react-native-video-controls/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "lodash": "^4.16.4"
+  },
+  "deprecated": false,
+  "description": "A set of GUI controls for the react-native-video component",
+  "homepage": "https://github.com/itsnubix/react-native-video-controls#readme",
+  "keywords": [
+    "react-native",
+    "react-native-video",
+    "react video controls",
+    "react video player"
+  ],
+  "license": "MIT",
+  "main": "VideoPlayer.js",
+  "name": "react-native-video-controls",
+  "peerDependencies": {
+    "react-native": ">=0.46.0",
+    "react-native-video": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/itsnubix/react-native-video-controls.git"
+  },
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 1"
+  },
+  "version": "2.2.3"
+}
