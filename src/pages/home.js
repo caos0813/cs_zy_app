@@ -408,12 +408,11 @@ configure({
     const { bannerData } = this
     // const { animationConfig } = this.state
     return (
-      <View paddingT-5 flex useSafeArea >
+      <View paddingT-5 flex >
         {/* backgroundColor={colors.light} */}
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
         {/* <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} /> */}
         <NoNetwork refresh={this.refresh} />
-        <View><Text style={{ color: colors.grey, opacity: 0 }}>1</Text></View>
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           header={() => this.renderContainer(bannerData)}
           onFetch={this.onFetch}
