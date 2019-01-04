@@ -92,9 +92,11 @@ import AliyunOSS from 'aliyun-oss-react-native'
   showAreaPicker = (val) => {
     const { getParam } = this.props.navigation
     const { areaPickerData, areaPickerVal, setValue, areaData, getSchoolList } = this.props.infoStore
-    const { province } = this.props.infoStore.userInfo
+    const { province, isSuperUser } = this.props.infoStore.userInfo
     let pickerData = areaPickerData
-    if (getParam('type') !== 'complete') {
+    // alert(isSuperUser)
+    // 用户修改时，若为不为超级用户则才限制；用户完善时不限制
+    if (getParam('type') !== 'complete' && !isSuperUser) {
       pickerData = [_.find(areaPickerData, (obj) => {
         for (let x in obj) {
           return x === province.name

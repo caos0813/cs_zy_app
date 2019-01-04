@@ -20,6 +20,7 @@ import { observer, inject } from 'mobx-react/native'
     this.OpenUrl.openNative(path, query, auth)
   }
   render () {
+    const { userInfo } = this.props.userStore
     const iconsList = [{
       image: require('../assets/icons/guo.png'),
       text: '全国',
@@ -30,7 +31,7 @@ import { observer, inject } from 'mobx-react/native'
       image: require('../assets/icons/sheng.png'),
       text: '本省',
       type: 'provinces',
-      id: ''
+      id: userInfo.province.id
     }, {
       image: require('../assets/icons/shuang.png'),
       text: '双一流',
@@ -56,7 +57,7 @@ import { observer, inject } from 'mobx-react/native'
           <View style={styles.iconsWrap} marginV-20>
             {
               iconsList.map((item, index) => (
-                <IconCeil onPress={() => { this.openUrl('school-list', { type: item.type }, false) }} imageSource={item.image} title={item.text} key={index} />
+                <IconCeil onPress={() => { this.openUrl('school-list', { type: item.type, id: item.id }, false) }} imageSource={item.image} title={item.text} key={index} />
               ))
             }
           </View>
