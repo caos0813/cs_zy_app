@@ -35,6 +35,7 @@ import playerStore from '../../src/store/playerStore'
     })
   }
   onProgress = (e) => {
+    console.log(e)
     const { currentTime } = e
     this.setValue({
       position: transferPlayerTime(currentTime)
@@ -76,13 +77,13 @@ import playerStore from '../../src/store/playerStore'
             />
             {(paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close} style={{ marginRight: 9 }}><Image assetName='playerClose' /></TouchableOpacity>}
           </View>
-          <View flex row centerV paddingR-9>
+          <TouchableOpacity style={{ flex: 1, paddingRight: 9, flexDirection: 'row', alignItems: 'center' }} onPress={this.toMiniPlayer}>
             <Image source={{ uri: image }} style={styles.image} />
             <View flex paddingL-5>
               <Text text-14 light numberOfLines={1}>{title}</Text>
               <Text text-12 grey>{position}/{duration}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.btnWrap} >
             {!audioEnd && !paused &&
             <TouchableOpacity row activeOpacity={0.6} onPress={this.toMiniPlayer}><Image assetName='playerArrowUp' tintColor={colors.light} /></TouchableOpacity>

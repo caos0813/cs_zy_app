@@ -7,6 +7,7 @@ class Store {
   @observable id = null
   @observable position = '00:00'
   @observable duration = '00:00'
+  @observable progress = 0
   @observable audioEnd=false
   @observable paused=true
   @observable playList=[]
@@ -21,6 +22,7 @@ class Store {
     this.id = null
     this.position = '00:00'
     this.duration = '00:00'
+    this.progress = 0
     this.audioEnd = false
     this.paused = true
   }

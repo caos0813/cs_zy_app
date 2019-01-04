@@ -217,8 +217,15 @@ render () {
         {data.fileType === 2 && <View style={fullScreen ? styles.fullScreen : styles.video}
         >
           <VideoPlayer
+            ref={ref => { this.videoPlayer = ref }}
+            // paused={paused}
+            onPlay={() => {
+              Player.player && Player.close()
+            }}
+
             onEnterFullscreen={() => {
               setValue('fullScreen', true)
+              this.refs.scroll.scrollTo({ y: 0 })
               Orientation.lockToLandscapeLeft()
             }}
             onExitFullscreen={() => {
@@ -330,7 +337,7 @@ async componentDidMount () {
     payload => {
       const { routes } = this.props.routeStore
       const curpage = routes[routes.length - 1]
-      setValue('paused', true)
+      this.videoPlayer && this.videoPlayer.playerPause()
       if (curpage.routeName !== 'NewsDetail' && getParam('type') !== 'banner' && getParam('type') !== 'volunteer' && !reachBottom) {
         this.statistics(2)
       }

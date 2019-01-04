@@ -303,9 +303,9 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: colors.light
     },
-    initialRouteName: 'Home',
+    initialRouteName: 'Play',
     initialRouteParams: {
-      articleId: '678'
+      articleId: '1983'
     },
     transitionConfig: (transitionProps, prevTransitionProps) => {
       const currentPage = transitionProps.scene
@@ -329,7 +329,7 @@ const AppNavigation = createStackNavigator(
   }
 )
 // 拦截登录的路由
-const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail']
+const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail', 'Play', 'Browser']
 
 const defaultGetStateForAction = AppNavigation.router.getStateForAction
 
