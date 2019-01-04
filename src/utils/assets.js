@@ -18,6 +18,7 @@ Assets.loadAssetsGroup('icons', {
   vipIcon: require('../assets/mine/vip-icon.png'),
   vipImg: require('../assets/mine/vip.png'),
   arrowRight: require('../assets/mine/arrow-right.png'),
+  small_arrowRight: require('../assets/mine/m_arrow-right.png'),
   card: require('../assets/pay/card.png'),
   vip: require('../assets/pay/vip.png'),
   wechat: require('../assets/pay/wechat.png'),

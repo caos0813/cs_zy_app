@@ -7,6 +7,10 @@ export default class Policy extends Component {
   constructor (props) {
     super(props)
   }
+  refresh = () => {
+    const { state, replace } = this.props.navigation
+    replace(state)
+  }
   render () {
     const { getParam } = this.props.navigation
     const path = getParam('path')

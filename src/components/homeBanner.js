@@ -60,8 +60,9 @@ export default class HomeBanner extends Component {
     return (
       <View>
         <Carousel
+          loop
           autoplay
-          autoplayDelay={5000}
+          autoplayDelay={3000}
           data={data}
           inactiveSlideScale={1}
           hasParallaxImages

@@ -47,7 +47,7 @@ const TabStack = createBottomTabNavigator(
     Mine: {
       screen: Mine,
       navigationOptions: () => ({
-        tabBarLabel: '我的'
+        tabBarLabel: '个人中心'
       })
     }
   },
@@ -164,7 +164,7 @@ const AppNavigation = createStackNavigator(
     Comment: {
       screen: CommentTab,
       navigationOptions: ({ navigation }) => ({
-        headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
+        headerLeft: <BackAvatar assetName='backArrow' onPress={navigation.goBack} />,
         headerStyle: {
           height: 44,
           borderTopLeftRadius: 16,

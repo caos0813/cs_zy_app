@@ -31,6 +31,7 @@ export default class OpenUrl {
     }
   }
   openNative (path, query, needAuth) {
+    // alert(needAuth)
     const { navigation, userStore } = this.props
     const { userInfo } = userStore
     if (!needAuth) {
