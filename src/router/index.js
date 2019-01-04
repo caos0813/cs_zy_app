@@ -26,6 +26,7 @@ import Praise from '../pages/comment/praise'
 import Test from '../pages/test'
 import ByMajor from '../pages/byMajor'
 import Classroom from '../pages/classroom'
+import Subject from '../pages/subject'
 import { BackAvatar } from '../components'
 import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
@@ -279,6 +280,12 @@ const AppNavigation = createStackNavigator(
     },
     Classroom: {
       screen: Classroom,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
+    Subject: {
+      screen: Subject,
       navigationOptions: () => ({
         header: null
       })
