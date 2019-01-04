@@ -18,6 +18,77 @@ import Orientation from 'react-native-orientation'
 configure({
   enforceActions: 'always'
 })
+@observer class Play extends Component {
+  @observable duration = '00:00'
+  @computed get position () {
+    console.log(this.props)
+    const { position, id } = this.props.playerStore
+    if (id === this.props.data.id) {
+      return position
+    } else {
+      return '00:00'
+    }
+  }
+  @computed get paused () {
+    const { paused, id } = this.props.playerStore
+    if (id === this.props.data.id) {
+      return paused
+    } else {
+      return true
+    }
+  }
+  @action.bound
+  setDuration (num) {
+    this.duration = num
+  }
+  constructor (props) {
+    super(props)
+    this.setValue = props.playerStore.setValue
+  }
+  audioLoad = (e) => {
+    const { duration } = e
+    this.setDuration(transferPlayerTime(duration))
+  }
+  play = () => {
+    const { id, videoFile, title, picture } = this.props.data
+    const playId = this.props.playerStore.id
+    if (Player.player && id === playId) {
+      Player.pause()
+    } else {
+      Player.play({
+        id: id,
+        url: videoFile,
+        title: title,
+        image: picture
+      })
+    }
+  }
+  render () {
+    const { position, duration, paused } = this
+    const { videoFile, picture, title } = this.props.data
+    return (
+      <View paddingH-25 >
+        <TouchableOpacity style={styles.item} onPress={this.play}>
+          <Video
+            paused
+            source={{ uri: videoFile }}
+            onLoad={this.audioLoad}
+          />
+          <Image
+            borderRadius={8}
+            source={{ uri: imageResize(picture, 600) }}
+            style={{ width: 48, height: 48 }} />
+          <View paddingL-7 flex>
+            <Text text-16 dark>{title}</Text>
+            <Text text-12 dark06>{position}/{duration}</Text>
+          </View>
+          <Image assetName={paused ? 'playerPlay' : 'playerPause'} tintColor={colors.dark} />
+        </TouchableOpacity>
+      </View>
+
+    )
+  }
+}
 @inject('routeStore')
 @observer class Page extends Component {
   @observable reachBottom = true
