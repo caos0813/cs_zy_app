@@ -20,7 +20,6 @@ configure({
   @observable data = {
   }
   @observable orgValue=0
-  @observable sliderValue=0
   @action.bound
   setValue (key, val) {
     this[key] = val
@@ -105,7 +104,12 @@ configure({
     this.setValue('data', data)
   }
   onValueChange=(e) => {
-    this.setValue('sliderValue', e)
+    const { duration } = playerStore
+    const [m, s] = duration.split(':')
+    const total = parseInt(m) * 60 + parseInt(s)
+    const time = total * e.toFixed(2)
+    Player.player && Player.setSeek(time)
+    console.log(time)
   }
   render () {
     const { data } = this
@@ -174,6 +178,8 @@ configure({
   }
   componentDidMount () {
     const id = this.props.navigation.getParam('articleId')
+    const { progress } = playerStore
+    this.setValue('orgValue', progress || 0)
     axios.get(api.queryArticleInfoDetails, {
       params: {
         articleInfoId: id

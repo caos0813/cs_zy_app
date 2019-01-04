@@ -317,7 +317,7 @@ const AppNavigation = createStackNavigator(
     cardStyle: {
       backgroundColor: colors.light
     },
-    initialRouteName: 'Play',
+    initialRouteName: 'Home',
     initialRouteParams: {
       articleId: '1983'
     },

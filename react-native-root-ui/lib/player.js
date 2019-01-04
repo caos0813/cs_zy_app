@@ -35,11 +35,16 @@ import playerStore from '../../src/store/playerStore'
     })
   }
   onProgress = (e) => {
-    console.log(e)
-    const { currentTime } = e
+    const { currentTime, seekableDuration } = e
+    const progress = (currentTime / seekableDuration).toFixed(2)
+    console.log(progress)
     this.setValue({
+      progress: progress,
       position: transferPlayerTime(currentTime)
     })
+  }
+  seek=(seek) => {
+    this.refs.playerRef.seek(seek)
   }
   updatePlayer = () => {
     this.refs.playerRef.seek(0)
@@ -118,6 +123,9 @@ export default class Player extends Component {
     } else {
       console.warn(`player.hide expected a \`RootSiblings\` instance as argument.\nBut got \`${typeof player}\` instead.`)
     }
+  }
+  static setSeek (seek) {
+    this.playerContainer && this.playerContainer.seek(seek)
   }
   static pause () {
     const { paused, audioEnd } = playerStore
