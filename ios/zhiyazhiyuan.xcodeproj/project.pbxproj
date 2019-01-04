@@ -326,13 +326,6 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTOrientation;
 		};
-		8C57BCA221DE1B6A004ED927 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 401B55DAD6604F9E825B192F /* RCTWeChat.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 10D6D7A41F160C250066F0F3;
-			remoteInfo = RCTWeChatTests;
-		};
 		8C623E4D21DA76A5007699B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8C623E4721DA76A5007699B4 /* imageCropPicker.xcodeproj */;
@@ -1062,7 +1055,6 @@
 			isa = PBXGroup;
 			children = (
 				8CB27DA021BCED6000E1D068 /* libRCTWeChat.a */,
-				8C57BCA321DE1B6A004ED927 /* RCTWeChatTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1582,13 +1574,6 @@
 			remoteRef = 8C57BC9321DE1B6A004ED927 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8C57BCA321DE1B6A004ED927 /* RCTWeChatTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RCTWeChatTests.xctest;
-			remoteRef = 8C57BCA221DE1B6A004ED927 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		8C623E4E21DA76A5007699B4 /* libimageCropPicker.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1902,7 +1887,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiyazhiyuan.zyzyapp;
 				PRODUCT_NAME = zhiyazhiyuan;
-				PROVISIONING_PROFILE = "3a587d6c-26df-4aa6-9174-350badbd69de";
+				PROVISIONING_PROFILE = "5d7ccd6a-ae0f-4804-9a54-d3eebc4137af";
 				PROVISIONING_PROFILE_SPECIFIER = zyzyapp_adhot;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1967,8 +1952,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiyazhiyuan.zyzyapp;
 				PRODUCT_NAME = zhiyazhiyuan;
-				PROVISIONING_PROFILE = "3a587d6c-26df-4aa6-9174-350badbd69de";
-				PROVISIONING_PROFILE_SPECIFIER = zyzyapp_adhot;
+				PROVISIONING_PROFILE = "43a2c300-b5a1-4246-8f43-c8862250d6f2";
+				PROVISIONING_PROFILE_SPECIFIER = zyzyapp_appstore;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
