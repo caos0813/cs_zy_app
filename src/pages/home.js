@@ -252,7 +252,8 @@ configure({
         href: 'Seek'
       }, {
         title: '升学课堂',
-        image: require('../assets/home/icon08.png')
+        image: require('../assets/home/icon08.png'),
+        href: 'Classroom'
       }
     ]
     const banner = bannerData.map(item => {

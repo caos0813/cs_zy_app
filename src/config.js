@@ -3,7 +3,7 @@ let config = {}
 if (Config.ENV === 'development') {
   // config.BASE_URL = 'http://testapp.zhiyazhiyuan.com:8763/'
   config.BASE_URL = 'http://testapp.zhiyazhiyuan.com:8763/'
-  config.WEB_URL = 'http://192.168.1.77:8082/#/'
+  config.WEB_URL = 'http://192.168.1.167:8080/#/'
 } else if (Config.ENV === 'staging') {
   config.BASE_URL = 'http://testapp.zhiyazhiyuan.com:8763/'
   config.WEB_URL = 'http://m.zhiyazhiyuan.com:8080/#/'
