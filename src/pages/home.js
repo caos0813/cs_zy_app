@@ -237,11 +237,11 @@ configure({
       }, {
         title: '测一测',
         image: require('../assets/home/icon05.png'),
-        isSpecial: true
+        isBrowser: true
       }, {
         title: '填志愿',
         image: require('../assets/home/icon04.png'),
-        isSpecial: true
+        isBrowser: true
       }, {
         title: '志愿问答',
         image: require('../assets/home/icon06.png'),

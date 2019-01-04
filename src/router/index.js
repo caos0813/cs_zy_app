@@ -163,7 +163,7 @@ const AppNavigation = createStackNavigator(
     },
     Comment: {
       screen: CommentTab,
-      navigationOptions: ({ navigation, screenProps }) => ({
+      navigationOptions: ({ navigation }) => ({
         headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
         headerStyle: {
           height: 44,
