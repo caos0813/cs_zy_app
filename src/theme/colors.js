@@ -17,6 +17,7 @@ const dark05 = '#555'
 const dark06 = '#69707F'
 const dark07 = '#7f7f7f'
 const dark09 = '#999'
+const greyE7 = '#E7E7E7'
 export {
   black,
   black01,
@@ -36,5 +37,6 @@ export {
   dark06,
   dark09,
   dark07,
-  grey
+  grey,
+  greyE7
 }

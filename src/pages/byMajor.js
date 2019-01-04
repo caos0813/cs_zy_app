@@ -90,7 +90,7 @@ import { observer, inject } from 'mobx-react/native'
             <ItemHead title='一分钟说专业' />
           </View>
           {this.audioList.map((item, index) => (
-            <View key={index} marginH-10 marginB-10 style={styles.audioWrap}>
+            <View key={index} marginH-15 marginB-10 style={styles.audioWrap}>
               <TouchableOpacity activeOpacity={0.6} onPress={() => { this.openUrl('audio', { id: item.id, title: item.title, introduction: item.introduction, img: item.filePath }, false) }}>
                 <Image style={styles.image} source={{ uri: imageResize(item.filePath, 350) }} />
                 <Text text-22 light style={styles.title}>{item.title}</Text>
