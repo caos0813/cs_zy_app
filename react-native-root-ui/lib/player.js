@@ -37,9 +37,8 @@ import playerStore from '../../src/store/playerStore'
   onProgress = (e) => {
     const { currentTime, seekableDuration } = e
     const progress = (currentTime / seekableDuration).toFixed(2)
-    console.log(progress)
     this.setValue({
-      progress: progress,
+      progress: Number(progress),
       position: transferPlayerTime(currentTime)
     })
   }

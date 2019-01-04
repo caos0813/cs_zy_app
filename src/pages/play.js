@@ -109,11 +109,11 @@ configure({
     const total = parseInt(m) * 60 + parseInt(s)
     const time = total * e.toFixed(2)
     Player.player && Player.setSeek(time)
-    console.log(time)
+    // console.log(time)
   }
   render () {
     const { data } = this
-    const { duration, position, paused } = playerStore
+    const { duration, position, paused, progress } = playerStore
     const picture = data.picture
     return (
       <View flex >
@@ -147,8 +147,8 @@ configure({
               source={{ uri: picture }}
             />
             <View style={[styles.progress]}>
-              <Text light text-9>{position}</Text>
-              <Slider value={this.orgValue} onValueChange={this.onValueChange} thumbTintColor={colors.light} style={{ flex: 1 }} />
+              <Text light text-9>{position}{progress}</Text>
+              <Slider value={progress} onValueChange={this.onValueChange} thumbTintColor={colors.light} style={{ flex: 1 }} />
               <Text light text-9>{duration}</Text>
             </View>
           </View>
@@ -178,8 +178,6 @@ configure({
   }
   componentDidMount () {
     const id = this.props.navigation.getParam('articleId')
-    const { progress } = playerStore
-    this.setValue('orgValue', progress || 0)
     axios.get(api.queryArticleInfoDetails, {
       params: {
         articleInfoId: id

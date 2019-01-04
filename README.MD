@@ -20,7 +20,7 @@ code-push promote zyzyapp-android  Staging Production
 ### 正式环境发布热更新
 ```
 code-push release-react zyzyapp-android android  --t 1.1.1 --dev false --d Staging  --des "有新的更新" --m true
-code-push release-react zyzyapp-ios ios  --t 1.1.0 --dev false --d Staging  --des "有新的更新" --m true
+code-push release-react zyzyapp-ios ios  --t 1.1.1 --dev false --d Staging  --des "有新的更新" --m true
 
 
 code-push promote zyzyapp-ios  Staging Production
