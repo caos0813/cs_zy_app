@@ -46,7 +46,7 @@ const listItems = [{
             </View>
             <View center padding-25 row>
               <Image assetName='vip' />
-              <Text text-18 marginH-5>知涯志愿专享功能</Text>
+              <Text text-16 marginH-5>知涯志愿专享功能</Text>
               <Image assetName='vip' />
             </View>
             <View row paddingH-20 style={styles.itemWrap}>
@@ -60,7 +60,7 @@ const listItems = [{
             </View>
             <View center row padding-25>
               <Image assetName='vip' />
-              <Text text-18 marginH-5 >特色功能介绍</Text>
+              <Text text-16 marginH-5 >特色功能介绍</Text>
               <Image assetName='vip' />
             </View>
             <View style={styles.listWrap} paddingH-25>
@@ -68,7 +68,7 @@ const listItems = [{
                 <View key={index} marginB-15>
                   <View row centerV>
                     <Image assetName='select' />
-                    <Text text-18 dark marginL-5 >{item.title}</Text>
+                    <Text text-16 dark marginL-5 >{item.title}</Text>
                   </View>
                   <Text marginT-2 marginB-10 text-13 gray>{item.text}</Text>
                   <Image assetName={item.img}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, findNodeHandle, ScrollView, Platform } from 'react-native'
+import { StyleSheet, findNodeHandle, Slider, ScrollView, Platform } from 'react-native'
 import { configure, observable, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
@@ -19,6 +19,7 @@ configure({
 @observer class Play extends Component {
   @observable data = {
   }
+  @observable orgValue=0
   @action.bound
   setValue (key, val) {
     this[key] = val
@@ -30,7 +31,7 @@ configure({
   }
   constructor (props) {
     super(props)
-    this.state = { viewRef: null }
+    this.state = { viewRef: null, value: 0 }
   }
   imageLoaded= () => {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
@@ -102,9 +103,17 @@ configure({
     data.commentNumber = num
     this.setValue('data', data)
   }
+  onValueChange=(e) => {
+    const { duration } = playerStore
+    const [m, s] = duration.split(':')
+    const total = parseInt(m) * 60 + parseInt(s)
+    const time = total * e.toFixed(2)
+    Player.player && Player.setSeek(time)
+    // console.log(time)
+  }
   render () {
     const { data } = this
-    const { duration, position, paused } = playerStore
+    const { duration, position, paused, progress } = playerStore
     const picture = data.picture
     return (
       <View flex >
@@ -138,10 +147,12 @@ configure({
               source={{ uri: picture }}
             />
             <View style={[styles.progress]}>
-              <Text light text-9>{position}/{duration}</Text>
+              <Text light text-9>{position}</Text>
+              <Slider value={progress} onSlidingComplete={this.onValueChange} thumbTintColor={colors.light} style={{ flex: 1, marginHorizontal: 8 }} />
+              <Text light text-9>{duration}</Text>
             </View>
           </View>
-          <View center paddingT-50 paddingB-24>
+          <View center paddingT-40 paddingB-24>
             <Text text-24 dark marginB-20>{data.title}</Text>
             <Text text-14 dark06 dark marginB-20>{transferTime(data.releaseTime)}</Text>
             <TouchableOpacity onPress={this.play}>
@@ -164,9 +175,11 @@ configure({
     navigator.goBack()
   }
   componentWillUnmount () {
+    Player.player && Player.setTranslucent(false)
   }
   componentDidMount () {
     const id = this.props.navigation.getParam('articleId')
+    Player.player && Player.setTranslucent(true)
     axios.get(api.queryArticleInfoDetails, {
       params: {
         articleInfoId: id
@@ -179,14 +192,14 @@ configure({
 export default Play
 const styles = StyleSheet.create({
   progress: {
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    left: 0,
+    bottom: 10,
+    width: '100%',
+    height: 20,
     position: 'absolute',
-    left: '50%',
-    marginLeft: -30,
-    bottom: -6,
-    paddingHorizontal: 5,
-    paddingVertical: 3,
-    borderRadius: 12
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   scroll: {
     flex: 1
@@ -206,14 +219,14 @@ const styles = StyleSheet.create({
   },
   image: {
     position: 'absolute',
-    width: 281,
-    height: 281,
+    width: width - 100,
+    height: width - 100,
     bottom: 47,
     borderRadius: 10
   },
   imageBlur: {
     width: width,
-    height: 425 + statusBarHeight,
+    height: width + statusBarHeight,
     opacity: 0,
     ...Platform.select({
       ios: {
