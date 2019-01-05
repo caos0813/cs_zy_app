@@ -217,6 +217,7 @@ render () {
         {data.fileType === 2 && <View style={fullScreen ? styles.fullScreen : styles.video}
         >
           <VideoPlayer
+            paused={paused}
             onEnterFullscreen={() => {
               setValue('fullScreen', true)
               Orientation.lockToLandscapeLeft()
@@ -246,7 +247,7 @@ render () {
           <Text text-14 dark06 marginT-20>{transferTime(data.releaseTime)}</Text>
         </View>
         {data.fileType === 1 &&
-          <Play playerStore={playerStore} data={this.data} />
+        <Play playerStore={playerStore} data={this.data} />
         }
         <View paddingH-20>
           <WebView
