@@ -147,8 +147,8 @@ configure({
               source={{ uri: picture }}
             />
             <View style={[styles.progress]}>
-              <Text light text-9>{position}{progress}</Text>
-              <Slider value={progress} onValueChange={this.onValueChange} thumbTintColor={colors.light} style={{ flex: 1 }} />
+              <Text light text-9>{position}</Text>
+              <Slider value={progress} onSlidingComplete={this.onValueChange} thumbTintColor={colors.light} style={{ flex: 1, marginHorizontal: 8 }} />
               <Text light text-9>{duration}</Text>
             </View>
           </View>
@@ -175,9 +175,11 @@ configure({
     navigator.goBack()
   }
   componentWillUnmount () {
+    Player.player && Player.setTranslucent(false)
   }
   componentDidMount () {
     const id = this.props.navigation.getParam('articleId')
+    Player.player && Player.setTranslucent(true)
     axios.get(api.queryArticleInfoDetails, {
       params: {
         articleInfoId: id

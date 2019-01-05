@@ -8,6 +8,7 @@ class Store {
   @observable position = '00:00'
   @observable duration = '00:00'
   @observable progress = 0
+  @observable translucent = false
   @observable audioEnd=false
   @observable paused=true
   @observable playList=[]

@@ -45,6 +45,11 @@ import playerStore from '../../src/store/playerStore'
   seek=(seek) => {
     this.refs.playerRef.seek(seek)
   }
+  setTranslucent=(flag) => {
+    this.setValue({
+      translucent: flag
+    })
+  }
   updatePlayer = () => {
     this.refs.playerRef.seek(0)
     this.setValue({
@@ -64,9 +69,9 @@ import playerStore from '../../src/store/playerStore'
   render () {
     const { title, url, image } = this.props.config
     const { pause, close } = this.props
-    const { duration, audioEnd, position, paused } = this.props.playerStore
+    const { duration, audioEnd, position, paused, translucent } = this.props.playerStore
     return (
-      <Animatable.View style={[styles.wrap]} row center animation='slideInUp' duration={300}>
+      <Animatable.View style={[styles.wrap, { display: (translucent ? 'none' : 'flex') }]} row center animation='slideInUp' duration={300}>
         <View style={styles.player} row>
           <View row centerV>
             <Video
@@ -77,7 +82,7 @@ import playerStore from '../../src/store/playerStore'
               onEnd={this.onEnd}
               paused={paused}
               onProgress={this.onProgress}
-              progressUpdateInterval={200}
+              progressUpdateInterval={500}
             />
             {(paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close} style={{ marginRight: 9 }}><Image assetName='playerClose' /></TouchableOpacity>}
           </View>
@@ -135,6 +140,9 @@ export default class Player extends Component {
         paused: !paused
       })
     }
+  }
+  static setTranslucent (flag) {
+    this.playerContainer && this.playerContainer.setTranslucent(flag)
   }
 
   static play (config) {
