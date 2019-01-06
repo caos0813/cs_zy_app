@@ -48,7 +48,7 @@
     "react-native-video": "^4.2.0",
     "react-native-webview": "^2.14.3",
     "react-native-wechat": "^1.9.10",
-    "react-navigation": "^3.0.9"
+    "react-navigation": "^3.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.1.2",
