@@ -217,8 +217,15 @@ render () {
         {data.fileType === 2 && <View style={fullScreen ? styles.fullScreen : styles.video}
         >
           <VideoPlayer
+            ref={ref => { this.videoPlayer = ref }}
+            // paused={paused}
+            onPlay={() => {
+              Player.player && Player.close()
+            }}
+
             onEnterFullscreen={() => {
               setValue('fullScreen', true)
+              this.refs.scroll.scrollTo({ y: 0 })
               Orientation.lockToLandscapeLeft()
             }}
             onExitFullscreen={() => {
@@ -246,7 +253,7 @@ render () {
           <Text text-14 dark06 marginT-20>{transferTime(data.releaseTime)}</Text>
         </View>
         {data.fileType === 1 &&
-          <Play playerStore={playerStore} data={this.data} />
+        <Play playerStore={playerStore} data={this.data} />
         }
         <View paddingH-20>
           <WebView
@@ -330,7 +337,7 @@ async componentDidMount () {
     payload => {
       const { routes } = this.props.routeStore
       const curpage = routes[routes.length - 1]
-      setValue('paused', true)
+      this.videoPlayer && this.videoPlayer.playerPause()
       if (curpage.routeName !== 'NewsDetail' && getParam('type') !== 'banner' && getParam('type') !== 'volunteer' && !reachBottom) {
         this.statistics(2)
       }

@@ -207,14 +207,16 @@ import AliyunOSS from 'aliyun-oss-react-native'
     const { setValue, userInfo, updateUserInfo } = this.props.infoStore
     setValue('actionSheetStatus', false)
     const uploadPath = `touxiang/${userInfo.userId}.jpg`
-    const imageUrl = `${this.CDN}/${uploadPath}`
+    const imageUrl = `${this.CDN}/${uploadPath}?v=${new Date().getTime()}`
     if (index === 0) {
       ImagePicker.openPicker({
         width: 300,
         height: 300,
         cropperToolbarTitle: '裁剪头像',
         hideBottomControls: true,
-        cropping: true
+        cropping: true,
+        cropperCancelText: '取消',
+        cropperChooseText: '确定'
       }).then(image => {
         console.log(image)
         console.log(AliyunOSS)
@@ -231,7 +233,9 @@ import AliyunOSS from 'aliyun-oss-react-native'
         height: 300,
         cropperToolbarTitle: '裁剪头像',
         hideBottomControls: true,
-        cropping: true
+        cropping: true,
+        cropperCancelText: '取消',
+        cropperChooseText: '确定'
       }).then(image => {
         console.log(image)
         AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {

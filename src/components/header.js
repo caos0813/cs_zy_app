@@ -61,9 +61,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   backImage: {
-    marginLeft: -1.5,
-    width: 16,
-    height: 16
+    // marginLeft: -1.5,
+    // width: 12,
+    // height: 22
   },
   titleWrap: {
     flex: 1,

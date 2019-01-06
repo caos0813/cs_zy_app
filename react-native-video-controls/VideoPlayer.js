@@ -225,7 +225,13 @@ export default class VideoPlayer extends Component {
      * Either close the video or go to a
      * new page.
      */
-    _onEnd () {}
+    _onEnd () {
+      this.setSeekerPosition(0)
+      this.setState({
+        paused: true
+      })
+      this.player.ref.seek(0)
+    }
 
     /**
      * Set the error state to true which then
@@ -437,8 +443,14 @@ export default class VideoPlayer extends Component {
     /**
      * Toggle playing state on <Video> component
      */
+    playerPause= () => {
+      this.setState({
+        paused: true
+      })
+    }
     _togglePlayPause () {
       console.log('_togglePlayPause')
+
       let state = this.state
       state.paused = !state.paused
 
@@ -527,7 +539,6 @@ export default class VideoPlayer extends Component {
 
       this.setState(state)
     }
-
     /**
      * Contrain the location of the seeker to the
      * min/max value based on how big the
@@ -665,6 +676,7 @@ export default class VideoPlayer extends Component {
      */
     componentWillReceiveProps (nextProps) {
       console.log('componentWillReceiveProps')
+      console.log(nextProps)
       if (this.state.paused !== nextProps.paused) {
         this.setState({
           // paused: nextProps.paused

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet, ScrollView } from 'react-native'
 import { View } from '../../react-native-ui-lib'
-import { HomeSearch, ItemHead, IconCeil, CardItem } from '../components'
-import { api, axios, OpenUrl } from '../utils'
+import { HomeSearch, ItemHead, IconCeil, CardItem, NoNetwork } from '../components'
+import { api, axios, OpenUrl, imageResize } from '../utils'
 import { observer, inject } from 'mobx-react/native'
 @inject('userStore')
 @observer class ByCollege extends Component {
@@ -18,6 +18,10 @@ import { observer, inject } from 'mobx-react/native'
   }
   openNative = (path, query, auth) => {
     this.OpenUrl.openNative(path, query, auth)
+  }
+  refresh = () => {
+    const { state, replace } = this.props.navigation
+    replace(state)
   }
   render () {
     const { userInfo } = this.props.userStore
@@ -50,6 +54,7 @@ import { observer, inject } from 'mobx-react/native'
     }]
     return (
       <View flex useSafeArea>
+        <NoNetwork refresh={this.refresh} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View centerH paddingV-10>
             <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
@@ -71,7 +76,7 @@ import { observer, inject } from 'mobx-react/native'
                   {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
                     item.articleInfoBean.content.map((el, i) => (
                       <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
-                        <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={item.fileType} />
+                        <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: imageResize(el.picture, 500) }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={item.fileType} />
                       </View>
                     ))
                   }

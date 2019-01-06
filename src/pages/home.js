@@ -10,7 +10,7 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator, formatVersion } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator, formatVersion, imageResize } from '../utils'
 import { colors } from '../theme'
 import { ItemHead, HomeBanner, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
 import { SplashSwiper } from '../../react-native-root-ui'
@@ -148,7 +148,7 @@ configure({
         this.openNative(item.href, {}, true)
       }
     }
-    if (item.title === '测一测') {
+    if (item.title === '测评选专业') {
       this.entryHolland()
     } else if (item.title === '填志愿') {
       this.entryZhiyuan()
@@ -235,7 +235,7 @@ configure({
         image: require('../assets/home/icon03.png'),
         href: 'ByProfession'
       }, {
-        title: '测一测',
+        title: '测评选专业',
         image: require('../assets/home/icon05.png'),
         isBrowser: true
       }, {
@@ -276,10 +276,10 @@ configure({
           }
         </View>
         {/* 文章1 */}
-        {this.firstArticle.labelName && <View>
+        {this.firstArticle.labelName && <View paddingT-15>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
-          <View paddingH-15>
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
+          <View paddingH-15 >
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: imageResize(this.firstArticle.picture, 500) }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
               <View style={styles.cardFooter} paddingT-5>
                 <View row>
                   <View row centerV paddingR-10>
@@ -301,8 +301,8 @@ configure({
         {/* 所有特殊专题 */}
         {
           this.specials.length > 0 &&
-          <View paddingT-10>
-            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' }, false)} />
+          <View paddingT-15>
+            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
           </View>
         }
         {this.renderSpecial(this.specials)}
@@ -329,13 +329,13 @@ configure({
   renderTopics = (topicData) => {
     return (
       topicData.map((item, index) => (
-        <View key={index}>
-          <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title }, false)} title={item.title} seeAll='true' />
+        <View paddingT-15 key={index}>
+          <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
-                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
+                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: imageResize(el.picture, 350) }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -353,7 +353,7 @@ configure({
             <Card.Item>
               <View paddingV-10>
                 <View row style={{ width: '90%' }}>
-                  <Text numberOfLines={1} text-16 dark >{item.title}</Text>
+                  <Text numberOfLines={2} text-16 dark >{item.title}</Text>
                 </View>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
                   <Text text-11 gray>{transferTime(item.createTime)}</Text>
@@ -380,10 +380,10 @@ configure({
       return null
     } else {
       return (
-        <View style={styles.article} key={index}>
+        <View paddingT-15 style={styles.article} key={index}>
           <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
           <View paddingH-15>
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} imageStyle={{ height: 115 }}>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: imageResize(item.picture, 500) }} desc={item.introduction} fileType={item.fileType} imageStyle={{ height: 115 }}>
               <View style={styles.cardFooter} paddingT-5>
                 <View row>
                   <View row centerV paddingR-10>
@@ -403,7 +403,6 @@ configure({
       )
     }
   }
-
   render () {
     const { bannerData } = this
     // const { animationConfig } = this.state
@@ -533,9 +532,8 @@ const styles = StyleSheet.create({
   },
   topic: {
     paddingHorizontal: 12,
-    paddingBottom: 15,
+    // paddingBottom: 15,
     width: '50%'
-    // borderTopWidth: 1
   },
   fullWidth: {
     width: '100%'

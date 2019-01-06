@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import { View, LoaderScreen } from '../../react-native-ui-lib'
-import { HomeSearch, ItemHead, ButtonCeil, CardItem } from '../components'
-import { api, axios, OpenUrl } from '../utils'
+import { HomeSearch, ItemHead, ButtonCeil, CardItem, NoNetwork } from '../components'
+import { api, axios, OpenUrl, imageResize } from '../utils'
 import { observer, inject } from 'mobx-react/native'
 import { configure, observable, action } from 'mobx'
 import { UltimateListView } from 'react-native-ultimate-listview'
@@ -51,6 +51,10 @@ configure({
       abortFetch()
     })
   }
+  refresh = () => {
+    const { state, replace } = this.props.navigation
+    replace(state)
+  }
   renderContainer = () => {
     return (
       <View>
@@ -60,7 +64,7 @@ configure({
         <View>
           <ItemHead title='按兴趣找职业' />
         </View>
-        <View style={styles.iconsWrap} marginV-20>
+        <View style={styles.iconsWrap} marginV-20 paddingH-5>
           {
             this.tagData && this.tagData.map((item, index) => (
               <ButtonCeil onPress={() => this.pressTag(item)} title={item.name} enlish={item.englishName} />
@@ -75,14 +79,15 @@ configure({
   }
   renderItem = (item, index, separator) => {
     return (
-      <View paddingH-12 marginB-15>
-        <CardItem onPress={() => this.openUrl('profession-parent-group', { id: item.id }, true)} title={item.title} imageSource={{ uri: item.picture }} imageStyle={{ height: 115 }} />
+      <View paddingH-15 marginB-15>
+        <CardItem onPress={() => this.openUrl('profession-parent-group', { id: item.id }, true)} title={item.title} imageSource={{ uri: imageResize(item.picture, 500) }} imageStyle={{ height: 115 }} />
       </View>
     )
   }
   render () {
     return (
       <View flex useSafeArea>
+        <NoNetwork refresh={this.refresh} />
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           header={() => this.renderContainer()}
           onFetch={this.onFetch}

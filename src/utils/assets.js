@@ -18,6 +18,7 @@ Assets.loadAssetsGroup('icons', {
   vipIcon: require('../assets/mine/vip-icon.png'),
   vipImg: require('../assets/mine/vip.png'),
   arrowRight: require('../assets/mine/arrow-right.png'),
+  small_arrowRight: require('../assets/mine/m_arrow-right.png'),
   card: require('../assets/pay/card.png'),
   vip: require('../assets/pay/vip.png'),
   wechat: require('../assets/pay/wechat.png'),
@@ -57,7 +58,16 @@ Assets.loadAssetsGroup('icons', {
   article_title2: require('../assets/icons/aTitle2.png'),
   article_title3: require('../assets/icons/aTitle3.png'),
   article_title4: require('../assets/icons/aTitle4.png'),
-  article_title5: require('../assets/icons/aTitle5.png')
+  article_title5: require('../assets/icons/aTitle5.png'),
+  subject_chinese: require('../assets/classroom/chinese.png'),
+  subject_math: require('../assets/classroom/math.png'),
+  subject_english: require('../assets/classroom/english.png'),
+  subject_physics: require('../assets/classroom/physics.png'),
+  subject_chemistry: require('../assets/classroom/chemistry.png'),
+  subject_biology: require('../assets/classroom/biology.png'),
+  subject_politics: require('../assets/classroom/politics.png'),
+  subject_history: require('../assets/classroom/history.png'),
+  subject_geography: require('../assets/classroom/geography.png')
 })
 
 /* share */

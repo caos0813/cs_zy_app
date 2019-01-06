@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, Image, Button, ListItem } from '../../react-native-ui-lib'
+import { Text, View, Avatar, Image, Button, ListItem, TouchableOpacity } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'
@@ -38,96 +38,103 @@ import { Header } from '../components'
     const { navigate } = this.props.navigation
     const { version } = this.props
     return (
-      <View flex >
+      <View flex style={{ backgroundColor: colors.lightGrey }} >
         <Header showLeft={false} title='我的' />
         <ScrollView>
-          <View row top paddingH-15 paddingV-15 style={styles.infoWrap}>
-            <View row>
-              <Avatar containerStyle={styles.avatar} imageStyle={{ width: 50, height: 50 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
+          <View row top paddingL-25 paddingR-18 paddingV-35 style={styles.infoWrap}>
+            <View style={{ alignItems: 'center' }} row>
+              <Avatar containerStyle={styles.avatar} imageStyle={{ width: 72, height: 72 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
                 backgroundColor={userInfo.image ? 'transparent' : colors.stable}
                 onPress={() => navigate('Mine')}
               />
               <View paddingL-10 paddingR-15>
                 <View row>
-                  <Text text-22>{userInfo.token ? userInfo.name : '未登录'}</Text>
+                  <Text black text-22>{userInfo.token ? userInfo.name : '未登录'}</Text>
                   {(isVipValid === 2) && <Image assetName='vipIcon' style={styles.vipIcon} />}
                 </View>
                 {!userInfo.token && <Text text-13 dark06>请先登录</Text>}
-                {isVipValid === 0 && <Text text-13 dark06>您还未开通志愿卡</Text>}
-                {isVipValid === 2 && <Text text-13 positive>志愿卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
-                {isVipValid === 1 && <Text text-13 positive>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
+                {isVipValid === 0 && <Text text-13 dark06>您还未开通VIP</Text>}
+                {isVipValid === 2 && <Text text-13 calm>VIP有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
+                {isVipValid === 1 && <Text text-13 calm>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
-            {(isVipValid !== 2 && userInfo.token) && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
+            {(isVipValid !== 2 && userInfo.token) && <Button labelStyle={{ marginTop: 6 }} bg-calm label='开通VIP' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            {!userInfo.token && <Button bg-assertive label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
+            {(isVipValid === 2 && userInfo.token) && <Button labelStyle={{ marginTop: 6 }} style={{ backgroundColor: colors.lightGrey }} dark06 label='已开通VIP' size='small' marginT-12 disabled />
             }
-            {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />}
+            {!userInfo.token && <Button bg-calm label='登录' labelStyle={{ marginTop: 6 }} size='small' marginT-12 onPress={() => navigate('Login')} />
+            }
+            {/* {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />} */}
           </View>
           <View>
-            <ListItem style={styles.item} height={42} onPress={() => this.openNative('Info', {}, true)}>
+            <ListItem style={[styles.item, { borderTopWidth: 5 / ratio, borderTopColor: colors.lightGrey }]} height={50} onPress={() => this.openNative('Info', {}, true)}>
               <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
                 <Image assetName='info' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>我的信息</Text>
+                <Text text-16 dark>我的资料</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' />
+                <Image assetName='small_arrowRight' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.item} height={42} onPress={() => this.openUrl('favorite', {}, true)} elevation={1}>
+            <ListItem style={styles.item} height={50} onPress={() => this.openUrl('favorite', {}, true)} elevation={1}>
               <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
                 <Image assetName='star' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>我的收藏</Text>
+                <Text text-16 dark>我的收藏</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' />
+                <Image assetName='small_arrowRight' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.item} height={42} onPress={() => this.openNative('Pay', {}, true)}>
+            <ListItem style={[styles.item, { borderBottomWidth: 0 }]} height={50} onPress={() => this.openNative('Pay', {}, true)}>
               <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
                 <Image assetName='vip_center' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>会员中心</Text>
+                <Text text-16 dark>会员中心</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' />
+                <Image assetName='small_arrowRight' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.item} height={42} onPress={() => this.openNative('Feedback', {}, true)}>
+            <ListItem style={[styles.item, { borderTopWidth: 5 / ratio, borderTopColor: colors.lightGrey }]} height={50} onPress={() => this.openNative('Feedback', {}, true)}>
               <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
                 <Image assetName='feedback' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>反馈</Text>
+                <Text text-16 dark>反馈</Text>
               </ListItem.Part>
               <ListItem.Part >
-                <Image assetName='arrowRight' />
+                <Image assetName='small_arrowRight' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.item} height={42} onPress={() => navigate('About')}>
+            <ListItem style={[styles.item, { borderBottomWidth: 5 / ratio, borderBottomColor: colors.lightGrey }]} height={50} onPress={() => navigate('About')}>
               <ListItem.Part left containerStyle={{ paddingRight: 10 }}>
                 <Image assetName='about' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>关于</Text>
+                <Text text-16 dark>关于</Text>
               </ListItem.Part>
               <ListItem.Part >
                 {Config.ENV !== 'production' && <Text marginR-8>test</Text>}
                 <Text gray marginR-10>v{version}</Text>
-                <Image assetName='arrowRight' />
+                <Image assetName='small_arrowRight' />
+              </ListItem.Part>
+            </ListItem>
+            <ListItem style={styles.signOut} height={50} onPress={this.signOut}>
+              <ListItem.Part>
+                <Text text-16 dark>退出</Text>
               </ListItem.Part>
             </ListItem>
           </View>
-          {userInfo.token && <View paddingT-100 paddingH-50>
-            <Button label='退出' bg-calm text-18 onPress={this.signOut} />
-          </View>}
+          {/* {userInfo.token && <View paddingT-100 paddingH-50>
+            <Button label='退出' bg-calm text-16 onPress={this.signOut} />
+          </View>} */}
         </ScrollView>
-      </View>
+      </View >
     )
   }
   componentDidMount () {
@@ -140,7 +147,9 @@ export default Info
 const styles = StyleSheet.create({
   infoWrap: {
     justifyContent: 'space-between',
-    height: 100
+    height: 100,
+    alignItems: 'center',
+    backgroundColor: colors.light
   },
   vipImg: {
     position: 'absolute',
@@ -151,13 +160,15 @@ const styles = StyleSheet.create({
     zIndex: -1
   },
   avatar: {
-    width: 50,
-    height: 50,
-    zIndex: 1
+    width: 72,
+    height: 72,
+    zIndex: 1,
+    borderRadius: 100
   },
   vipIcon: {
-    width: 26,
-    height: 24
+    width: 18,
+    height: 18,
+    marginTop: -5
   },
   card: {
     borderRadius: 6,
@@ -168,8 +179,13 @@ const styles = StyleSheet.create({
   },
   item: {
     justifyContent: 'flex-start',
-    paddingHorizontal: 36,
-    borderBottomColor: colors.grey,
+    paddingLeft: 26,
+    paddingRight: 15,
+    borderBottomColor: colors.greyE7,
     borderBottomWidth: 1 / ratio
+  },
+  signOut: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 })

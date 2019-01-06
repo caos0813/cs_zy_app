@@ -35,9 +35,19 @@ import playerStore from '../../src/store/playerStore'
     })
   }
   onProgress = (e) => {
-    const { currentTime } = e
+    const { currentTime, seekableDuration } = e
+    const progress = (currentTime / seekableDuration).toFixed(2)
     this.setValue({
+      progress: Number(progress),
       position: transferPlayerTime(currentTime)
+    })
+  }
+  seek=(seek) => {
+    this.refs.playerRef.seek(seek)
+  }
+  setTranslucent=(flag) => {
+    this.setValue({
+      translucent: flag
     })
   }
   updatePlayer = () => {
@@ -59,9 +69,9 @@ import playerStore from '../../src/store/playerStore'
   render () {
     const { title, url, image } = this.props.config
     const { pause, close } = this.props
-    const { duration, audioEnd, position, paused } = this.props.playerStore
+    const { duration, audioEnd, position, paused, translucent } = this.props.playerStore
     return (
-      <Animatable.View style={[styles.wrap]} row center animation='slideInUp' duration={300}>
+      <Animatable.View style={[styles.wrap, { display: (translucent ? 'none' : 'flex') }]} row center animation='slideInUp' duration={300}>
         <View style={styles.player} row>
           <View row centerV>
             <Video
@@ -72,17 +82,17 @@ import playerStore from '../../src/store/playerStore'
               onEnd={this.onEnd}
               paused={paused}
               onProgress={this.onProgress}
-              progressUpdateInterval={200}
+              progressUpdateInterval={500}
             />
             {(paused || audioEnd) && <TouchableOpacity activeOpacity={0.6} onPress={close} style={{ marginRight: 9 }}><Image assetName='playerClose' /></TouchableOpacity>}
           </View>
-          <View flex row centerV paddingR-9>
+          <TouchableOpacity style={{ flex: 1, paddingRight: 9, flexDirection: 'row', alignItems: 'center' }} onPress={this.toMiniPlayer}>
             <Image source={{ uri: image }} style={styles.image} />
             <View flex paddingL-5>
               <Text text-14 light numberOfLines={1}>{title}</Text>
               <Text text-12 grey>{position}/{duration}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.btnWrap} >
             {!audioEnd && !paused &&
             <TouchableOpacity row activeOpacity={0.6} onPress={this.toMiniPlayer}><Image assetName='playerArrowUp' tintColor={colors.light} /></TouchableOpacity>
@@ -118,6 +128,9 @@ export default class Player extends Component {
       console.warn(`player.hide expected a \`RootSiblings\` instance as argument.\nBut got \`${typeof player}\` instead.`)
     }
   }
+  static setSeek (seek) {
+    this.playerContainer && this.playerContainer.seek(seek)
+  }
   static pause () {
     const { paused, audioEnd } = playerStore
     if (audioEnd) {
@@ -127,6 +140,9 @@ export default class Player extends Component {
         paused: !paused
       })
     }
+  }
+  static setTranslucent (flag) {
+    this.playerContainer && this.playerContainer.setTranslucent(flag)
   }
 
   static play (config) {
