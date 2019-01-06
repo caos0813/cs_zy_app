@@ -10,18 +10,21 @@ import {
   StatusBar,
   Linking
 } from 'react-native'
-import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator } from '../utils'
+import { api, axios, OpenUrl, dialog, Toast, storage, statusBarHeight, platform, ratio, transferTime, getUrlParams, navigator, formatVersion } from '../utils'
 import { colors } from '../theme'
-import { ItemHead, HomeBanner, SplashSwiper, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { ItemHead, HomeBanner, NoNetwork, HomeSearch, CardItem, IconCeil } from '../components'
+import { SplashSwiper } from '../../react-native-root-ui'
 import { UltimateListView } from 'react-native-ultimate-listview'
 import { configure, observable, action } from 'mobx'
+import DeviceInfo from 'react-native-device-info'
+import EnvConfig from 'react-native-config'
+import Config from '../config'
+
 configure({
   enforceActions: 'always'
 })
 @inject('userStore')
 @observer class Home extends Component {
-  @observable showSplash = false
   @observable bannerData = []
   @observable firstArticle = {}
   @observable firstTopic = []
@@ -39,7 +42,7 @@ configure({
       animationConfig: {}
     }
   }
-  static navigationOptions = ({ navigation, screenProps }) => {
+  /* static navigationOptions = ({ navigation, screenProps }) => {
     const { getParam } = navigation
     console.log(getParam('showSplash'))
     // 启动页加载完以后再显示底部的tabNav
@@ -52,7 +55,7 @@ configure({
     return {
       tabBarVisible
     }
-  }
+  } */
   bannerPress = (item) => {
     if (item.articleInfoId) {
       this.openNative('NewsDetail', { articleId: item.articleInfoId })
@@ -113,9 +116,6 @@ configure({
     }
   }
   hideSplash = () => {
-    const { setParams } = this.props.navigation
-    this.setValue('showSplash', false)
-    setParams({ showSplash: 'hide' })
     storage.save({
       key: 'showSplash',
       data: false
@@ -155,13 +155,17 @@ configure({
     }
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
-    // alert(1111)
     const pageSize = 5
-    const userStorage = await storage.load({
-      key: 'userInfo'
-    })
-    let provinceId = userStorage.province ? userStorage.province.id : 430000
-    console.log(provinceId)
+
+    let userInfo = null
+    try {
+      userInfo = await storage.load({
+        key: 'userInfo'
+      })
+    } catch (err) {
+
+    }
+    let provinceId = (userInfo && userInfo.province) ? userInfo.province.id : 430000
     axios.get(api.queryModuleArticleInfo, {
       params: {
         moduleId: 4,
@@ -170,6 +174,7 @@ configure({
         size: pageSize
       }
     }).then(data => {
+      console.log('onFetch3')
       const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
       if (page === 1) {
         if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
@@ -186,8 +191,8 @@ configure({
           this.setValue('firstTopic', [])
           this.setValue('topics', [])
         }
-        if (provincePolicyList.length > 0) {
-          this.setValue('specials', provincePolicyList)
+        if (provincePolicyList.content.length > 0) {
+          this.setValue('specials', provincePolicyList.content)
         } else {
           this.setValue('specials', [])
         }
@@ -222,8 +227,9 @@ configure({
       }, {
         title: '查专业',
         image: require('../assets/home/icon02.png'),
-        href: 'major-index',
-        isBrowser: true
+        href: 'ByMajor'
+        // href: 'major-index',
+        // isBrowser: true
       }, {
         title: '查职业',
         image: require('../assets/home/icon03.png'),
@@ -231,21 +237,23 @@ configure({
       }, {
         title: '测一测',
         image: require('../assets/home/icon05.png'),
-        isSpecial: true
+        isBrowser: true
       }, {
         title: '填志愿',
         image: require('../assets/home/icon04.png'),
-        isSpecial: true
+        isBrowser: true
       }, {
         title: '志愿问答',
         image: require('../assets/home/icon06.png'),
         href: 'VolunteerAnswer'
       }, {
         title: '高考咨询',
-        image: require('../assets/home/icon07.png')
+        image: require('../assets/home/icon07.png'),
+        href: 'Seek'
       }, {
         title: '升学课堂',
-        image: require('../assets/home/icon08.png')
+        image: require('../assets/home/icon08.png'),
+        href: 'Classroom'
       }
     ]
     const banner = bannerData.map(item => {
@@ -256,6 +264,7 @@ configure({
     // alert(JSON.stringify(this.firstArticle))
     return (
       <View style={{ backgroundColor: 'transparent' }}>
+        {this.renderHeader()}
         <View style={{ height: 165 }} paddingT-10 paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
@@ -267,23 +276,25 @@ configure({
           }
         </View>
         {/* 文章1 */}
-        {this.firstArticle && <View style={styles.article}>
+        {this.firstArticle.labelName && <View>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
-          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
-            <View style={styles.cardFooter} paddingT-5>
-              <View row>
-                <View row centerV paddingR-10>
-                  <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.priseNumber}</Text>
+          <View paddingH-15>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: this.firstArticle.picture }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
+              <View style={styles.cardFooter} paddingT-5>
+                <View row>
+                  <View row centerV paddingR-10>
+                    <Image assetName='attention' style={styles.cardItemImage} />
+                    <Text gray text-11>{this.firstArticle.priseNumber}</Text>
+                  </View>
+                  <View row centerV>
+                    <Image assetName='comment' style={styles.cardItemImage} />
+                    <Text gray text-11>{this.firstArticle.commentNumber}</Text>
+                  </View>
                 </View>
-                <View row centerV>
-                  <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{this.firstArticle.commentNumber}</Text>
-                </View>
+                <Text gray text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
               </View>
-              <Text dark06 text-11>{transferTime(this.firstArticle.releaseTime)}</Text>
-            </View>
-          </CardItem>
+            </CardItem>
+          </View>
         </View>}
         {/* 专题1 */}
         {this.renderTopics(this.firstTopic)}
@@ -291,7 +302,7 @@ configure({
         {
           this.specials.length > 0 &&
           <View paddingT-10>
-            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' })} />
+            <ItemHead title='省内高考政策' seeAll='true' onPress={() => this.openNative('CommonList', { type: 2, title: '省内高考政策' }, false)} />
           </View>
         }
         {this.renderSpecial(this.specials)}
@@ -300,30 +311,18 @@ configure({
       </View>
     )
   }
-  renderItem = (item, index, separator) => {
-    if (index === 0) {
-      return null
+  openNotificationListener = (e) => {
+    const extras = _.isObject(e.extras) ? e.extras : JSON.parse(e.extras)
+    if (extras.type === 'article') {
+      this.openUrl(`article`, { id: extras.id })
+    } else if (extras.type === 'banner') {
+      if (extras.link) {
+        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
+      } else {
+        this.openUrl(`article`, { id: extras.id, type: 'banner' })
+      }
     } else {
-      return (
-        <View style={styles.article} key={index}>
-          <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
-          <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} imageStyle={{ height: 115 }} fileType={item.fileType}>
-            <View style={styles.cardFooter} paddingT-5>
-              <View row>
-                <View row centerV paddingR-10>
-                  <Image assetName='attention' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.priseNumber}</Text>
-                </View>
-                <View row centerV>
-                  <Image assetName='comment' style={styles.cardItemImage} />
-                  <Text dark06 text-11>{item.commentNumber}</Text>
-                </View>
-              </View>
-              <Text dark06 text-11>{transferTime(item.releaseTime)}</Text>
-            </View>
-          </CardItem>
-        </View>
-      )
+      return false
     }
   }
   // 专题
@@ -331,14 +330,12 @@ configure({
     return (
       topicData.map((item, index) => (
         <View key={index}>
-          <View paddingT-10>
-            <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
-          </View>
+          <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title }, false)} title={item.title} seeAll='true' />
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
-                <View style={styles.topic} key={i}>
-                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={el.fileType} />
+                <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
+                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -351,11 +348,13 @@ configure({
   renderSpecial = (specials) => {
     return (
       specials.map((item, index) => (
-        <TouchableOpacity onPress={() => Linking.openURL(item.link).catch(err => console.error('An error occurred', err))} style={styles.item} activeOpacity={0.6} key={index}>
+        <TouchableOpacity onPress={() => navigator.push('Policy', { path: item.link })} style={[styles.item, index === specials.length - 1 ? styles.lastItem : '']} activeOpacity={0.6} key={index}>
           <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
             <Card.Item>
               <View paddingV-10>
-                <Text text-16 dark >{item.title}</Text>
+                <View row style={{ width: '90%' }}>
+                  <Text numberOfLines={1} text-16 dark >{item.title}</Text>
+                </View>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
                   <Text text-11 gray>{transferTime(item.createTime)}</Text>
                 </View>
@@ -366,57 +365,65 @@ configure({
       ))
     )
   }
-  testPlay = (index) => {
-    if (index === 1) {
-      Player.play({
-        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152145',
-        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084813',
-        title: '学前教育'
-      })
-    } else {
-      Player.play({
-        url: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/audio/article/20180831152050',
-        image: 'https://fdomsimage.oss-cn-huhehaote.aliyuncs.com/image/article/20180905084352',
-        title: '护理学'
-      })
-    }
-  }
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
     const extras = JSON.parse(e.extras)
-    if (extras.type === 'article') {
-      this.openUrl(`article`, { id: extras.id })
-    } else if (extras.type === 'banner') {
-      if (extras.link) {
-        Linking.openURL(extras.link).catch(err => console.error('An error occurred', err))
-      } else {
-        this.openUrl(`article`, { id: extras.id, type: 'banner' })
-      }
+    console.log(extras)
+    if (extras.articleInfoId) {
+      this.openNative('NewsDetail', { articleId: extras.articleInfoId })
+    } else {
+      this.openNative('NewsDetail', { articleId: extras.id, type: 'banner' })
     }
   }
+  renderItem = (item, index, separator) => {
+    if (index === 0) {
+      return null
+    } else {
+      return (
+        <View style={styles.article} key={index}>
+          <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
+          <View paddingH-15>
+            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} imageStyle={{ height: 115 }}>
+              <View style={styles.cardFooter} paddingT-5>
+                <View row>
+                  <View row centerV paddingR-10>
+                    <Image assetName='attention' style={styles.cardItemImage} />
+                    <Text gray text-11>{item.priseNumber}</Text>
+                  </View>
+                  <View row centerV>
+                    <Image assetName='comment' style={styles.cardItemImage} />
+                    <Text gray text-11>{item.commentNumber}</Text>
+                  </View>
+                </View>
+                <Text gray text-11>{transferTime(item.releaseTime)}</Text>
+              </View>
+            </CardItem>
+          </View>
+        </View>
+      )
+    }
+  }
+
   render () {
-    const { showSplash, bannerData } = this
-    const { animationConfig } = this.state
+    const { bannerData } = this
+    // const { animationConfig } = this.state
     return (
-      <View flex useSafeArea>
+      <View paddingT-5 flex >
+        {/* backgroundColor={colors.light} */}
         <StatusBar animated backgroundColor='transparent' barStyle='dark-content' translucent />
-        {showSplash && <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} />}
+        {/* <SplashSwiper close={this.hideSplash} animationConfig={animationConfig} /> */}
         <NoNetwork refresh={this.refresh} />
-        {!showSplash && this.renderHeader()}
-        {!showSplash &&
-          <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
-            header={() => this.renderContainer(bannerData)}
-            onFetch={this.onFetch}
-            item={this.renderItem}
-            refreshable={false}
-            waitingSpinnerText='正在加载...'
-            spinnerColor={colors.calm}
-            allLoadedText='--我是有底线的--'
-            // onScroll={this.onScroll}
-            showsVerticalScrollIndicator={false}
-            paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
-          />
-        }
+        <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
+          header={() => this.renderContainer(bannerData)}
+          onFetch={this.onFetch}
+          item={this.renderItem}
+          refreshable={false}
+          waitingSpinnerText='正在加载...'
+          spinnerColor={colors.calm}
+          allLoadedText='--我是有底线的--'
+          showsVerticalScrollIndicator={false}
+          paginationFetchingView={() => <LoaderScreen color={colors.dark09} messageStyle={{ color: colors.dark09 }} message='正在加载...' />}
+        />
       </View >
     )
   }
@@ -430,25 +437,24 @@ configure({
     }) */
   }
   componentDidMount () {
-    const { navigate, setParams } = this.props.navigation
+    const { navigate } = this.props.navigation
     axios.get(api.queryHomePageBannerInfo, { params: { moduleId: 4 } }).then(data => {
       this.setValue('bannerData', data.content)
     })
+
     storage.load({
       key: 'showSplash'
     }).then(data => {
-      this.setValue('showSplash', false)
-      setParams({ showSplash: 'hide' })
-      console.log(1111)
     }).catch(() => {
-      this.setValue('showSplash', true)
-      setParams({ showSplash: 'show' })
-      console.log(2222)
+      SplashSwiper.init({
+        callback: () => {
+          this.hideSplash()
+        }
+      })
     }).finally(() => {
       setTimeout(() => {
         SplashScreen.hide()
-        // setParams({ showSplash: 'hide' })
-        console.log(3333)
+        this.setValue('showSplash', true)
       }, 1000)
     })
     /* 监听点击推送时事件 */
@@ -460,12 +466,27 @@ configure({
     JPushModule.addReceiveOpenNotificationListener(this.openNotificationListener)
     /* 监听点击推送时事件 */
     Linking.getInitialURL().then((url) => {
-      console.log(url)
       if (url) {
         const { id } = getUrlParams(url)
         setTimeout(() => {
           navigate('NewsDetail', { articleId: id })
-        }, 200)
+        }, 1000)
+      }
+    })
+    axios.get(api.checkVersion, {
+      params: {
+        productId: 3,
+        platform,
+        isProduction: EnvConfig.ENV === 'production'
+      }
+    }).then(data => {
+      const nowVersion = formatVersion(DeviceInfo.getVersion())
+      const newVersion = formatVersion(data.version)
+      if (nowVersion < newVersion) {
+        dialog.confirm('检查到新版本，是否升级？').then(() => {
+          const downloadUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/download`
+          Linking.openURL(downloadUrl)
+        })
       }
     })
   }
@@ -499,12 +520,12 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   item: {
-    marginHorizontal: 10,
+    marginHorizontal: 15,
     borderTopWidth: 1 / ratio,
     borderColor: colors.gray
   },
-  article: {
-    paddingHorizontal: 12
+  lastItem: {
+    borderBottomWidth: 1 / ratio
   },
   topics: {
     flexWrap: 'wrap',
@@ -514,6 +535,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingBottom: 15,
     width: '50%'
+    // borderTopWidth: 1
   },
   fullWidth: {
     width: '100%'
@@ -522,11 +544,14 @@ const styles = StyleSheet.create({
     width: 12,
     height: 10,
     marginRight: 2,
-    tintColor: colors.dark06
+    tintColor: colors.gray
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  one: {
+    width: '100%'
   }
 })
 export default Home

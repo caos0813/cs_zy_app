@@ -17,7 +17,7 @@ export default class Loading extends Component {
     */
     Mask.show()
     const ShareComponent = Animatable.createAnimatableComponent(Share)
-    this.shareDom = new RootSiblings(<ShareComponent animation='slideInUp' duration={300} close={() => this.close()} />)
+    this.shareDom = new RootSiblings(<ShareComponent animation='slideInUp' {...config} duration={300} close={() => this.close()} />)
   }
   static close () {
     Mask.hide()

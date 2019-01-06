@@ -12,6 +12,8 @@ import ImagePicker from 'react-native-image-crop-picker'
 import AliyunOSS from 'aliyun-oss-react-native'
 @inject('userStore', 'infoStore')
 @observer class Info extends Component {
+  endPoint = 'oss-cn-huhehaote.aliyuncs.com'
+  CDN ='https://fdappdata.oss-cn-huhehaote.aliyuncs.com/'
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('type') === 'complete' ? '完善用户信息' : '修改用户信息'
@@ -74,8 +76,9 @@ import AliyunOSS from 'aliyun-oss-react-native'
       pickerTextEllipsisLen: 24,
       onPickerConfirm: data => {
         Mask.hide()
-        setValue('schoolPickerVal', data[0])
-        const pickerItem = _.find(schoolData, (item) => { return item.name === data[0] })
+        let pickerValue = data[0] || schoolPickerData[0]
+        setValue('schoolPickerVal', pickerValue)
+        const pickerItem = _.find(schoolData, (item) => { return item.name === pickerValue })
         setValue('schoolPickerId', pickerItem.id)
         // updateUserInfo('startYear', data.toString())
       },
@@ -160,6 +163,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
       let reg = /[^\u4e00-\u9fa5]/
       if (reg.test(name)) {
         Toast('姓名必需为中文')
+        return
       }
     }
     let params = {
@@ -200,8 +204,10 @@ import AliyunOSS from 'aliyun-oss-react-native'
     })
   }
   pickOption = (index) => {
-    const { setValue } = this.props.infoStore
+    const { setValue, userInfo, updateUserInfo } = this.props.infoStore
     setValue('actionSheetStatus', false)
+    const uploadPath = `touxiang/${userInfo.userId}.jpg`
+    const imageUrl = `${this.CDN}/${uploadPath}`
     if (index === 0) {
       ImagePicker.openPicker({
         width: 300,
@@ -210,8 +216,11 @@ import AliyunOSS from 'aliyun-oss-react-native'
         hideBottomControls: true,
         cropping: true
       }).then(image => {
-        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+        console.log(image)
+        console.log(AliyunOSS)
+        AliyunOSS.asyncUpload('fdappdata', uploadPath, image.path).then((res) => {
           console.log(res)
+          updateUserInfo('image', imageUrl)
         }).catch(err => {
           console.log(err)
         })
@@ -226,7 +235,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
       }).then(image => {
         console.log(image)
         AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
-          console.log(res)
+          updateUserInfo('image', imageUrl)
         }).catch(err => {
           console.log(err)
         })
@@ -315,6 +324,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
         <ActionSheet
           visible={actionSheetStatus}
           title='请选择'
+          useNativeIOS
           options={
             [
               { label: '相册', onPress: () => this.pickOption(0) },
@@ -345,9 +355,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
     }
     axios.get(api.getAssumeRole).then(data => {
       const { securityToken, accessKeyId, accessKeySecret } = data.credentials
-      console.log(securityToken)
-      const endPoint = 'oss-cn-huhehaote.aliyuncs.com'
-      AliyunOSS.initWithSecurityToken(securityToken, accessKeyId, accessKeySecret, endPoint, configuration)
+      AliyunOSS.initWithSecurityToken(securityToken, accessKeyId, accessKeySecret, this.endPoint, configuration)
     })
   }
   componentWillUnmount () {

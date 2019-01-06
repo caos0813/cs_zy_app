@@ -52,7 +52,12 @@ Assets.loadAssetsGroup('icons', {
   share: require('../assets/player/share.png'),
   play: require('../assets/icons/play.png'),
   paused: require('../assets/icons/paused.png'),
-  delete: require('../assets/icons/delete.png')
+  delete: require('../assets/icons/delete.png'),
+  article_title1: require('../assets/icons/aTitle1.png'),
+  article_title2: require('../assets/icons/aTitle2.png'),
+  article_title3: require('../assets/icons/aTitle3.png'),
+  article_title4: require('../assets/icons/aTitle4.png'),
+  article_title5: require('../assets/icons/aTitle5.png')
 })
 
 /* share */

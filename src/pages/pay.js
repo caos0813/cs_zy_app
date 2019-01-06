@@ -98,7 +98,7 @@ const listItems = [{
           </ScrollView>
           <View paddingV-8 centerV paddingH-13 bg-light style={styles.footer} row spread>
             {isVipValid === 2 ? <Text dark06 text-14>我的志愿卡</Text> : <Text calm text-28>¥{payAmount}</Text>}
-            {isVipValid === 1 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.refs.modal.open()} />}
+            {isVipValid === 2 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.openModel()} />}
           </View>
         </View>
         <Modal ref='modal' style={styles.modal} backdropPressToClose={false}>
@@ -148,6 +148,12 @@ const listItems = [{
       </View>
     )
   }
+  openModel = () => {
+    const { setValue } = this.props.payStore
+    setValue('cardNumber', '')
+    setValue('password', '')
+    this.refs.modal.open()
+  }
   pay = () => {
     const { payAmount, payType, cardNumber, password } = this.props.payStore
     const { userInfo, getUserInfo } = this.props.userStore
@@ -172,9 +178,9 @@ const listItems = [{
           } else {
             Toast(result.errStr)
           }
-        }).catch((err) => {
-          // Toast('用户取消')
-          alert(JSON.stringify(err))
+        }).catch(() => {
+          Toast('用户取消')
+          // alert(JSON.stringify(err))
         })
       }).catch(() => {
         Toast('创建订单失败')

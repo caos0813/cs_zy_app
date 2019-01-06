@@ -38,16 +38,16 @@ import { Header } from '../components'
     const { navigate } = this.props.navigation
     const { version } = this.props
     return (
-      <View flex useSafeArea>
+      <View flex >
         <Header showLeft={false} title='我的' />
         <ScrollView>
-          <View row top paddingH-25 paddingV-15 style={styles.infoWrap}>
+          <View row top paddingH-15 paddingV-15 style={styles.infoWrap}>
             <View row>
               <Avatar containerStyle={styles.avatar} imageStyle={{ width: 50, height: 50 }} imageSource={imageFormat(userInfo.image, userInfo.gender)}
                 backgroundColor={userInfo.image ? 'transparent' : colors.stable}
                 onPress={() => navigate('Mine')}
               />
-              <View paddingL-10 paddingR-24>
+              <View paddingL-10 paddingR-15>
                 <View row>
                   <Text text-22>{userInfo.token ? userInfo.name : '未登录'}</Text>
                   {(isVipValid === 2) && <Image assetName='vipIcon' style={styles.vipIcon} />}
@@ -60,7 +60,7 @@ import { Header } from '../components'
             </View>
             {(isVipValid !== 2 && userInfo.token) && <Button bg-assertive label='开通志愿卡' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            {!userInfo.token && <Button bg-assertive label='登陆' size='small' marginT-12 onPress={() => navigate('Login')} />
+            {!userInfo.token && <Button bg-assertive label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
             }
             {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />}
           </View>
@@ -81,7 +81,7 @@ import { Header } from '../components'
                 <Image assetName='star' assetGroup='mine' />
               </ListItem.Part>
               <ListItem.Part containerStyle={{ flex: 1 }}>
-                <Text text-18 dark>我的关注</Text>
+                <Text text-18 dark>我的收藏</Text>
               </ListItem.Part>
               <ListItem.Part >
                 <Image assetName='arrowRight' />
@@ -124,7 +124,7 @@ import { Header } from '../components'
             </ListItem>
           </View>
           {userInfo.token && <View paddingT-100 paddingH-50>
-            <Button label='退出登录' bg-calm text-18 onPress={this.signOut} />
+            <Button label='退出' bg-calm text-18 onPress={this.signOut} />
           </View>}
         </ScrollView>
       </View>

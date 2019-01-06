@@ -6,14 +6,12 @@ function setTopLevelNavigator (navigatorRef) {
   _navigator = navigatorRef
 }
 
-function navigate (routeName, params) {
-  console.log(_navigator)
-  console.log(StackActions)
+function navigate (routeName, params, action = {}) {
   _navigator.dispatch(
     NavigationActions.navigate({
       routeName,
       params,
-      action: NavigationActions.navigate({ routeName: 'Home' })
+      action: action
     })
   )
 }
@@ -25,9 +23,9 @@ function push (routeName, params) {
     })
   )
 }
-function goBack (routeName, params) {
+function goBack (routeName, params, key) {
   _navigator.dispatch(
-    NavigationActions.back()
+    NavigationActions.back(key)
   )
 }
 function replace (routeName, params) {

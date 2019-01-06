@@ -26,7 +26,7 @@ export default class LoginInput extends Component {
         height: 32,
         color: colors.black,
         border: 30,
-        radius: 16,
+        radius: 10,
         opacity: 0.05,
         x: 0,
         y: 0,
@@ -53,7 +53,7 @@ export default class LoginInput extends Component {
       return (
         <TextInput style={styles.wrap}
           text-14
-          placeholder='请输入手机号'
+          placeholder={placeholder}
           keyboardType='phone-pad'
           dark10
           onChangeText={this._onChangeText}

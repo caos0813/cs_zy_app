@@ -36,24 +36,24 @@ import { observer, inject } from 'mobx-react/native'
       image: require('../assets/icons/shuang.png'),
       text: '双一流',
       type: 'collegeLevels',
-      id: '1001'
+      id: 1001
     }, {
       image: require('../assets/icons/985.png'),
       text: '985',
       type: 'collegeLevels',
-      id: '1002'
+      id: 1002
     }, {
       image: require('../assets/icons/211.png'),
       text: '211',
       type: 'collegeLevels',
-      id: '1003'
+      id: 1003
     }]
     return (
       <View flex useSafeArea>
-        <View centerH paddingV-10>
-          <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
-        </View>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View centerH paddingV-10>
+            <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
+          </View>
           <View style={styles.iconsWrap} marginV-20>
             {
               iconsList.map((item, index) => (
@@ -70,8 +70,8 @@ import { observer, inject } from 'mobx-react/native'
                 <View row style={styles.topics}>
                   {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
                     item.articleInfoBean.content.map((el, i) => (
-                      <View style={styles.topic} key={i}>
-                        <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} desc={el.introduction} fileType={item.fileType} />
+                      <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
+                        <CardItem onPress={() => { this.openNative('NewsDetail', { articleId: el.id }) }} title={el.title} imageSource={{ uri: el.picture }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={item.fileType} />
                       </View>
                     ))
                   }
@@ -89,7 +89,7 @@ import { observer, inject } from 'mobx-react/native'
         topicData: data.topicsAndArticlesList
       })
     }).catch(() => {
-      alert(2)
+      // alert(2)
     })
   }
 }
@@ -105,6 +105,9 @@ const styles = StyleSheet.create({
   topic: {
     paddingHorizontal: 12,
     paddingBottom: 15,
+    width: '50%'
+  },
+  one: {
     width: '100%'
   }
 })

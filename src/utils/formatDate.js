@@ -44,4 +44,14 @@ function transferPlayerTime (currentTime) {
   s = (s.length === 1) ? `0${s}` : s
   return `${m}:${s}`
 }
-export { formatDate, transferTime, transferPlayerTime }
+
+function formatVersion (str) {
+  var arr = str.split('.')
+  var val = ''
+  for (var i = 0; i < arr.length; i++) {
+    val += String(arr[i])
+  }
+  return Number(val)
+}
+
+export { formatDate, transferTime, transferPlayerTime, formatVersion }

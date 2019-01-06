@@ -54,6 +54,9 @@ configure({
   renderContainer = () => {
     return (
       <View>
+        <View centerH paddingV-10>
+          <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
+        </View>
         <View>
           <ItemHead title='按兴趣找职业' />
         </View>
@@ -80,9 +83,6 @@ configure({
   render () {
     return (
       <View flex useSafeArea>
-        <View centerH paddingV-10>
-          <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
-        </View>
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           header={() => this.renderContainer()}
           onFetch={this.onFetch}

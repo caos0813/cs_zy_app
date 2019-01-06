@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
-import { StyleSheet, findNodeHandle, DeviceEventEmitter, ScrollView, Modal } from 'react-native'
+import { StyleSheet, findNodeHandle, ScrollView, Platform } from 'react-native'
 import { configure, observable, action } from 'mobx'
-import { observer } from 'mobx-react/native'
+import { observer, inject } from 'mobx-react/native'
 import { View, Image, TouchableOpacity, Text } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { BlurView } from 'react-native-blur'
-import { width, statusBarHeight, transferTime, navigator, transferPlayerTime } from '../utils'
+import { width, statusBarHeight, transferTime, navigator, api, axios, imageResize } from '../utils'
 import { Header, NewsFooter } from '../components'
-import { Player } from '../../react-native-root-ui'
+import { Player, Share } from '../../react-native-root-ui'
 import _ from 'lodash'
+import Config from '../config'
+import playerStore from '../store/playerStore'
+import { NavigationActions } from 'react-navigation'
 configure({
   enforceActions: 'always'
 })
+@inject('routeStore')
 @observer class Play extends Component {
-  @observable duration = '00:00'
-  @observable position = '00:00'
-  @observable currentTime = 0
-  @observable paused = true
   @observable data = {
   }
   @action.bound
@@ -36,12 +36,78 @@ configure({
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) })
   }
   play = () => {
-    Player.player && Player.pause()
+    const { id, videoFile, title, picture } = this.data
+    if (Player.player) {
+      Player.pause()
+    } else {
+      Player.play({
+        id: id,
+        url: videoFile,
+        title: title,
+        image: imageResize(picture, 200)
+      })
+    }
+  }
+  statistics=(type) => {
+    axios.post(api.addNumber, {
+      articleInfoId: this.data.id,
+      type: type
+    })
+  }
+  footerFunc= async (e) => {
+    let copyData = _.clone(this.data)
+    const webpageUrl = `${Config.WEB_URL.split('#')[0]}?platform=0#/article?id=${this.data.id}`
+    switch (e) {
+      case 'detail':
+        navigator.navigate('NewsDetail', { articleId: this.data.id })
+        break
+      case 'share':
+        Share.show({
+          thumbImage: this.data.picture,
+          description: '',
+          title: this.data.title,
+          webpageUrl,
+          shareCallback: () => {
+            this.statistics(3)
+            Share.close()
+          }
+        })
+        break
+      case 'attention':
+        axios.post(api.changePraiseState, { articleInfoId: this.data.id }).then(data => {
+          copyData.isPrise = !copyData.isPrise
+          this.setValue('data', copyData)
+        })
+        break
+      case 'star':
+        axios.post(api.changePraiseCollect, { articleInfoId: this.data.id }).then(data => {
+          copyData.isCollect = !copyData.isCollect
+          this.setValue('data', copyData)
+        })
+        break
+      case 'comment':
+        const { setValue } = this.props.routeStore
+        setValue('commentTabId', this.data.id)
+        navigator.navigate('Comment', { articleId: this.data.id },
+          NavigationActions.navigate({
+            routeName: 'Comment',
+            params: { refresh: (e) => this.refreshComment(e) }
+          })
+        )
+        break
+    }
+  }
+  refreshComment=(num) => {
+    let data = _.clone(this.data)
+    data.commentNumber = num
+    this.setValue('data', data)
   }
   render () {
-    const { data, duration, position, paused } = this
+    const { data } = this
+    const { duration, position, paused } = playerStore
+    const picture = data.picture
     return (
-      <View flex useSafeArea>
+      <View flex >
         <ScrollView style={styles.scroll}>
           <View style={styles.imageWrap} centerH>
             <Header
@@ -55,10 +121,10 @@ configure({
             <Image
               style={styles.imageBlur}
               ref={(img) => { this.backgroundImage = img }}
-              source={{ uri: data.picture }}
+              source={{ uri: picture }}
               onLoadEnd={this.imageLoaded}
             />
-            {this.state.viewRef && data.picture &&
+            {this.state.viewRef && picture &&
               <BlurView
                 style={styles.blur}
                 viewRef={this.state.viewRef}
@@ -69,7 +135,7 @@ configure({
             }
             <Image
               style={styles.image}
-              source={{ uri: data.picture }}
+              source={{ uri: picture }}
             />
             <View style={[styles.progress]}>
               <Text light text-9>{position}/{duration}</Text>
@@ -83,7 +149,14 @@ configure({
             </TouchableOpacity>
           </View>
         </ScrollView>
-        <NewsFooter />
+        <NewsFooter
+          showLink
+          isCollect={data.isCollect}
+          isPrise={data.isPrise}
+          commentNumber={data.commentNumber}
+          showCollect
+          onPress={this.footerFunc}
+        />
       </View>
     )
   }
@@ -91,21 +164,15 @@ configure({
     navigator.goBack()
   }
   componentWillUnmount () {
-    Player.player && Player.setStatus(true)
-    this.playerEvent.remove()
   }
   componentDidMount () {
-    const { setValue, data } = this
-    Player.player && Player.setStatus(false)
-    this.playerEvent = DeviceEventEmitter.addListener('playerEvent', e => {
-      console.log(e)
-      const { duration, currentTime, others, paused } = e
-      setValue('paused', paused)
-      if (_.isEmpty(data)) {
-        setValue('data', others)
+    const id = this.props.navigation.getParam('articleId')
+    axios.get(api.queryArticleInfoDetails, {
+      params: {
+        articleInfoId: id
       }
-      setValue('position', transferPlayerTime(currentTime))
-      setValue('duration', transferPlayerTime(duration))
+    }).then(data => {
+      this.setValue('data', data)
     })
   }
 }
@@ -134,7 +201,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    left: 0
+    left: 0,
+    bottom: 0
   },
   image: {
     position: 'absolute',
@@ -146,6 +214,11 @@ const styles = StyleSheet.create({
   imageBlur: {
     width: width,
     height: 425 + statusBarHeight,
-    opacity: 0
+    opacity: 0,
+    ...Platform.select({
+      ios: {
+        opacity: 1
+      }
+    })
   }
 })

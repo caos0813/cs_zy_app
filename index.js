@@ -5,14 +5,16 @@ import { Provider } from 'mobx-react/native'
 import Router from './src/router'
 import * as WeChat from 'react-native-wechat'
 import JPushModule from 'jpush-react-native'
-import Config from 'react-native-config'
 import codePush from 'react-native-code-push'
-import SplashScreen from 'react-native-splash-screen'
+import Config from 'react-native-config'
+import JAnalyticsModule from 'janalytics-react-native'
 require('./src/utils/assets')
 /* eslint-disable */
 import theme from './src/theme'
-import {  storage, platform, navigator } from './src/utils'
+import {  storage, platform, navigator, statusBarHeight } from './src/utils'
 import store from './src/store'
+import SplashScreen from 'react-native-splash-screen'
+const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
 promise.polyfill()
 class App extends Component {
   constructor(props) {
@@ -21,43 +23,48 @@ class App extends Component {
   render () {
     return (
       <Provider {...store}>
-        <Router  onNavigationStateChange={(prev, current, action) => {
-          const { routes } = current
-          console.log(routes)
-          const { setRoutes } = store.routeStore
-          setRoutes(routes)
-        }}  />
+       <Router
+          onNavigationStateChange={(from, to) => {
+            const { routes } = to
+            const { setRoutes } = store.routeStore
+            setRoutes(routes)
+          }}
+          uriPrefix={prefix}
+          screenProps={{ statusBarHeight: statusBarHeight }}
+          ref={navigatorRef => {
+            navigator.setTopLevelNavigator(navigatorRef)
+          }} 
+        />
       </Provider>
     )
   }
   update = () => {
     if (Config.ENV === 'production') {
       codePush.sync({
-        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESUME,
-        installMode: codePush.InstallMode.ON_NEXT_RESUME
+        installMode: codePush.InstallMode.IMMEDIATE,
+        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE  
       })
     } else {
       codePush.sync({
         updateDialog: {
           appendReleaseDescription: true,
-          descriptionPrefix: '检查到更新',
+          //descriptionPrefix: '检查到更新',
           title: '更新',
           mandatoryUpdateMessage: '',
           mandatoryContinueButtonLabel: '确定'
         },
-        installMode: codePush.InstallMode.IMMEDIATE
+        mandatoryInstallMode: codePush.InstallMode.ON_NEXT_SUSPEND,
+        installMode: codePush.InstallMode.ON_NEXT_SUSPEND 
       })
     }
   }
   async componentDidMount () {
-    SplashScreen.hide()
     this.update()
     /* 初始化极光 */
-    if (platform === 'android') {
-      JPushModule.initPush()
-
-    } else {
-      JPushModule.setupPush()
+    JPushModule.initPush()
+    JPushModule.clearAllNotifications()
+    if(platform==='ios'){
+      JAnalyticsModule.setup({appKey: "97ab5a6f89c340b6f61c74c4"})  // iOS 端需要先调用该方法
     }
     /* 初始化极光 */
     const { setUserInfo, getUserInfo } = store.userStore
@@ -77,10 +84,11 @@ class App extends Component {
             //alert(JSON.stringify(e))
           })
         } catch (err) {
+          //alert(JSON.stringify(err))
         }
       }
     } catch (err) {
-
+      //alert(JSON.stringify(err))
     }
     DeviceEventEmitter.addListener('updateUserInfo', () => {
       const { userInfo } = store.userStore
@@ -88,6 +96,9 @@ class App extends Component {
         getUserInfo()
       }
     })
+    if (Config.ENV === 'development') {
+      SplashScreen.hide()
+    }
   }
   componentWillMount () {
     console.log('componentWillUnmount')

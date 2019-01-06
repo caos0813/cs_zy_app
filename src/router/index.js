@@ -1,9 +1,8 @@
 import React from 'react'
 import { Animated, Easing } from 'react-native'
-import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation'
-import store from '../store'
+import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator, createAppContainer, NavigationActions } from 'react-navigation'
 import { dark, light, calm, gray } from '../theme/colors'
-import { platform, navigator, statusBarHeight, ratio, width } from '../utils'
+import { ratio, width, platform } from '../utils'
 import Login from '../pages/login'
 import Home from '../pages/home'
 import Browser from '../pages/browser'
@@ -17,21 +16,24 @@ import PlanIndex from '../pages/PlanIndex'
 import ByCollege from '../pages/byCollege'
 import CommonList from '../pages/commonList'
 import NewsDetail from '../pages/newsDetail'
+import Seek from '../pages/seek'
+import Policy from '../pages/policy'
 import VolunteerAnswer from '../pages/volunteerAnswer'
 import ByProfession from '../pages/byProfession'
 import ProfessionTag from '../pages/professionTag'
-import Comment from '../pages/comment/comment'
+import CommentList from '../pages/comment/comment'
 import Praise from '../pages/comment/praise'
 import Test from '../pages/test'
+import ByMajor from '../pages/byMajor'
+import Classroom from '../pages/classroom'
 import { BackAvatar } from '../components'
-import { Image, View } from '../../react-native-ui-lib'
+import { Image } from '../../react-native-ui-lib'
 import StackViewStyleInterpolator from 'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator'
 import { colors } from '../theme'
-const prefix = platform === 'android' ? 'zyzyapp://zyzyapp/' : 'zyzyapp://'
-
+import userStore from '../store/userStore'
 const TabStack = createBottomTabNavigator(
   {
-    Index: {
+    Home: {
       screen: Home,
       navigationOptions: () => ({
         tabBarLabel: '⾸⻚'
@@ -51,18 +53,23 @@ const TabStack = createBottomTabNavigator(
     }
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
-        let iconName
-        if (routeName === 'Index') {
+        let iconName, iconColor
+        if (routeName === 'Home') {
           iconName = 'home'
         } else if (routeName === 'Plan') {
           iconName = 'class'
         } else if (routeName === 'Mine') {
           iconName = 'mine'
         }
-        return <Image assetName={iconName} tintColor={tintColor} />
+        if (!focused) {
+          iconColor = colors.dark
+        } else {
+          iconColor = colors.calm
+        }
+        return <Image assetName={iconName} tintColor={iconColor} />
       }
     }),
     tabBarOptions: {
@@ -82,16 +89,16 @@ const TabStack = createBottomTabNavigator(
       pressOpacity: 0.8,
       // tab bar的样式
       style: {
-        height: 60,
+        height: 50,
         backgroundColor: light,
         paddingBottom: 0,
-        paddingTop: 6,
+        paddingTop: 5,
         borderTopWidth: 1 / ratio,
         borderTopColor: gray
       },
       // tab bar的⽂本样式
       labelStyle: {
-        fontSize: 14,
+        fontSize: 10,
         paddingTop: 5
       }
       // tab ⻚指示符的样式 (tab⻚下⾯的⼀条线).
@@ -107,12 +114,12 @@ const TabStack = createBottomTabNavigator(
     lazy: true,
     // 返回按钮是否会导致tab切换到初始tab⻚？ 如果是，则设置为initialRoute，否则为none。 缺省为initialRoute。
     backBehavior: 'none',
-    initialRouteName: 'Index'
+    initialRouteName: 'Home'
   }
 )
 const CommentTab = createMaterialTopTabNavigator({
   Comment: {
-    screen: Comment,
+    screen: CommentList,
     navigationOptions: () => ({
       tabBarLabel: '评论'
     })
@@ -143,38 +150,10 @@ const CommentTab = createMaterialTopTabNavigator({
       color: colors.dark06
     }
   },
+  lazy: true,
   initialRouteName: 'Comment'
 })
-/* const CommentStack = createStackNavigator({
-  Comment: {
-    screen: CommentTab,
-    navigationOptions: ({ navigation }) => ({
-      headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
-      headerStyle: {
-        height: 44,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        overflow: 'hidden',
-        borderBottomColor: gray,
-        elevation: 0,
-        borderBottomWidth: 0
-      },
-      title: '互动',
-      headerTitleStyle: {
-        fontSize: 18,
-        fontWeight: 'normal',
-        color: dark
-      }
-    })
-  }
-}, {
-  initialRouteName: 'Comment',
-  headerLayoutPreset: 'center',
-  cardStyle: {
-    backgroundColor: colors.dark
-  }
-}
-) */
+
 const AppNavigation = createStackNavigator(
   {
     Login: {
@@ -203,6 +182,7 @@ const AppNavigation = createStackNavigator(
           color: dark
         },
         cardStyle: {
+          // paddingTop: screenProps.statusBarHeight,
           backgroundColor: colors.dark
         }
       })
@@ -211,6 +191,12 @@ const AppNavigation = createStackNavigator(
       screen: TabStack,
       navigationOptions: ({ navigation }) => ({
         header: null
+      })
+    },
+    Policy: {
+      screen: Policy,
+      navigationOptions: () => ({
+        title: '高考政策'
       })
     },
     Feedback: {
@@ -261,6 +247,12 @@ const AppNavigation = createStackNavigator(
         header: null
       })
     },
+    Seek: {
+      screen: Seek,
+      navigationOptions: () => ({
+        title: '高考咨询'
+      })
+    },
     Play: {
       screen: Play
     },
@@ -278,10 +270,22 @@ const AppNavigation = createStackNavigator(
       navigationOptions: () => ({
         header: null
       })
+    },
+    ByMajor: {
+      screen: ByMajor,
+      navigationOptions: () => ({
+        title: '查专业'
+      })
+    },
+    Classroom: {
+      screen: Classroom,
+      navigationOptions: () => ({
+        header: null
+      })
     }
   },
   {
-    navigationOptions: ({ navigation, screenProps }) => ({
+    defaultNavigationOptions: ({ navigation, screenProps }) => ({
       // gesturesEnabled: true,
       headerLeft: <BackAvatar onPress={navigation.goBack} />,
       /* headerBackImage: <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}><Image
@@ -290,8 +294,8 @@ const AppNavigation = createStackNavigator(
       /></View>, */
       headerPressColorAndroid: 'transparent',
       headerStyle: {
-        height: 44 + screenProps.statusBarHeight,
-        paddingTop: screenProps.statusBarHeight,
+        height: 44 + (platform === 'android' ? screenProps.statusBarHeight : 0),
+        paddingTop: platform === 'android' ? screenProps.statusBarHeight : 0,
         // borderBottomColor: gray,
         elevation: 0,
         borderBottomWidth: 0
@@ -308,7 +312,7 @@ const AppNavigation = createStackNavigator(
     },
     initialRouteName: 'Home',
     initialRouteParams: {
-      articleId: '389'
+      articleId: '678'
     },
     transitionConfig: (transitionProps, prevTransitionProps) => {
       const currentPage = transitionProps.scene
@@ -331,15 +335,47 @@ const AppNavigation = createStackNavigator(
     }
   }
 )
-const app = () => <AppNavigation
-  onNavigationStateChange={(from, to) => {
-    const { routes } = to
-    const { setRoutes } = store.routeStore
-    setRoutes(routes)
-  }}
-  uriPrefix={prefix}
-  screenProps={{ statusBarHeight: statusBarHeight }}
-  ref={navigatorRef => {
-    navigator.setTopLevelNavigator(navigatorRef)
-  }} />
-export default app
+// 拦截登录的路由
+const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail']
+
+const defaultGetStateForAction = AppNavigation.router.getStateForAction
+
+AppNavigation.router.getStateForAction = (action, state) => {
+  const { routeName, type } = action
+  const { token, startYear } = userStore.userInfo
+  const params = state ? state.routes[state.routes.length - 1].params : null
+  if (state &&
+    type === NavigationActions.NAVIGATE && params &&
+    routeName === params.name) {
+    return null
+  } else if (routeName && unNeedLoginRoute.indexOf(routeName) < 0 && state) {
+    let interceptName = 'Login'
+    let routes = []
+    if (!token) {
+      routes = [
+        ...state.routes,
+        { key: 'id-' + Date.now(), routeName: interceptName, params: { name: routeName, params: action.params } }
+      ]
+      return {
+        ...state,
+        routes,
+        index: routes.length - 1
+      }
+    } else if (token && !startYear) {
+      interceptName = 'Info'
+      routes = [
+        ...state.routes,
+        { key: 'id-' + Date.now(), routeName: interceptName, params: { name: routeName, params: action.params, type: 'complete' } }
+      ]
+      return {
+        ...state,
+        routes,
+        index: routes.length - 1
+      }
+    } else {
+      return defaultGetStateForAction(action, state)
+    }
+  }
+  return defaultGetStateForAction(action, state)
+}
+export default createAppContainer(AppNavigation)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, KeyboardAvoidingView, Keyboard, StatusBar } from 'react-native'
 import { configure, observable, action } from 'mobx'
-import { observer } from 'mobx-react/native'
+import { observer, inject } from 'mobx-react/native'
 import { View, Text, Image, TouchableOpacity, TextInput, Button, LoaderScreen } from '../../../react-native-ui-lib'
 import { colors } from '../../theme'
 import { ratio, api, axios, Toast, transferTime, imageFormat } from '../../utils'
@@ -9,25 +9,31 @@ import { UltimateListView } from 'react-native-ultimate-listview'
 configure({
   enforceActions: 'always'
 })
+@inject('routeStore')
 @observer class Page extends Component {
   @observable content = ''
+  @observable total = 0
   @action.bound
   setValue (key, val) {
     this[key] = val
   }
-  onChangeText=(e) => {
+  onChangeText = (e) => {
     const { setValue } = this
     setValue('content', e)
   }
-  submit=() => {
+  submit = () => {
     const { content, setValue } = this
-    const { getParam } = this.props.navigation
+    const { commentTabId } = this.props.routeStore
+    alert(content.length)
     if (!content) {
       Toast('请输入内容')
+    } else if (content.trim().length > 100) {
+      Toast('评论字数不能超过100字')
+      return
     }
     axios.post(api.addComment, {
       content,
-      articleInfoId: getParam('articleId')
+      articleInfoId: commentTabId
     }).then(data => {
       Toast('发布成功')
       Keyboard.dismiss()
@@ -39,25 +45,25 @@ configure({
   }
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const pageSize = 10
-    const { getParam } = this.props.navigation
-    console.log(this.props.navigation)
+    const { commentTabId } = this.props.routeStore
     axios.get(api.queryArticleInfoComment, {
       params: {
         page: page - 1,
         size: pageSize,
-        articleInfoId: getParam('articleId')
+        articleInfoId: commentTabId
       }
     }).then(data => {
       startFetch(data.content, pageSize)
+      this.setValue('total', data.totalElements)
     }).catch(() => {
       startFetch([], pageSize)
       abortFetch()
     })
   }
-  deleteComment=(id) => {
-    const { getParam } = this.props.navigation
+  deleteComment = (id) => {
+    const { commentTabId } = this.props.routeStore
     axios.post(api.deleteComment, {
-      articleInfoId: getParam('articleId'),
+      articleInfoId: commentTabId,
       id
     }).then(data => {
       Toast('删除成功')
@@ -69,16 +75,16 @@ configure({
   renderItem = (item, index) => {
     return (
       <View paddingV-15 row style={styles.item}>
-        <Image source={imageFormat(item.userImage, true)} borderRadius={40} style={{ width: 38, height: 38 }} />
+        <Image source={imageFormat(item.userImage, item.gender)} borderRadius={40} style={{ width: 38, height: 38 }} />
         <View flex paddingL-7>
           <Text text-16 dark>{item.userName}</Text>
           <Text text-12 dark06>{transferTime(item.commentTime)}</Text>
           <Text text-14 dark06 marginT-5>{item.content}</Text>
         </View>
         {item.deleteState &&
-        <TouchableOpacity activeOpacity={0.6} onPress={() => this.deleteComment(item.id)}>
-          <Image assetName='delete' />
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => this.deleteComment(item.id)}>
+            <Image assetName='delete' />
+          </TouchableOpacity>
         }
       </View>
     )
@@ -118,13 +124,12 @@ configure({
     )
   }
   componentWillUnmount () {
-    StatusBar.setTranslucent(true)
-    StatusBar.setBackgroundColor('transparent', true)
+    const { getParam } = this.props.navigation
+    const refresh = getParam('refresh')
+    refresh && refresh(this.total)
     StatusBar.setBarStyle('dark-content', true)
   }
   componentDidMount () {
-    StatusBar.setTranslucent(false)
-    StatusBar.setBackgroundColor(colors.dark, true)
     StatusBar.setBarStyle('light-content', true)
   }
 }

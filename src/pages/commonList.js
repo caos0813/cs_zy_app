@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, Linking } from 'react-native'
-import { View, Text, Image, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
-import { CardItem, ItemHead } from '../components'
+import { StyleSheet } from 'react-native'
+import { View, Text, LoaderScreen, TouchableOpacity, Card } from '../../react-native-ui-lib'
+import { CardItem } from '../components'
 import { colors } from '../theme'
 import { axios, api, transferTime, ratio, OpenUrl, storage, navigator } from '../utils'
 import { UltimateListView } from 'react-native-ultimate-listview'
@@ -29,11 +29,15 @@ import { observer, inject } from 'mobx-react/native'
   onFetch = async (page = 1, startFetch, abortFetch) => {
     const { params } = this.props.navigation.state
     const pageSize = 10
-    const userStorage = await storage.load({
-      key: 'userInfo'
-    })
-    let provinceId = userStorage.province ? userStorage.province.id : 430000
-    console.log(provinceId)
+    let userInfo = null
+    try {
+      userInfo = await storage.load({
+        key: 'userInfo'
+      })
+    } catch (err) {
+
+    }
+    let provinceId = (userInfo && userInfo.province) ? userInfo.province.id : 430000
     axios.get(api.queryViewMore, {
       params: {
         specialTopicInfoId: params.specialTopicInfoId,
@@ -54,19 +58,21 @@ import { observer, inject } from 'mobx-react/native'
     if (params.type === 1) {
       return (
         <View style={styles.article} key={index} >
-          <View paddingT-10>
-            <ItemHead title={item.specialTopicInfoTitle} leftIcon='true' smallText='true' />
-          </View>
+          {/* <View paddingT-10>
+            <ItemHead title={item.specialTopicInfoTitle} />
+          </View> */}
           <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: item.picture }} desc={item.introduction} fileType={item.fileType} />
         </View>
       )
     } else {
       return (
-        <TouchableOpacity onPress={() => Linking.openURL(item.link).catch(err => console.error('An error occurred', err))} style={styles.item} activeOpacity={0.6} key={index}>
+        <TouchableOpacity onPress={() => navigator.push('Policy', { path: item.link })} style={styles.item} activeOpacity={0.6} key={index}>
           <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
             <Card.Item>
               <View paddingV-10>
-                <Text text-16 dark >{item.title}</Text>
+                <View row style={{ width: '90%', justifyContent: 'flex-end' }}>
+                  <Text text-16 dark numberOfLines={1} >{item.title}</Text>
+                </View>
                 <View row style={{ width: '100%', justifyContent: 'flex-end' }}>
                   <Text text-11 gray>{transferTime(item.createTime)}</Text>
                 </View>
@@ -79,7 +85,7 @@ import { observer, inject } from 'mobx-react/native'
   }
   render () {
     return (
-      <View flex useSafeArea>
+      <View marginT-10 flex useSafeArea>
         <UltimateListView ref='scroll' style={{ flex: 1, backgroundColor: colors.light }} keyExtractor={(item, index) => `${index} - ${item}`}
           onFetch={this.onFetch}
           item={this.renderItem}
@@ -104,8 +110,9 @@ const styles = StyleSheet.create({
     padding: 15
   },
   item: {
-    marginHorizontal: 10,
+    marginHorizontal: 15,
     borderTopWidth: 1 / ratio,
+    borderBottomWidth: 1 / ratio,
     borderColor: colors.gray
   },
   cardItemImage: {
@@ -119,7 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   article: {
-    paddingHorizontal: 12
+    paddingHorizontal: 15,
+    marginBottom: 15
   }
 })
 export default Page

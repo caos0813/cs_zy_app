@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
-import { View, Text, TouchableOpacity, Image } from '../../react-native-ui-lib'
+import { View, Text, TouchableOpacity, Image, Constants } from '../../react-native-ui-lib'
 import { colors } from '../theme'
 import { ratio } from '../utils'
 import PropTypes from 'prop-types'
@@ -22,9 +22,9 @@ export default class Footer extends Component {
     return (
       <View style={styles.footer} >
         {showLink &&
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('detail')}>
-          <Image assetName='detail' />
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('detail')}>
+            <Image assetName='detail' />
+          </TouchableOpacity>
         }
         <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('attention')}>
           {isPrise ? <Image assetName='attention_active' /> : <Image assetName='attention' />}
@@ -34,9 +34,9 @@ export default class Footer extends Component {
           <Text text-14 dark06 marginL-5>{commentNumber}</Text>
         </TouchableOpacity>
         {showCollect &&
-        <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('star')}>
-          {isCollect ? <Image assetName='star_active' /> : <Image assetName='star' />}
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('star')}>
+            {isCollect ? <Image assetName='star_active' /> : <Image assetName='star' />}
+          </TouchableOpacity>
         }
         <TouchableOpacity activeOpacity={0.6} style={styles.footerCeil} onPress={() => onPress('share')}>
           <Image assetName='share' />
@@ -51,10 +51,11 @@ const styles = StyleSheet.create({
     borderTopColor: colors.grey,
     borderTopWidth: 1 / ratio,
     flexDirection: 'row',
-    height: 50
+    height: 50 + (Constants.isIphoneX ? 34 : 0),
+    paddingBottom: Constants.isIphoneX ? 34 : 0
   },
   footerCeil: {
-    height: '100%',
+    height: 50,
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
