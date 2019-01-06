@@ -214,7 +214,9 @@ import AliyunOSS from 'aliyun-oss-react-native'
         height: 300,
         cropperToolbarTitle: '裁剪头像',
         hideBottomControls: true,
-        cropping: true
+        cropping: true,
+        cropperCancelText: '取消',
+        cropperChooseText: '确定'
       }).then(image => {
         console.log(image)
         console.log(AliyunOSS)
@@ -231,7 +233,9 @@ import AliyunOSS from 'aliyun-oss-react-native'
         height: 300,
         cropperToolbarTitle: '裁剪头像',
         hideBottomControls: true,
-        cropping: true
+        cropping: true,
+        cropperCancelText: '取消',
+        cropperChooseText: '确定'
       }).then(image => {
         console.log(image)
         AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
