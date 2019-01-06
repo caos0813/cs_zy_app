@@ -207,7 +207,7 @@ import AliyunOSS from 'aliyun-oss-react-native'
     const { setValue, userInfo, updateUserInfo } = this.props.infoStore
     setValue('actionSheetStatus', false)
     const uploadPath = `touxiang/${userInfo.userId}.jpg`
-    const imageUrl = `${this.CDN}/${uploadPath}`
+    const imageUrl = `${this.CDN}/${uploadPath}?v=${new Date().getTime()}`
     if (index === 0) {
       ImagePicker.openPicker({
         width: 300,
