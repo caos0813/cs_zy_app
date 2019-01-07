@@ -1,46 +1,32 @@
 import React, { Component } from 'react'
 import { StyleSheet, Platform } from 'react-native'
 import { TouchableOpacity, Text } from '../../react-native-ui-lib'
-import { BoxShadow } from 'react-native-shadow'
-import { width, platform } from '../utils'
+import ImageCapInset from 'react-native-image-capinsets'
+import { platform } from '../utils'
 import PropTypes from 'prop-types'
 import { colors } from '../theme'
 export default class ButtonCeil extends Component {
   static propTypes = {
     title: PropTypes.string,
-    onPress: PropTypes.func,
-    enlish: PropTypes.string
+    onPress: PropTypes.func
   }
   static defaultProps = {
     isBadge: 'false'
   }
   render () {
-    const { title, onPress, enlish } = this.props
+    const { title, onPress } = this.props
     if (platform === 'android') {
-      const shadowOpt = {
-        width: width * 0.2,
-        height: 40,
-        color: colors.black,
-        border: 8,
-        radius: 10,
-        opacity: 0.05,
-        x: 0,
-        y: 0,
-        style: {
-          marginHorizontal: '2%',
-          marginBottom: 10,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }
-      }
       return (
-        <BoxShadow setting={shadowOpt}>
+        <ImageCapInset
+          source={{ uri: 'cycle' }}
+          style={{ width: '25%' }}
+          capInsets={{ top: 0, bottom: 0, right: 20, left: 20 }}
+        >
           <TouchableOpacity style={[styles.wrap, title === '更多' ? styles.more : '']} onPress={onPress} activeOpacity={0.6}>
             {/* <Text numberOfLines={1} style={styles.enlish} text-26 gray>{enlish}</Text> */}
             <Text numberOfLines={1} style={[styles.title, title === '更多' ? styles.more : '']} text-16>{title}</Text>
           </TouchableOpacity>
-        </BoxShadow >
+        </ImageCapInset >
       )
     } else {
       return (
@@ -58,12 +44,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     borderRadius: 15,
-    height: 40,
     justifyContent: 'center',
-    backgroundColor: colors.light,
     overflow: 'hidden',
     ...Platform.select({
+      android: {
+        paddingHorizontal: 20,
+        height: 65
+      },
       ios: {
+        height: 40,
+        backgroundColor: colors.light,
         width: '25%',
         shadowColor: colors.black,
         shadowOpacity: 0.05,

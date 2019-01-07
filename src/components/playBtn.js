@@ -19,7 +19,7 @@ export default class PlayBtn extends Component {
   render () {
     const { activeOpacity, size, onPress, paused, style, viewRef } = this.props
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity} style={[styles.wrap, style, { width: size, height: size, borderRadius: size }]}>
+      <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity} style={[styles.wrap, style, { width: size, height: size, borderRadius: size }, viewRef ? styles.back : '']}>
         {viewRef && <BlurView
           viewRef={viewRef}
           blurType='dark'
@@ -34,8 +34,10 @@ export default class PlayBtn extends Component {
 }
 const styles = StyleSheet.create({
   wrap: {
-    // backgroundColor: 'rgba(0,0,0,.65)',
     overflow: 'hidden'
+  },
+  back: {
+    backgroundColor: 'rgba(0,0,0,.65)'
   },
   image: {
     width: '100%',

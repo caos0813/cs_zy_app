@@ -21,7 +21,6 @@ configure({
 @observer class Play extends Component {
   @observable duration = '00:00'
   @computed get position () {
-    console.log(this.props)
     const { position, id } = this.props.playerStore
     if (id === this.props.data.id) {
       return position
@@ -105,7 +104,6 @@ configure({
   @observable moreData = []
   @action.bound
   setValue (key, val) {
-    console.log(key, val)
     this[key] = val
   }
   constructor (props) {
@@ -268,7 +266,7 @@ render () {
         <View center paddingV-30><Text text-12 dark06>--END</Text></View>
         {data.isMore &&
           <View paddingT-10>
-            <ItemHead title='更多' seeAll='false' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
+            <ItemHead title='更多' seeAll='true' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: data.specialTopInfoId, title: getParam('title') })} />
             <View marginH-25>
               {moreData.map((item) => (
                 <TouchableOpacity style={styles.item} key={item.id} onPress={() => navigator.push('NewsDetail', { articleId: item.id })}>

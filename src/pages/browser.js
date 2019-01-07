@@ -76,7 +76,6 @@ import _ from 'lodash'
       return true
     }
     if (this.state.canGoBack) {
-      console.log(333)
       this.refs.webview.goBack()
       return true
     } else {
@@ -85,7 +84,6 @@ import _ from 'lodash'
   }
   onNavigationStateChange = (e) => {
     const { canGoBack } = e
-    console.log(e)
     this.setState({
       canGoBack: canGoBack
     })
@@ -183,7 +181,7 @@ import _ from 'lodash'
           break
         case 'navigate':
           const routes = data.data
-          console.log(routes.query)
+         // console.log(routes.query)
           navigate(routes.path, routes.query)
           break
         case 'replace':

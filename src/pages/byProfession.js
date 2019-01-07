@@ -57,8 +57,8 @@ configure({
   }
   renderContainer = () => {
     return (
-      <View>
-        <View centerH paddingV-10>
+      <View style={{ width: '100%' }}>
+        <View centerH style paddingV-10>
           <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
         </View>
         <View>

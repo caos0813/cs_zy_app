@@ -24,7 +24,6 @@ configure({
   submit = () => {
     const { content, setValue } = this
     const { commentTabId } = this.props.routeStore
-    alert(content.length)
     if (!content) {
       Toast('请输入内容')
     } else if (content.trim().length > 100) {

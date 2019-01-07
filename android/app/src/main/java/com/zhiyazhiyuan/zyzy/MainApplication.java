@@ -3,6 +3,7 @@ package com.zhiyazhiyuan.zyzy;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import dk.madslee.imageCapInsets.RCTImageCapInsetPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -53,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RCTImageCapInsetPackage(),
             new OrientationPackage(),
             new RNGestureHandlerPackage(),
             new RNCWebViewPackage(),

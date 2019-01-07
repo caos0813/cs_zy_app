@@ -6,7 +6,7 @@ import { api, axios, Toast, height } from '../utils'
 import { StyleSheet, Keyboard, AppState } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import BackgroundTimer from 'react-native-background-timer'
-import Modal from 'react-native-modalbox'
+import Modal from '../../react-native-modalbox'
 import { colors } from '../theme'
 let timer
 @inject('loginStore', 'userStore', 'routeStore')
@@ -140,7 +140,6 @@ let timer
     )
   }
   _handleAppStateChange = (nextAppState) => {
-    console.log(nextAppState)
     if (nextAppState === 'background') {
       const { countDown } = this.props.loginStore
       BackgroundTimer.runBackgroundTimer(() => {

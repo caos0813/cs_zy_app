@@ -218,13 +218,9 @@ import AliyunOSS from 'aliyun-oss-react-native'
         cropperCancelText: '取消',
         cropperChooseText: '确定'
       }).then(image => {
-        console.log(image)
-        console.log(AliyunOSS)
         AliyunOSS.asyncUpload('fdappdata', uploadPath, image.path).then((res) => {
-          console.log(res)
           updateUserInfo('image', imageUrl)
         }).catch(err => {
-          console.log(err)
         })
       })
     } else if (index === 1) {
@@ -237,11 +233,10 @@ import AliyunOSS from 'aliyun-oss-react-native'
         cropperCancelText: '取消',
         cropperChooseText: '确定'
       }).then(image => {
-        console.log(image)
-        AliyunOSS.asyncUpload('fdappdata', 'touxiang', image.path).then((res) => {
+        AliyunOSS.asyncUpload('fdappdata', uploadPath, image.path).then((res) => {
           updateUserInfo('image', imageUrl)
         }).catch(err => {
-          console.log(err)
+
         })
       })
     }

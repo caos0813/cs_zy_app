@@ -165,12 +165,13 @@ const AppNavigation = createStackNavigator(
     },
     Comment: {
       screen: CommentTab,
-      navigationOptions: ({ navigation }) => ({
-        headerLeft: <BackAvatar assetName='backArrow' onPress={navigation.goBack} />,
+      navigationOptions: ({ navigation, screenProps }) => ({
+        headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
         headerStyle: {
-          height: 44,
+          height: 44 + screenProps.statusBarHeight,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
+          paddingTop: screenProps.statusBarHeight,
           overflow: 'hidden',
           borderBottomColor: gray,
           elevation: 0,
@@ -208,8 +209,8 @@ const AppNavigation = createStackNavigator(
     },
     Pay: {
       screen: Pay,
-      navigationOptions: () => ({
-        title: '我的志愿卡'
+      navigationOptions: ({ navigation }) => ({
+        header: null
       })
     },
     About: {
@@ -343,12 +344,13 @@ const AppNavigation = createStackNavigator(
   }
 )
 // 拦截登录的路由
-const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail', 'Play', 'Browser']
+const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail', 'Play', 'Browser', 'Policy', 'CommentList']
 
 const defaultGetStateForAction = AppNavigation.router.getStateForAction
 
 AppNavigation.router.getStateForAction = (action, state) => {
   const { routeName, type } = action
+  console.log(action)
   const { token, startYear } = userStore.userInfo
   const params = state ? state.routes[state.routes.length - 1].params : null
   if (state &&

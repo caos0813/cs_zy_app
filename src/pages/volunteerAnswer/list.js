@@ -53,7 +53,6 @@ class Page extends Component {
     )
   }
   componentDidMount () {
-    console.log(this.props)
   }
 }
 export default withNavigation(Page)

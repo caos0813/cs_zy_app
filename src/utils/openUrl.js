@@ -4,8 +4,7 @@ export default class OpenUrl {
     this.props = props
   }
   openBrowser (path, query, needAuth) {
-    const { navigation, userStore } = this.props
-    const { userInfo } = userStore
+    const { navigation } = this.props
     let queryString = path
     if (!_.isEmpty(query)) {
       queryString += '?'
@@ -14,27 +13,32 @@ export default class OpenUrl {
       })
       queryString = queryString.slice(0, -1)
     }
-    if (!needAuth) {
-      navigation.navigate('Browser', {
-        path: queryString
-      })
-    } else {
-      if (userInfo.token && userInfo.startYear) {
-        navigation.navigate('Browser', {
-          path: queryString
-        })
-      } else if (userInfo.token && !userInfo.startYear) {
-        navigation.navigate('Info', { type: 'complete' })
-      } else {
-        navigation.navigate('Login')
-      }
-    }
+    navigation.navigate('Browser', {
+      path: queryString,
+      needAuth
+    })
+    // if (!needAuth) {
+    //   navigation.navigate('Browser', {
+    //     path: queryString
+    //   })
+    // } else {
+    //   if (userInfo.token && userInfo.startYear) {
+    //     navigation.navigate('Browser', {
+    //       path: queryString
+    //     })
+    //   } else if (userInfo.token && !userInfo.startYear) {
+    //     navigation.navigate('Info', { type: 'complete' })
+    //   } else {
+    //     navigation.navigate('Login')
+    //   }
+    // }
   }
   openNative (path, query, needAuth) {
     // alert(needAuth)
-    const { navigation, userStore } = this.props
-    const { userInfo } = userStore
-    if (!needAuth) {
+    const { navigation } = this.props
+    let params = query || {}
+    navigation.navigate(path, { ...params, needAuth })
+    /* if (!needAuth) {
       navigation.navigate(path, query)
     } else {
       if (userInfo.token && userInfo.startYear) {
@@ -44,6 +48,6 @@ export default class OpenUrl {
       } else {
         navigation.navigate('Login')
       }
-    }
+    } */
   }
 }

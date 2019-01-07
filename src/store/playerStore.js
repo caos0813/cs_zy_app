@@ -1,4 +1,4 @@
-import { configure, observable, action, reaction } from 'mobx'
+import { configure, observable, action } from 'mobx'
 import _ from 'lodash'
 configure({
   enforceActions: 'always'
@@ -29,7 +29,4 @@ class Store {
   }
 }
 const playerStore = new Store()
-reaction(() => playerStore.paused, (data) => {
-  console.log(typeof data, data)
-})
 export default playerStore
