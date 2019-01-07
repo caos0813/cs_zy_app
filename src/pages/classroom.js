@@ -82,8 +82,8 @@ import { OpenUrl } from '../utils'
                     }
                   </View>
                   <View style={styles.lineWrap}>
-                    <View style={styles.rotateX} />
-                    <View style={styles.bottomBox} />
+                    <Text style={styles.rotateX} />
+                    <Text style={styles.bottomBox} />
                   </View>
                 </View>
               )
@@ -128,6 +128,8 @@ const styles = StyleSheet.create({
     height: 35,
     backgroundColor: colors.stable,
     transform: [{ rotateX: '65deg' }],
+    // borderWidth: 1,
+    // borderColor: 'red',
     zIndex: -9
   },
   bottomBox: {

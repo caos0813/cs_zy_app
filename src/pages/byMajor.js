@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, ScrollView, findNodeHandle } from 'react-native'
 import { View, Text, Image, TouchableOpacity } from '../../react-native-ui-lib'
-import { HomeSearch, IconCeil, ItemHead } from '../components'
+import { HomeSearch, IconCeil, ItemHead, CardItem } from '../components'
 import { OpenUrl, axios, api, imageResize } from '../utils'
 import { observable, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
@@ -91,10 +91,11 @@ import { observer, inject } from 'mobx-react/native'
           </View>
           {this.audioList.map((item, index) => (
             <View key={index} marginH-15 marginB-10 style={styles.audioWrap}>
-              <TouchableOpacity activeOpacity={0.6} onPress={() => { this.openUrl('audio', { id: item.id, title: item.title, introduction: item.introduction, img: item.filePath }, false) }}>
+              {/* <TouchableOpacity activeOpacity={0.6} onPress={() => { this.openUrl('audio', { id: item.id, title: item.title, introduction: item.introduction, img: item.filePath }, false) }}>
                 <Image style={styles.image} source={{ uri: imageResize(item.filePath, 350) }} />
                 <Text text-22 light style={styles.title}>{item.title}</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              <CardItem onPress={() => { this.openUrl('audio', { id: item.id, title: item.title, introduction: item.introduction, img: item.filePath }, false) }} imageSource={{ uri: imageResize(item.filePath, 350) }} imageStyle={{ height: 150 }} title={item.title} fileType='1' />
             </View>
           ))}
         </ScrollView>
@@ -117,25 +118,6 @@ const styles = StyleSheet.create({
   iconsWrap: {
     flexDirection: 'row',
     justifyContent: 'space-around'
-  },
-  audioWrap: {
-    position: 'relative'
-  },
-  image: {
-    borderRadius: 6,
-    height: 150
-  },
-  title: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    textAlign: 'right',
-    padding: 10,
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    zIndex: 2
   }
 })
 export default ByMajor

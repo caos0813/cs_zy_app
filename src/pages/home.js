@@ -271,7 +271,7 @@ configure({
         <View row marginV-5 style={styles.iconWrap}>
           {
             iconsList.map((item, index) => (
-              <IconCeil onPress={() => this.goHref(item)} iconButton={styles.iconButton} imageSource={item.image} title={item.title} key={index} opacity={index === (iconsList.length - 1) ? 1 : 0.6} isBadge={item.title === '填志愿' ? 'true' : 'false'} />
+              <IconCeil onPress={() => this.goHref(item)} iconButton={styles.iconButton} imageSource={item.image} title={item.title} key={index} isBadge={item.title === '填志愿' ? 'true' : 'false'} />
             ))
           }
         </View>

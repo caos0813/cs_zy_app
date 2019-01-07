@@ -21,6 +21,10 @@ import { colors } from '../theme'
     const { goBack } = this.props.navigation
     Keyboard.dismiss()
     const { userInfo } = this.props.userStore
+    if (this.state.feedback.length === 0) {
+      Toast('反馈内容不能为空')
+      return
+    }
     if (this.state.feedback.length > 500) {
       Toast('最多输入500字')
       return

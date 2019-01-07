@@ -22,7 +22,7 @@ import { View, Image, Text } from '../../react-native-ui-lib'
         <ScrollView showsVerticalScrollIndicator={false} >
           <Image style={{ width: '100%', height: 250 }} assetName={this.img} />
           <View paddingH-15 paddingV-10>
-            <Text dark>{getParam('text')}</Text>
+            <Text dark center>{getParam('text')}</Text>
           </View>
         </ScrollView>
       </View>
