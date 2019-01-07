@@ -58,7 +58,7 @@ configure({
         {this.firstArticle.labelName && <View>
           <ItemHead smallText='true' title={this.firstArticle.labelName} leftIcon='true' />
           <View paddingH-15>
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: imageResize(this.firstArticle.picture, 500) }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
+            <CardItem onPress={() => { navigator.navigate('NewsDetail', { articleId: this.firstArticle.id }) }} imageStyle={{ height: 115 }} title={this.firstArticle.title} imageSource={{ uri: imageResize(this.firstArticle.picture, 500) }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType}>
               <View style={styles.cardFooter} paddingT-5>
                 <View row>
                   <View row centerV paddingR-10>
@@ -129,7 +129,7 @@ configure({
         <View paddingT-15 key={index} >
           <ItemHead smallText='true' title={item.labelName} leftIcon='true' />
           <View paddingH-15>
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: imageResize(item.picture, 500) }} desc={item.introduction} fileType={item.fileType}>
+            <CardItem onPress={() => { navigator.navigate('NewsDetail', { articleId: item.id }) }} imageStyle={{ height: 115 }} title={item.title} imageSource={{ uri: imageResize(item.picture, 500) }} desc={item.introduction} fileType={item.fileType}>
               <View style={styles.cardFooter} paddingT-5>
                 <View row>
                   <View row centerV paddingR-10>
@@ -154,12 +154,12 @@ configure({
     return (
       topicData.map((item, index) => (
         <View paddingT-10 key={index}>
-          <ItemHead title={item.title} seeAll='true' onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
+          <ItemHead title={item.title} seeAll='true' onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} />
           <View row style={styles.topics}>
             {item.articleInfoBean.content &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
-                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: imageResize(el.picture, 350) }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
+                  <CardItem onPress={() => { navigator.navigate('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: imageResize(el.picture, 350) }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }

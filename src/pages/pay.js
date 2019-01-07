@@ -3,8 +3,9 @@ import { StyleSheet, ScrollView } from 'react-native'
 import { observer, inject } from 'mobx-react/native'
 import * as WeChat from 'react-native-wechat'
 import { View, Button, Text, Assets, Image, Card, RadioGroup, RadioButton, Avatar, TextInput } from '../../react-native-ui-lib/'
-import Modal from 'react-native-modalbox'
-import { ratio, api, axios, Toast, width } from '../utils'
+import Modal from '../../react-native-modalbox'
+import { ratio, api, axios, Toast, width, height, getLayoutInfo } from '../utils'
+import { Header } from '../components'
 import { colors } from '../theme'
 const items = ['智能填报志愿表', '志愿合理性分析', '招生信息查询', '专家咨询服务']
 const listItems = [{
@@ -40,6 +41,7 @@ const listItems = [{
     return (
       <View flex useSafeArea bg-stable >
         <View flex style={{ zIndex: 0 }}>
+          <Header showLeft title='我的志愿卡' />
           <ScrollView>
             <View paddingH-12 paddingV-3 center>
               <Image assetName='card' style={styles.imgStyle} />
@@ -98,51 +100,53 @@ const listItems = [{
           </ScrollView>
           <View paddingV-8 centerV paddingH-13 bg-light style={styles.footer} row spread>
             {isVipValid === 2 ? <Text dark06 text-14>我的志愿卡</Text> : <Text calm text-28>¥{payAmount}</Text>}
-            {isVipValid === 2 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.openModel()} />}
+            {isVipValid === 1 ? <Button bg-calm label='已开通' disabled /> : <Button bg-calm label='开通' onPress={() => this.openModel()} />}
           </View>
         </View>
-        <Modal ref='modal' style={styles.modal} backdropPressToClose={false}>
-          <View center padding-8 >
-            <Text text-20 dark>选择支付方式</Text>
-            <Avatar imageSource={Assets.icons.close} containerStyle={styles.closeWrap} backgroundColor='transparent' imageStyle={styles.closeImage} onPress={() => this.refs.modal.close()} />
-          </View>
-          {payType === 'wechat' &&
-            <View center padding-10>
-              <Text calm text-28>¥{payAmount}</Text>
+        <Modal ref='modal' style={styles.modal} backdropPressToClose>
+          <View ref='modalcontent'>
+            <View center padding-8 >
+              <Text text-20 dark>选择支付方式</Text>
+              <Avatar imageSource={Assets.icons.close} containerStyle={styles.closeWrap} backgroundColor='transparent' imageStyle={styles.closeImage} onPress={() => this.refs.modal.close()} />
             </View>
-          }
-          <RadioGroup value={payType} onValueChange={e => setValue('payType', e)}>
-            <View row centerV spread style={[styles.payItem, !wechatInstall && { display: 'none' }]}>
-              <View row centerV>
-                <Image assetName='wechat' />
-                <Text marginL-25>微信支付</Text>
+            {payType === 'wechat' &&
+              <View center padding-10>
+                <Text calm text-28>¥{payAmount}</Text>
               </View>
-              <RadioButton color={colors.balanced} value='wechat' size={18} imageSource={Assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
-            </View>
-            <View row centerV spread style={styles.payItem}>
-              <View row centerV>
-                <Image assetName='vip' style={{ width: 28, height: 25 }} />
-                <Text marginL-25>激活志愿卡</Text>
+            }
+            <RadioGroup value={payType} onValueChange={e => setValue('payType', e)}>
+              <View row centerV spread style={[styles.payItem, !wechatInstall && { display: 'none' }]}>
+                <View row centerV>
+                  <Image assetName='wechat' />
+                  <Text marginL-25>微信支付</Text>
+                </View>
+                {wechatInstall && <RadioButton color={colors.balanced} value='wechat' size={18} imageSource={Assets.icons.select} imageProps={{ resizeMode: 'cover' }} />}
               </View>
-              <RadioButton color={colors.balanced} value='vip' size={18} imageSource={Assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
-            </View>
-          </RadioGroup>
-          {payType === 'vip' && <View paddingT-15>
-            <View row centerV marginB-10>
-              <Text marginR-25>卡号</Text>
-              <TextInput placeholder='请输入卡号' containerStyle={styles.inputWrap} hideUnderline text-15 enableErrors={false} onChangeText={val => setValue('cardNumber', val)} />
-            </View>
+              <View row centerV spread style={styles.payItem}>
+                <View row centerV>
+                  <Image assetName='vip' style={{ width: 28, height: 25 }} />
+                  <Text marginL-25>激活志愿卡</Text>
+                </View>
+                <RadioButton color={colors.balanced} value='vip' size={18} imageSource={Assets.icons.select} imageProps={{ resizeMode: 'cover' }} />
+              </View>
+            </RadioGroup>
+            {payType === 'vip' && <View paddingT-15>
+              <View row centerV marginB-10>
+                <Text marginR-25>卡号</Text>
+                <TextInput placeholder='请输入卡号' containerStyle={styles.inputWrap} hideUnderline text-15 enableErrors={false} onChangeText={val => setValue('cardNumber', val)} />
+              </View>
 
-            <View row centerV>
-              <Text marginR-25>密码</Text>
-              <TextInput placeholder='请输入密码' containerStyle={styles.inputWrap} hideUnderline text-15 enableErrors={false} onChangeText={val => setValue('password', val)} secureTextEntry
-              />
-            </View>
+              <View row centerV>
+                <Text marginR-25>密码</Text>
+                <TextInput placeholder='请输入密码' containerStyle={styles.inputWrap} hideUnderline text-15 enableErrors={false} onChangeText={val => setValue('password', val)} secureTextEntry
+                />
+              </View>
 
-          </View>
-          }
-          <View center paddingV-28>
-            <Button bg-calm label={payType === 'wechat' ? '支付' : '激活'} onPress={this.pay} />
+            </View>
+            }
+            <View center paddingV-28>
+              <Button bg-calm label={payType === 'wechat' ? '支付' : '激活'} onPress={this.pay} />
+            </View>
           </View>
         </Modal>
       </View>
@@ -219,6 +223,8 @@ const listItems = [{
         setValue('payType', 'vip')
       }
     })
+    console.log(this.refs)
+    // console.log(getLayoutInfo(this.refs.modalcontent))
     // this.refs.modal.open()
   }
 }
@@ -238,7 +244,8 @@ const styles = StyleSheet.create({
     borderRadius: 16
   },
   modal: {
-    top: 160,
+    // top: 160,
+    top: height - 400, // 470
     left: 0,
     width: '100%',
     borderTopLeftRadius: 8,
