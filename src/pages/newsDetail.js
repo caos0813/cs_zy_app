@@ -21,7 +21,6 @@ configure({
 @observer class Play extends Component {
   @observable duration = '00:00'
   @computed get position () {
-    console.log(this.props)
     const { position, id } = this.props.playerStore
     if (id === this.props.data.id) {
       return position
@@ -105,7 +104,6 @@ configure({
   @observable moreData = []
   @action.bound
   setValue (key, val) {
-    console.log(key, val)
     this[key] = val
   }
   constructor (props) {

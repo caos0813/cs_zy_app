@@ -7,7 +7,6 @@ class Store {
   @observable commentTabId = ''
   @action.bound
   setRoutes (val) {
-    console.log(val)
     this.routes = val
   }
   @action.bound

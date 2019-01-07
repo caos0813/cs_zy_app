@@ -43,7 +43,6 @@ class Store {
         })
       }
     ).catch((err) => {
-      console.log(err)
     })
   }
 }

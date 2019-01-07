@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Avatar, Image, Button, ListItem, TouchableOpacity } from '../../react-native-ui-lib'
+import { Text, View, Avatar, Image, Button, ListItem } from '../../react-native-ui-lib'
 import { inject, observer } from 'mobx-react/native'
 import { StyleSheet, ScrollView, DeviceEventEmitter } from 'react-native'
 import { colors } from '../theme'

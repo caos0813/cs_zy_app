@@ -165,12 +165,13 @@ const AppNavigation = createStackNavigator(
     },
     Comment: {
       screen: CommentTab,
-      navigationOptions: ({ navigation }) => ({
-        headerLeft: <BackAvatar assetName='backArrow' onPress={navigation.goBack} />,
+      navigationOptions: ({ navigation, screenProps }) => ({
+        headerLeft: <BackAvatar assetName='backClose' onPress={navigation.goBack} />,
         headerStyle: {
-          height: 44,
+          height: 44 + screenProps.statusBarHeight,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
+          paddingTop: screenProps.statusBarHeight,
           overflow: 'hidden',
           borderBottomColor: gray,
           elevation: 0,
@@ -343,7 +344,7 @@ const AppNavigation = createStackNavigator(
   }
 )
 // 拦截登录的路由
-const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail', 'Play', 'Browser']
+const unNeedLoginRoute = ['Home', 'Plan', 'Mine', 'About', 'NewsDetail', 'Play', 'Browser', 'Policy']
 
 const defaultGetStateForAction = AppNavigation.router.getStateForAction
 

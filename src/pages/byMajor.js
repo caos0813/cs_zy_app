@@ -103,10 +103,10 @@ import { observer, inject } from 'mobx-react/native'
   }
   componentDidMount () {
     axios.get(api.getMinuteAudioSpecialList).then(data => {
-      console.log(data)
+      // console.log(data)
       if (data) {
         this.setValue('audioList', data)
-        console.log(this.audioList)
+      //  console.log(this.audioList)
       } else {
         this.setValue('audioList', [])
       }
