@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { StyleSheet, Platform } from 'react-native'
-import { BoxShadow } from 'react-native-shadow'
 import { TextInput } from '../../react-native-ui-lib'
 import { width, platform } from '../utils'
 import { colors } from '../theme'
 import PropTypes from 'prop-types'
+import ImageCapInset from 'react-native-image-capinsets'
 export default class LoginInput extends Component {
   static propTypes = {
     onChangeText: PropTypes.func,
@@ -21,20 +21,12 @@ export default class LoginInput extends Component {
   render () {
     const { onSubmitEditing, maxLength, placeholder } = this.props
     if (platform === 'android') {
-      const shadowOpt = {
-        width: width - 50,
-        height: 32,
-        color: colors.black,
-        border: 30,
-        radius: 10,
-        opacity: 0.05,
-        x: 0,
-        y: 0,
-        style: {
-        }
-      }
       return (
-        <BoxShadow setting={shadowOpt}>
+        <ImageCapInset
+          source={{ uri: 'bg' }}
+          style={{ width: '100%' }}
+          capInsets={{ top: 0, bottom: 0, right: 25, left: 25 }}
+        >
           <TextInput style={styles.wrap}
             text-14
             placeholder={placeholder}
@@ -44,9 +36,10 @@ export default class LoginInput extends Component {
             returnKeyType='next'
             onSubmitEditing={onSubmitEditing}
             hideUnderline
+            enableErrors={false}
             maxLength={maxLength}
           />
-        </BoxShadow>
+        </ImageCapInset>
 
       )
     } else {
@@ -73,8 +66,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 30,
     textAlign: 'center',
-    marginBottom: 5,
     ...Platform.select({
+      android: {
+        height: 50,
+        paddingBottom: 5,
+        backgroundColor: 'transparent'
+      },
       ios: {
         width: width - 50,
         shadowColor: colors.black,

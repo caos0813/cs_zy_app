@@ -174,7 +174,7 @@ configure({
         size: pageSize
       }
     }).then(data => {
-      console.log('onFetch3')
+      // ('onFetch3')
       const { articleInfoLabelList, topicsAndArticlesList, provincePolicyList } = data
       if (page === 1) {
         if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
@@ -199,7 +199,7 @@ configure({
       }
       if (articleInfoLabelList.content && articleInfoLabelList.content.length > 0) {
         if (articleInfoLabelList.content.length === 1 && page <= 1) {
-          console.log('只有一个，在第一页，所以删除一个')
+          // console.log('只有一个，在第一页，所以删除一个')
           articleInfoLabelList.content.shift()
         }
         startFetch(articleInfoLabelList.content, pageSize)
@@ -213,7 +213,7 @@ configure({
   }
   renderHeader = () => {
     return (
-      <View centerV paddingH-15 style={[styles.header]} >
+      <View centerV style={[styles.header]} >
         <HomeSearch onPress={() => this.openUrl(`search`, {}, true)} />
       </View>
     )
@@ -265,7 +265,7 @@ configure({
     return (
       <View style={{ backgroundColor: 'transparent' }}>
         {this.renderHeader()}
-        <View style={{ height: 165 }} paddingT-10 paddingB-5>
+        <View style={{ height: 165 }} paddingB-5>
           {banner.length > 0 && <HomeBanner data={banner} itemPress={(e) => this.bannerPress(e)} />}
         </View>
         <View row marginV-5 style={styles.iconWrap}>
@@ -368,7 +368,7 @@ configure({
   openNotificationListener = (e) => {
     /* alert(JSON.stringify(e)) */
     const extras = JSON.parse(e.extras)
-    console.log(extras)
+    // console.log(extras)
     if (extras.articleInfoId) {
       this.openNative('NewsDetail', { articleId: extras.articleInfoId })
     } else {
@@ -479,6 +479,9 @@ configure({
         isProduction: EnvConfig.ENV === 'production'
       }
     }).then(data => {
+      if (!data) {
+        return
+      }
       const nowVersion = formatVersion(DeviceInfo.getVersion())
       const newVersion = formatVersion(data.version)
       if (nowVersion < newVersion) {
@@ -496,9 +499,9 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     backgroundColor: colors.light,
-    paddingTop: statusBarHeight + 5,
+    paddingTop: statusBarHeight,
     // paddingHorizontal: 15,
-    paddingBottom: 5,
+    // paddingBottom: 5,
     zIndex: 2
   },
   avatar: {

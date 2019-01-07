@@ -1,13 +1,2 @@
-arguments=
-auto.sync=false
-build.scans.enabled=false
-connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(/Users/zhanlan/gradle/gradle-3.0))
 connection.project.dir=
 eclipse.preferences.version=1
-gradle.user.home=/Users/zhanlan/gradle/gradle-3.0
-java.home=
-jvm.arguments=
-offline.mode=false
-override.workspace.settings=true
-show.console.view=true
-show.executions.view=true

@@ -64,7 +64,6 @@ configure({
         }
         scenes[index] = () => (<List style={{ flex: 1 }} />)
       })
-      console.log(routes)
       this.setValue('routes', routes)
       this.setValue('scenes', scenes)
     })

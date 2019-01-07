@@ -22,5 +22,4 @@ if (platform === 'ios' && !Constants.isIphoneX) {
   statusBarHeight = 44
 }
 let { width, height } = Dimensions.get('screen')
-// console.log(Dimensions.get('screen'))
 export { width, height, getLayoutInfo, dialog, storage, platform, api, axios, BackPress, imageResize, ratio, statusBarHeight, Toast, OpenUrl, formatDate, navigator, imageFormat, transferTime, transferPlayerTime, getUrlParams, formatVersion }

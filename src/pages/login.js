@@ -140,7 +140,6 @@ let timer
     )
   }
   _handleAppStateChange = (nextAppState) => {
-    console.log(nextAppState)
     if (nextAppState === 'background') {
       const { countDown } = this.props.loginStore
       BackgroundTimer.runBackgroundTimer(() => {
