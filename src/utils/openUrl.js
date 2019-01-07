@@ -14,6 +14,7 @@ export default class OpenUrl {
       })
       queryString = queryString.slice(0, -1)
     }
+    // alert(queryString)
     if (!needAuth) {
       navigation.navigate('Browser', {
         path: queryString

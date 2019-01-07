@@ -59,11 +59,11 @@ import { Header } from '../components'
               </View>
             </View>
             {/* labelStyle={{ marginTop: 6 }} */}
-            {(isVipValid !== 2 && userInfo.token) && <Button bg-calm label='开通VIP' size='small' marginT-12 onPress={() => navigate('Pay')} />
+            {(isVipValid !== 2 && userInfo.token) && <Button style={{ height: 32, lineHeight: 32 }} bg-calm label='开通VIP' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            {(isVipValid === 2 && userInfo.token) && <Button style={{ backgroundColor: colors.lightGrey }} dark06 label='已开通VIP' size='small' marginT-12 disabled />
+            {(isVipValid === 2 && userInfo.token) && <Button style={{ backgroundColor: colors.lightGrey, height: 32, lineHeight: 32 }} labelStyle={{ display: 'flex', alignItems: 'center' }} dark06 label='已开通VIP' size='small' marginT-12 disabled />
             }
-            {!userInfo.token && <Button bg-calm label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
+            {!userInfo.token && <Button style={{ height: 32, lineHeight: 32 }} bg-calm label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
             }
             {/* {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />} */}
           </View>
