@@ -58,11 +58,12 @@ import { Header } from '../components'
                 {isVipValid === 1 && <Text text-13 calm>体验卡有效期至{formatDate(userInfo.endDate, 'yyyy-MM-dd')}</Text>}
               </View>
             </View>
-            {(isVipValid !== 2 && userInfo.token) && <Button labelStyle={{ marginTop: 6 }} bg-calm label='开通VIP' size='small' marginT-12 onPress={() => navigate('Pay')} />
+            {/* labelStyle={{ marginTop: 6 }} */}
+            {(isVipValid !== 2 && userInfo.token) && <Button bg-calm label='开通VIP' size='small' marginT-12 onPress={() => navigate('Pay')} />
             }
-            {(isVipValid === 2 && userInfo.token) && <Button labelStyle={{ marginTop: 6 }} style={{ backgroundColor: colors.lightGrey }} dark06 label='已开通VIP' size='small' marginT-12 disabled />
+            {(isVipValid === 2 && userInfo.token) && <Button style={{ backgroundColor: colors.lightGrey }} dark06 label='已开通VIP' size='small' marginT-12 disabled />
             }
-            {!userInfo.token && <Button bg-calm label='登录' labelStyle={{ marginTop: 6 }} size='small' marginT-12 onPress={() => navigate('Login')} />
+            {!userInfo.token && <Button bg-calm label='登录' size='small' marginT-12 onPress={() => navigate('Login')} />
             }
             {/* {userInfo.token && <Image assetName='vipImg' style={styles.vipImg} tintColor={isVipValid === 2 ? colors.calm : colors.grey} />} */}
           </View>
@@ -124,11 +125,11 @@ import { Header } from '../components'
                 <Image assetName='small_arrowRight' />
               </ListItem.Part>
             </ListItem>
-            <ListItem style={styles.signOut} height={50} onPress={this.signOut}>
+            {userInfo.token && <ListItem style={styles.signOut} height={50} onPress={this.signOut}>
               <ListItem.Part>
                 <Text text-16 dark>退出</Text>
               </ListItem.Part>
-            </ListItem>
+            </ListItem>}
           </View>
           {/* {userInfo.token && <View paddingT-100 paddingH-50>
             <Button label='退出' bg-calm text-16 onPress={this.signOut} />

@@ -279,7 +279,7 @@ configure({
         {this.firstArticle.labelName && <View paddingT-15>
           <ItemHead title={this.firstArticle.labelName} leftIcon='true' smallText='true' />
           <View paddingH-15 >
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: imageResize(this.firstArticle.picture, 500) }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
+            <CardItem onPress={() => { navigator.navigate('NewsDetail', { articleId: this.firstArticle.id }) }} title={this.firstArticle.title} imageSource={{ uri: imageResize(this.firstArticle.picture, 500) }} desc={this.firstArticle.introduction} fileType={this.firstArticle.fileType} imageStyle={{ height: 115 }}>
               <View style={styles.cardFooter} paddingT-5>
                 <View row>
                   <View row centerV paddingR-10>
@@ -330,12 +330,12 @@ configure({
     return (
       topicData.map((item, index) => (
         <View paddingT-15 key={index}>
-          <ItemHead onPress={() => navigator.push('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
+          <ItemHead onPress={() => navigator.navigate('CommonList', { type: 1, specialTopicInfoId: item.id, title: item.title })} title={item.title} seeAll='true' />
           <View row style={[styles.topics]}>
             {(item.articleInfoBean.content && item.articleInfoBean.content.length > 0) &&
               item.articleInfoBean.content.map((el, i) => (
                 <View style={[styles.topic, item.articleInfoBean.content.length === 1 ? styles.one : '']} key={i}>
-                  <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: imageResize(el.picture, 350) }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
+                  <CardItem onPress={() => { navigator.navigate('NewsDetail', { articleId: el.id, title: item.title }) }} title={el.title} imageSource={{ uri: imageResize(el.picture, 350) }} imageStyle={{ height: item.articleInfoBean.content.length === 1 ? 115 : 85 }} desc={el.introduction} fileType={el.fileType} />
                 </View>
               ))
             }
@@ -348,7 +348,7 @@ configure({
   renderSpecial = (specials) => {
     return (
       specials.map((item, index) => (
-        <TouchableOpacity onPress={() => navigator.push('Policy', { path: item.link })} style={[styles.item, index === specials.length - 1 ? styles.lastItem : '']} activeOpacity={0.6} key={index}>
+        <TouchableOpacity onPress={() => navigator.navigate('Policy', { path: item.link })} style={[styles.item, index === specials.length - 1 ? styles.lastItem : '']} activeOpacity={0.6} key={index}>
           <Card borderRadius={0} enableShadow={false} style={{ backgroundColor: colors.light }}>
             <Card.Item>
               <View paddingV-10>
@@ -383,7 +383,7 @@ configure({
         <View paddingT-15 style={styles.article} key={index}>
           <ItemHead title={item.labelName} leftIcon='true' smallText='true' />
           <View paddingH-15>
-            <CardItem onPress={() => { navigator.push('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: imageResize(item.picture, 500) }} desc={item.introduction} fileType={item.fileType} imageStyle={{ height: 115 }}>
+            <CardItem onPress={() => { navigator.navigate('NewsDetail', { articleId: item.id }) }} title={item.title} imageSource={{ uri: imageResize(item.picture, 500) }} desc={item.introduction} fileType={item.fileType} imageStyle={{ height: 115 }}>
               <View style={styles.cardFooter} paddingT-5>
                 <View row>
                   <View row centerV paddingR-10>
