@@ -4462,7 +4462,7 @@ lodash.throttle@^4.1.1:
   resolved "http://registry.npm.taobao.org/lodash.throttle/download/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
-lodash@^4.13.1, lodash@^4.16.4, lodash@^4.16.6, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.1:
+lodash@^4.13.1, lodash@^4.16.6, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.1:
   version "4.17.11"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha1-s56mIp72B+zYniyN8SU2iRysm40=
@@ -5773,7 +5773,7 @@ react-native-code-push@^5.4.2:
     plist "3.0.1"
     xcode "1.0.0"
 
-react-native-config@^0.11.5:
+react-native-config@^0.11.7:
   version "0.11.7"
   resolved "http://registry.npm.taobao.org/react-native-config/download/react-native-config-0.11.7.tgz#a2b323f2ecd76a4df88cbb6bc86eaa2ef9febee7"
   integrity sha1-orMj8uzXak34jLtryG6qLvn+vuc=
@@ -5886,13 +5886,6 @@ react-native-ultimate-listview@^3.3.0:
   resolved "http://registry.npm.taobao.org/react-native-ultimate-listview/download/react-native-ultimate-listview-3.3.0.tgz#92fd0dbe5b291681fc679c1016a180f2da805334"
   integrity sha1-kv0NvlspFoH8Z5wQFqGA8tqAUzQ=
 
-react-native-video-controls@^2.2.3:
-  version "2.2.3"
-  resolved "http://registry.npm.taobao.org/react-native-video-controls/download/react-native-video-controls-2.2.3.tgz#f0927e11aeb2cbbb03935e21bac0caa1d46d8a67"
-  integrity sha1-8JJ+Ea6yy7sDk14husDKodRtimc=
-  dependencies:
-    lodash "^4.16.4"
-
 react-native-video@^4.2.0:
   version "4.3.0"
   resolved "http://registry.npm.taobao.org/react-native-video/download/react-native-video-4.3.0.tgz#5d9569cea928d8125b839aac9653f3dbcb6efe06"
@@ -5997,7 +5990,7 @@ react-navigation-tabs@1.0.2:
     react-lifecycles-compat "^3.0.4"
     react-native-tab-view "^1.0.0"
 
-react-navigation@^3.0.0:
+react-navigation@^3.0.9:
   version "3.0.9"
   resolved "http://registry.npm.taobao.org/react-navigation/download/react-navigation-3.0.9.tgz#1c82f8ec2f87e2728816e79fb43d7b11ed265415"
   integrity sha1-HIL47C+H4nKIFueftD17Ee0mVBU=
