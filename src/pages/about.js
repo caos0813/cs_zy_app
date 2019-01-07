@@ -16,7 +16,7 @@ class About extends Component {
             </Text>
           </View>
           <View marginB-15>
-            <Text style={styles.text}> 知涯总部位于长沙，先后在全国设立21个办事处。公司专家团队由上海交大、武汉大学、湖南大学、湖南师范大学等高校知名教育专家组成，服务青少年教育课程、志愿填报、测试测评、生涯规划等方面。
+            <Text style={styles.text}>知涯总部位于长沙，先后在全国设立21个办事处。公司专家团队由上海交大、武汉大学、湖南大学、湖南师范大学等高校知名教育专家组成，服务青少年教育课程、志愿填报、测试测评、生涯规划等方面。
             </Text>
           </View>
           <View marginB-15>
